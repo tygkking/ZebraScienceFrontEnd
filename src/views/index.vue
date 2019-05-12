@@ -37,15 +37,14 @@
 
                 <h2>
                     <p>Welcome to Zebra Science!</p>
-                    <Button @click="handleStart">Start learning</Button>
                 </h2>
-                <Input style="width: 50%; margin-left: 25%" v-model="value13">
-                    <Select v-model="select3" slot="prepend" style="width: 80px;background-color: #808695">
+                <Input style="width: 50%; margin-left: 25%" v-model="search_content">
+                    <Select v-model="search_item" slot="prepend" style="width: 80px;background-color: #eeeeee;color: black">
                         <Option value="prof">专家</Option>
                         <Option value="paper">论文</Option>
                         <Option value="org">机构</Option>
                     </Select>
-                    <Button  slot="append" style="background-color:#57c5f7;color: white" icon="ios-search" ></Button>
+                    <Button @click="search" slot="append" style="background-color:#57c5f7;color: white" icon="ios-search" ></Button>
                 </Input>
             </Col>
         </Row>
@@ -56,15 +55,21 @@
         data () {
             return {
                 login_url:'/login',
-                register_url:'/register'
+                register_url:'/register',
+                search_item: 'prof',
+                search_content: ''
             }
         },
         methods: {
-            handleStart () {
-                this.$Modal.info({
-                    title: 'Bravo',
-                    content: 'Now, enjoy the convenience of iView.'
-                });
+            search() {
+                if (this.search_item=='prof')
+                    alert("专家搜索："+this.search_content);
+                else if (this.search_item=='paper')
+                    alert("论文搜索："+this.search_content);
+                else if (this.search_item=='org')
+                    alert("机构搜索："+this.search_content);
+                else
+                    alert("请选择搜索项！");
             }
         }
     }
