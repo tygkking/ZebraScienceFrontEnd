@@ -29,7 +29,7 @@
     <div class="index">
         <a :href="login_url" style="padding-left: 95%">登录</a>
         <a :href="register_url" >注册</a>
-        <Row type="flex" justify="center" align="middle">
+        <Row type="flex" justify="center" align="middle" style="height: 70%">
             <Col span="24">
                 <h1>
                     <img src="../images/zebra.png">
