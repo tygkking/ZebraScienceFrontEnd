@@ -53,6 +53,7 @@
             </Col>
         </Row>
         <a :href="professorDetails_url">专家详情</a>
+        <a :href="user_url">个人主页</a>
     </div>
 </template>
 <script>
@@ -62,7 +63,8 @@
                 modal1: false,
                 search_item: '',
                 search_content: '',
-                professorDetails_url: '/professorDetails'
+                professorDetails_url: '/professorDetails',
+                user_url:'/user'
             }
         },
         methods: {
