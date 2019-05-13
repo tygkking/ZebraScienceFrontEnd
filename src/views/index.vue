@@ -52,6 +52,7 @@
                 </Input>
             </Col>
         </Row>
+        <a :href="professorDetails_url">专家详情</a>
     </div>
 </template>
 <script>
@@ -60,7 +61,8 @@
             return {
                 modal1: false,
                 search_item: '',
-                search_content: ''
+                search_content: '',
+                professorDetails_url: '/professorDetails'
             }
         },
         methods: {
