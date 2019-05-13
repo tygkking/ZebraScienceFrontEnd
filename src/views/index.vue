@@ -27,8 +27,12 @@
 </style>
 <template>
     <div class="index">
-        <a :href="login_url" style="padding-left: 95%">登录</a>
-        <a :href="register_url" >注册</a>
+        <Button type="text" @click="modal1=true" style="margin-left: 89%;font-size: 15px;text-align: right">登陆</Button>
+        <Modal v-model="modal1" title="登录" ok-text="登录" cancel-text="取消" @on-ok="login" @on-cancel="cancel">
+            <p>用户名<input style="margin-left: 8px"/></p><br/>
+            <p>密  码<input style="margin-left: 17px"/></p>
+        </Modal>
+        <Button type="text" @click="jump_register" style="font-size: 15px;">注册</Button>
         <Row type="flex" justify="center" align="middle" style="height: 70%">
             <Col span="24">
                 <h1>
@@ -54,13 +58,21 @@
     export default {
         data () {
             return {
-                login_url:'/login',
-                register_url:'/register',
-                search_item: 'prof',
+                modal1: false,
+                search_item: '',
                 search_content: ''
             }
         },
         methods: {
+            login () {
+                this.$Message.info('login');
+            },
+            cancel () {
+                this.$Message.info('cancel');
+            },
+            jump_register(){
+                this.$router.push({path: '/register'})
+            },
             search() {
                 if (this.search_item=='prof')
                     alert("专家搜索："+this.search_content);
