@@ -83,7 +83,8 @@
                 temp_detail: [
                     {
                         name: 'name1',
-                        detail: 'detail1'
+                        detail: 'detail1detail1detail1detail1detail1detail1detail1detail1detail1detail1detail1detail1detail1detail1detail1detail1detail1detail1detail1detail1detail1',
+                        img_url: ''
                     },
                     {
                         name: 'name2',
@@ -93,7 +94,50 @@
                         name: 'name3',
                         detail: 'detail3'
                     },
-                ]
+                    {
+                        name: 'name1',
+                        detail: 'detail1',
+                        img_url: ''
+                    },
+                    {
+                        name: 'name1',
+                        detail: 'detail1',
+                        img_url: ''
+                    },
+                    {
+                        name: 'name1',
+                        detail: 'detail1',
+                        img_url: ''
+                    },
+                    {
+                        name: 'name1',
+                        detail: 'detail1detail1detail1detail1detail1detail1detail1detail1detail1detail1detail1detail1detail1detail1detail1detail1detail1detail1detail1detail1detail1',
+                        img_url: ''
+                    },
+                    {
+                        name: 'name2',
+                        detail: 'detail2'
+                    },
+                    {
+                        name: 'name3',
+                        detail: 'detail3'
+                    },
+                    {
+                        name: 'name1',
+                        detail: 'detail1',
+                        img_url: ''
+                    },
+                    {
+                        name: 'name1',
+                        detail: 'detail1',
+                        img_url: ''
+                    },
+                    {
+                        name: 'name1',
+                        detail: 'detail1',
+                        img_url: ''
+                    },
+                ],
                 search_content: '',
                 professorDetails_url: '/professorDetails',
                 user_url:'/user'
@@ -119,7 +163,8 @@
                 this.$router.push({
                     name: 'search_detail',
                     query: {
-                        search_detail: this.temp_detail
+                        search_detail: this.temp_detail,
+                        search_type: this.search_item
                     }
                 })
             }
