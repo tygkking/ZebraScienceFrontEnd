@@ -83,7 +83,7 @@
                 search_content: '',
                 temp_detail: [
                     {
-                        name: 'name1',
+                        name: '名字名字名字名字名字名字名字名字名字名字名字名字名字名字名字名字名字名字名字名字名字名字名字名字名字名字名字名字名字名字名字名字名字名字',
                         detail: 'detail1detail1detail1detail1detail1detail1detail1detail1detail1detail1detail1detail1detail1detail1detail1detail1detail1detail1detail1detail1detail1',
                         img_url: ''
                     },

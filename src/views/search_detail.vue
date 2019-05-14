@@ -5,12 +5,13 @@
         </div>
         <div class="sc_detail">
             <div v-for="item in search_results" class="sc_content">
-                <div v-if="type=='paper'" style="margin-left: 10%;width: 50%">
-                    <h3 class="c_font">
+                <div v-if="type=='paper'" style="margin-left: 10%;width: 50%;">
+                    <div class="c_font">
                         <a href="https://www.baidu.com" target="_blank">{{item.name}}</a>
-                    </h3>
+                        <img src="/src/images/未收藏.png" alt="收藏" height="25px" width="25px" @click="shoucang" class="collect_img">
+                    </div>
                     <div class="c_abstract">{{item.detail}}</div>
-                    <div class="paper-author">作者  -  报刊  -  时间</div>
+                    <div class="paper-author">作者 - 报刊 - 时间</div>
                     <div class="paper-key">关键词1、关键词2</div>
                 </div>
 
@@ -72,6 +73,9 @@
             getSearchDetails() {
                 this.search_results = this.$route.query.search_detail;
                 this.type = this.$route.query.search_type;
+            },
+            shoucang() {
+                alert("shoucang")
             }
         }
 
@@ -110,6 +114,7 @@
         margin-top: 15px;
     }
     .c_font{
+        font-family: "Helvetica Neue";
         font-size: 22px;
         word-wrap:break-word;
     }
@@ -118,6 +123,10 @@
         color: #666;
         font-size: 15px;
         word-wrap:break-word;
+    }
+    .collect_img{
+        margin-left: 30px;
+        vertical-align:middle;
     }
     .searchResultItem {
         float: left;
