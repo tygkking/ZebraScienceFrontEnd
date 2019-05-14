@@ -60,7 +60,21 @@
             return {
                 modal1: false,
                 search_item: '',
-                search_content: ''
+                search_content: '',
+                temp_detail: [
+                    {
+                        name: 'name1',
+                        detail: 'detail1'
+                    },
+                    {
+                        name: 'name2',
+                        detail: 'detail2'
+                    },
+                    {
+                        name: 'name3',
+                        detail: 'detail3'
+                    },
+                ]
             }
         },
         methods: {
@@ -80,8 +94,12 @@
                     alert("论文搜索："+this.search_content);
                 else if (this.search_item=='org')
                     alert("机构搜索："+this.search_content);
-                else
-                    alert("请选择搜索项！");
+                this.$router.push({
+                    name: 'search_detail',
+                    query: {
+                        search_detail: this.temp_detail
+                    }
+                })
             }
         }
     }
