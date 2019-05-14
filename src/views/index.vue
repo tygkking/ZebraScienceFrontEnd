@@ -23,6 +23,19 @@
         .ivu-row-flex{
             height: 100%;
         }
+        #ftCon {
+            width: 100%;
+            height: 24px;
+            line-height: 24px;
+            text-align: center;
+            z-index: 10;
+            overflow: hidden;
+            bottom: 0;
+            position: absolute;
+            background: #e9e9e9;
+            color: #bbb;
+            font-size: 13px;
+        }
     }
 </style>
 <template>
@@ -52,6 +65,12 @@
                 </Input>
             </Col>
         </Row>
+        <a :href="professorDetails_url">专家详情</a>
+        <a :href="user_url">个人主页</a>
+        <div id="ftCon">
+            2019-2019 &copy; ZebraScience
+            <a href="http://www.baidu.com">联系我们</a>
+        </div>
     </div>
 </template>
 <script>
@@ -75,6 +94,9 @@
                         detail: 'detail3'
                     },
                 ]
+                search_content: '',
+                professorDetails_url: '/professorDetails',
+                user_url:'/user'
             }
         },
         methods: {
