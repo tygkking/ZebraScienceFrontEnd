@@ -302,10 +302,10 @@
                 this.$router.push({path: '/news'})
             },
             setting () {
-                alert('To Setting page')
+                this.$router.push({path: '/setting'})
             },
             logout () {
-                alert('User Logout')
+                this.identity = 'visitor';
             },
             toggle_like (){
                 if(this.isliked){

@@ -241,13 +241,13 @@
                 this.$router.push({path: '/news'})
             },
             setting () {
-                alert('To Setting page')
+                this.$router.push({path: '/setting'})
             },
             logout () {
-                alert('User Logout')
+                this.identity = 'visitor';
             },
             applyfor () {
-                alert('Apply For Professor Identity')
+                this.$router.push({path: '/certify'})
             }
         }
     }

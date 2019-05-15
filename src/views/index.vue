@@ -69,6 +69,8 @@
         <a :href="user_url">个人主页</a>
         <a :href="paperDetails_url">论文详情</a>
         <a :href="news_url">消息界面</a>
+        <a :href="certify_url">申请认证</a>
+        <a :href="setting_url">信息设置</a>
         <div id="ftCon">
             2019-2019 &copy; ZebraScience
             <a href="http://www.baidu.com">联系我们</a>
@@ -145,6 +147,8 @@
                 user_url:'/user',
                 paperDetails_url:'/paperDetails',
                 news_url:'/news',
+                certify_url:'/certify',
+                setting_url:'/setting',
             }
         },
         methods: {

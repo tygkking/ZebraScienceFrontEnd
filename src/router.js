@@ -52,5 +52,21 @@ const routers = [
         },
         component: (resolve) => require(['./views/news.vue'], resolve)
     },
+    {
+        path: '/certify',
+        name: 'certify',
+        meta: {
+            title: 'certify'
+        },
+        component: (resolve) => require(['./views/certify.vue'], resolve)
+    },
+    {
+        path: '/setting',
+        name: 'setting',
+        meta: {
+            title: 'setting'
+        },
+        component: (resolve) => require(['./views/setting.vue'], resolve)
+    },
 ];
 export default routers;

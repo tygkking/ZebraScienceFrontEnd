@@ -61,11 +61,11 @@
                 alert("To user page")
             },
             setting () {
-                alert('To Setting page')
+                this.$router.push({path: '/setting'})
             },
             logout () {
-                alert('User Logout')
-            }
+                this.identity = 'visitor';
+            },
         }
     }
 </script>
