@@ -8,6 +8,8 @@
         name: "global",
         userID: '123456',
         userType: 'professer',
+        collectList: [],
+        followList: [],
         setUserID(id) {
             this.userID = id;
         },
