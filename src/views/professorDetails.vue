@@ -49,12 +49,12 @@
     <div class="userpage">
         <Menu mode="horizontal" :theme="theme1" active-name="1" style="width:100%; position: fixed">
             <a :href="index_url" style="float:left">
-                <MenuItem name="1" :href="index_url">
+                <MenuItem name="1">
                     <Icon type="ios-home" size="20"/>
                     首页
                 </MenuItem>
             </a>
-            <Submenu name="2" style="float:right">
+            <Submenu v-if="identity != 'visitor'" name="2" style="float:right">
                 <template slot="title">
                     <Icon type="ios-contact" size="20"/>
                     用户信息
@@ -63,6 +63,18 @@
                 <MenuItem name="2-2" @click.native="setting()">设置</MenuItem>
                 <MenuItem name="2-3" @click.native="logout()">退出登录</MenuItem>
             </Submenu>
+            <MenuItem v-if="identity == 'visitor'" @click.native="modal1=true" name="3" style="float:right">
+                登录
+                <Modal v-model="modal1" title="登录" ok-text="登录" cancel-text="取消" @on-ok="login" @on-cancel="cancel">
+                    <p>用户名<input style="margin-left: 8px"/></p><br/>
+                    <p>密  码<input style="margin-left: 17px"/></p>
+                </Modal>
+            </MenuItem>
+            <a :href="register_url" style="float: right;">
+                <MenuItem v-if="identity == 'visitor'" :href="register_url" name="4">
+                    注册
+                </MenuItem>
+            </a>
         </Menu>
         <Layout id="layout">
             <Content :style="{padding: '0 50px'}">
@@ -110,6 +122,7 @@
                                     </li>
                                 </ul>
                             </div>
+                            <Page :current="1" :total="50" simple style="text-align: center; margin-bottom: 20px"/>
                         </Col>
                         <Col span="8" offset="2">
                             <div class="relevant-info">
@@ -152,7 +165,10 @@
         name: 'professorDetails',
         data () {
             return {
+                modal1: false,
                 index_url:'/',
+                register_url:'/register',
+                identity:'professor', //professor user visitor
                 theme1: 'primary',
                 isliked: false,
                 showlike: '关注',
@@ -272,6 +288,12 @@
             }
         },
         methods:{
+            login () {
+                this.$Message.info('login');
+            },
+            cancel () {
+                this.$Message.info('cancel');
+            },
             userpage () {
                 alert("To user page")
             },
