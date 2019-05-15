@@ -44,5 +44,13 @@ const routers = [
         },
         component: (resolve) => require(['./views/paperDetails.vue'], resolve)
     },
+    {
+        path: '/news',
+        name: 'news',
+        meta: {
+            title: 'news'
+        },
+        component: (resolve) => require(['./views/news.vue'], resolve)
+    },
 ];
 export default routers;

@@ -59,9 +59,10 @@
                     <Icon type="ios-contact" size="20"/>
                     用户信息
                 </template>
-                <MenuItem name="2-1" @click.native="userpage()">个人主页</MenuItem>
-                <MenuItem name="2-2" @click.native="setting()">设置</MenuItem>
-                <MenuItem name="2-3" @click.native="logout()">退出登录</MenuItem>
+                <MenuItem name="2-1" @click.native="user_page()">个人主页</MenuItem>
+                <MenuItem name="2-2" @click.native="news_page()">消息/通知</MenuItem>
+                <MenuItem name="2-3" @click.native="setting()">设置</MenuItem>
+                <MenuItem name="2-4" @click.native="logout()">退出登录</MenuItem>
             </Submenu>
             <MenuItem v-if="identity == 'visitor'" @click.native="modal1=true" name="3" style="float:right">
                 登录
@@ -294,8 +295,11 @@
             cancel () {
                 this.$Message.info('cancel');
             },
-            userpage () {
-                alert("To user page")
+            user_page () {
+                this.$router.push({path: '/user'})
+            },
+            news_page () {
+                this.$router.push({path: '/news'})
             },
             setting () {
                 alert('To Setting page')
