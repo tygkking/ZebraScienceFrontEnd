@@ -5,10 +5,11 @@ import Routers from './router';
 import Util from './libs/util';
 import App from './app.vue';
 import 'iview/dist/styles/iview.css';
+import Global from './views/global'
 
 Vue.use(VueRouter);
 Vue.use(iView);
-
+Vue.prototype.GLOBAL = Global;
 // 路由配置
 const RouterConfig = {
     mode: 'history',
