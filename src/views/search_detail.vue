@@ -85,7 +85,7 @@
 
             </div>
         </div>
-        <div v-if="type=='paper'" class="paper-img">
+        <div v-if="type=='paper'||type=='org'" class="paper-img">
             <img src="/src/images/zebra.png" style="width: 300px;height: 300px">
             <p style="text-align: center;font-size: 30px">斑马学术<br>给你不一样的体验</p>
         </div>
