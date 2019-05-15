@@ -37,7 +37,8 @@
                 <div v-if="type=='paper'" style="margin-left: 10%;width: 50%;">
                     <div class="c_font">
                         <a href="https://www.baidu.com" target="_blank">{{item.name}}</a>
-                        <img src="/src/images/未收藏.png" alt="收藏" height="25px" width="25px" @click="shoucang" class="collect_img">
+                        <img v-if="iscollected" src="/src/images/未收藏.png" alt="收藏" height="25px" width="25px" @click="shoucang(1)" class="collect_img">
+                        <img v-else src="/src/images/已收藏.png" alt="取消收藏" height="25px" width="25px" @click="shoucang(0)" class="collect_img">
                     </div>
                     <div class="c_abstract">{{item.detail}}</div>
                     <div class="paper-author">作者 - 报刊 - 时间</div>
@@ -73,16 +74,22 @@
                     </div>
                 </div>
 
-                <div>
-
+                <div v-else-if="type=='org'" style="margin-left: 10%;width: 50%;">
+                    <div class="c_font">
+                        <a href="https://www.baidu.com" target="_blank">{{item.name}}</a>
+<!--                        <img v-if="iscollected" src="/src/images/未收藏.png" alt="收藏" height="25px" width="25px" @click="shoucang(1)" class="collect_img">-->
+<!--                        <img v-else src="/src/images/已收藏.png" alt="取消收藏" height="25px" width="25px" @click="shoucang(0)" class="collect_img">-->
+                    </div>
+                    <div class="c_abstract">{{item.detail}}</div>
                 </div>
+
             </div>
         </div>
         <div v-if="type=='paper'" class="paper-img">
             <img src="/src/images/zebra.png" style="width: 300px;height: 300px">
             <p style="text-align: center;font-size: 30px">斑马学术<br>给你不一样的体验</p>
         </div>
-        <Layout id="layout">
+        <Layout>
             <Footer class="layout-footer-center" style="background-color: #666666; color: #eeeeee;">
                 2019-2019 &copy; ZebraScience
                 <a href="http://www.baidu.com" style="margin-left: 20px; color: #eeeeee">联系我们</a>
@@ -129,9 +136,19 @@
                 this.search_results = this.$route.query.search_detail;
                 this.type = this.$route.query.search_type;
             },
-            shoucang() {
-                alert("shoucang")
+            shoucang(collect) {
+                if(collect==0)
+                    alert("collect")
+                else
+                    alert("uncollect")
+            },
+            iscollected() {
+                if (1)
+                    return true;
             }
+        },
+        computed: {
+
         }
 
     }
@@ -145,6 +162,10 @@
     }
     .layout-footer-center{
         text-align: center;
+        position: fixed;
+        bottom: 0px;
+        left: 0px;
+        right: 0px;
     }
     .top_xf{
         background-color:#666666;
