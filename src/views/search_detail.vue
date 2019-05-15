@@ -131,10 +131,10 @@
                 this.$router.push({path: '/news'})
             },
             setting () {
-                alert('To Setting page')
+                this.$router.push({path: '/setting'})
             },
             logout () {
-                alert('User Logout')
+                this.identity = 'visitor';
             },
             getSearchDetails() {
                 this.search_results = this.$route.query.search_detail;
