@@ -110,8 +110,15 @@
                 <Modal v-model="modal_msg" draggable scrollable title="消息详情">
                     <div>这是消息详情</div>
                     <div slot="footer">
-                        <Button type="success" size="large"  @click="check_news">同意</Button>
-                        <Button type="error" size="large"  @click="check_news">拒绝</Button>
+                        <Button type="primary" size="large"  @click="check_news">确定</Button>
+                    </div>
+                </Modal>
+                <Modal v-model="modal_verify" draggable scrollable title="认证详情">
+                    <div style="margin: 0 0 10px 0">这是认证详情信息</div>
+                    <Input type="textarea" placeholder="备注理由" class="input-select-class" :maxlength="140" :rows="4"/>
+                    <div slot="footer">
+                        <Button type="success" size="large"  @click="check_verify('Yes')">同意</Button>
+                        <Button type="error" size="large"  @click="check_verify('No')">拒绝</Button>
                     </div>
                 </Modal>
                 <Col span="16" offset="1" style="padding-top: 30px; margin: 0px">
@@ -188,7 +195,7 @@
                                         {{ item.message.text }}
                                         <Button type="error" size="small" style="float: right; margin-left: 5px" @click="modal_delete=true">删除</Button>
                                         <Button v-show="item.message.status == '已查看'" type="success" size="small" style="float:right;">已查看</Button>
-                                        <Button v-show="item.message.status == '未查看'" type="info" size="small" style="float:right;" @click="modal_msg=true">未查看</Button>
+                                        <Button v-show="item.message.status == '未查看'" type="info" size="small" style="float:right;" @click="modal_verify=true">未查看</Button>
                                     </div>
                                     <Divider dashed />
                                 </li>
@@ -216,6 +223,7 @@
                 modal_delete: false,
                 modal_clean: false,
                 modal_msg: false,
+                modal_verify: false,
                 index_url:'/',
                 register_url:'/register',
                 theme1: 'primary',
@@ -226,30 +234,35 @@
                 comments_news: [
                     {
                         message: {
+                            id: 'c1',
                             text: 'message1',
                             status: '未查看',
                         }
                     },
                     {
                         message: {
+                            id: 'c2',
                             text: 'message2',
                             status: '已查看',
                         }
                     },
                     {
                         message: {
+                            id: 'c3',
                             text: 'message3',
                             status: '未查看',
                         }
                     },
                     {
                         message: {
+                            id: 'c4',
                             text: 'message4',
                             status: '已查看',
                         }
                     },
                     {
                         message: {
+                            id: 'c5',
                             text: 'message5',
                             status: '未查看',
                         }
@@ -258,30 +271,35 @@
                 like_news: [
                     {
                         message: {
+                            id: 'l1',
                             text: 'message1',
                             status: '已查看',
                         }
                     },
                     {
                         message: {
+                            id: 'l2',
                             text: 'message2',
                             status: '未查看',
                         }
                     },
                     {
                         message: {
+                            id: 'l3',
                             text: 'message3',
                             status: '已查看',
                         }
                     },
                     {
                         message: {
+                            id: 'l4',
                             text: 'message4',
                             status: '未查看',
                         }
                     },
                     {
                         message: {
+                            id: 'l5',
                             text: 'message5',
                             status: '已查看',
                         }
@@ -290,30 +308,35 @@
                 system_news: [
                     {
                         message: {
+                            id: 's1',
                             text: 'message1',
                             status: '未查看',
                         }
                     },
                     {
                         message: {
+                            id: 's2',
                             text: 'message2',
                             status: '已查看',
                         }
                     },
                     {
                         message: {
+                            id: 's3',
                             text: 'message3',
                             status: '未查看',
                         }
                     },
                     {
                         message: {
+                            id: 's4',
                             text: 'message4',
                             status: '已查看',
                         }
                     },
                     {
                         message: {
+                            id: 's5',
                             text: 'message5',
                             status: '已查看',
                         }
@@ -322,30 +345,35 @@
                 verify_news: [
                     {
                         message: {
+                            id: 'v1',
                             text: 'message1',
                             status: '未查看',
                         }
                     },
                     {
                         message: {
+                            id: 'v2',
                             text: 'message2',
                             status: '未查看',
                         }
                     },
                     {
                         message: {
+                            id: 'v3',
                             text: 'message3',
                             status: '已查看',
                         }
                     },
                     {
                         message: {
+                            id: 'v4',
                             text: 'message4',
                             status: '已查看',
                         }
                     },
                     {
                         message: {
+                            id: 'v5',
                             text: 'message5',
                             status: '已查看',
                         }
@@ -378,6 +406,20 @@
                     this.modal_msg = false;
                     this.$Message.success('已读该信息');
                 }, 300);
+            },
+            check_verify (type) {
+                if (type === 'Yes') {
+                    setTimeout(() => {
+                    this.modal_verify = false;
+                    this.$Message.success('已同意该认证');
+                }, 300);
+                }
+                else {
+                    setTimeout(() => {
+                    this.modal_verify = false;
+                    this.$Message.error('已拒绝该认证');
+                }, 300);
+                }
             },
             delete_news () {
                 setTimeout(() => {
