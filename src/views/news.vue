@@ -59,11 +59,9 @@
                             <img src="../images/zebra.png" height="50px" style="margin: 5px">
                         </div>
                         <div class="person-detail">
-                            用户名：{{username}}
+                            用户名：{{this.GLOBAL.username}}
                             <br>
-                            邮箱：{{email}}
-                            <br>
-                            个人简介：{{introduction}}
+                            邮箱：{{this.GLOBAL.email}}
                         </div>
                     </div>
                     <Menu :theme="theme3" active-name="1" style="padding-top: 20px">
@@ -85,9 +83,40 @@
                         </MenuItem>
                     </Menu>
                 </Col>
+                <Modal v-model="modal_delete" width="240">
+                    <p slot="header" style="color:#f60;text-align:center">
+                        <Icon type="ios-information-circle"></Icon>
+                        <span>删除确认</span>
+                    </p>
+                    <div style="text-align:center">
+                        <p style="font-size: 16px">您是否要删除该信息</p>
+                    </div>
+                    <div slot="footer">
+                        <Button type="error" size="large" long  @click="del">删除</Button>
+                    </div>
+                </Modal>
+                <Modal v-model="modal_clean" width="240">
+                    <p slot="header" style="color:#2baee9;text-align:center">
+                        <Icon type="ios-information-circle"></Icon>
+                        <span>清空确认</span>
+                    </p>
+                    <div style="text-align:center">
+                        <p style="font-size: 16px">您是否要清空该页面所有信息</p>
+                    </div>
+                    <div slot="footer">
+                        <Button type="warning" size="large" long  @click="delete_news">清空</Button>
+                    </div>
+                </Modal>
+                <Modal v-model="modal_msg" draggable scrollable title="消息详情">
+                    <div>这是消息详情</div>
+                    <div slot="footer">
+                        <Button type="success" size="large"  @click="check_news">同意</Button>
+                        <Button type="error" size="large"  @click="check_news">拒绝</Button>
+                    </div>
+                </Modal>
                 <Col span="16" offset="1" style="padding-top: 30px; margin: 0px">
                     <div class="comments_news" v-if="news_type=='comments'">
-                        <Button @click="delete_news" style="float: right;">
+                        <Button @click="modal_clean=true" style="float: right;">
                             清空
                         </Button>
                         <br>
@@ -97,7 +126,9 @@
                                 <li v-for="item in comments_news">
                                     <div class="relevant-detail">
                                         {{ item.message.text }}
-                                        <Tag color="default" style="float: right;">{{ item.message.status }}</Tag>
+                                        <Button type="error" size="small" style="float: right; margin-left: 5px" @click="modal_delete=true">删除</Button>
+                                        <Button v-show="item.message.status == '已查看'" type="success" size="small" style="float:right;">已查看</Button>
+                                        <Button v-show="item.message.status == '未查看'" type="info" size="small" style="float:right;" @click="modal_msg=true">未查看</Button>
                                     </div>
                                     <Divider dashed />
                                 </li>
@@ -105,7 +136,7 @@
                         </div>
                     </div>
                     <div class="like_news" v-if="news_type=='like'">
-                        <Button @click="delete_news" style="float: right;">
+                        <Button @click="modal_clean=true" style="float: right;">
                             清空
                         </Button>
                         <br>
@@ -115,7 +146,9 @@
                                 <li v-for="item in like_news">
                                     <div class="relevant-detail">
                                         {{ item.message.text }}
-                                        <Tag color="default" style="float: right;">{{ item.message.status }}</Tag>
+                                        <Button type="error" size="small" style="float: right; margin-left: 5px" @click="modal_delete=true">删除</Button>
+                                        <Button v-show="item.message.status == '已查看'" type="success" size="small" style="float:right;">已查看</Button>
+                                        <Button v-show="item.message.status == '未查看'" type="info" size="small" style="float:right;" @click="modal_msg=true">未查看</Button>
                                     </div>
                                     <Divider dashed />
                                 </li>
@@ -123,7 +156,7 @@
                         </div>
                     </div>
                     <div class="system_news" v-if="news_type=='system'">
-                        <Button @click="delete_news" style="float: right;">
+                        <Button @click="modal_clean=true" style="float: right;">
                             清空
                         </Button>
                         <br>
@@ -133,7 +166,9 @@
                                 <li v-for="item in system_news">
                                     <div class="relevant-detail">
                                         {{ item.message.text }}
-                                        <Tag color="default" style="float: right;">{{ item.message.status }}</Tag>
+                                        <Button type="error" size="small" style="float: right; margin-left: 5px" @click="modal_delete=true">删除</Button>
+                                        <Button v-show="item.message.status == '已查看'" type="success" size="small" style="float:right;">已查看</Button>
+                                        <Button v-show="item.message.status == '未查看'" type="info" size="small" style="float:right;" @click="modal_msg=true">未查看</Button>
                                     </div>
                                     <Divider dashed />
                                 </li>
@@ -141,7 +176,7 @@
                         </div>
                     </div>
                     <div class="verify_news" v-if="news_type=='verify'">
-                        <Button @click="delete_news" style="float: right;">
+                        <Button @click="modal_clean=true" style="float: right;">
                             清空
                         </Button>
                         <br>
@@ -151,7 +186,9 @@
                                 <li v-for="item in verify_news">
                                     <div class="relevant-detail">
                                         {{ item.message.text }}
-                                        <Tag color="default" style="float: right;">{{ item.message.status }}</Tag>
+                                        <Button type="error" size="small" style="float: right; margin-left: 5px" @click="modal_delete=true">删除</Button>
+                                        <Button v-show="item.message.status == '已查看'" type="success" size="small" style="float:right;">已查看</Button>
+                                        <Button v-show="item.message.status == '未查看'" type="info" size="small" style="float:right;" @click="modal_msg=true">未查看</Button>
                                     </div>
                                     <Divider dashed />
                                 </li>
@@ -176,6 +213,9 @@
         data () {
             return {
                 modal1: false,
+                modal_delete: false,
+                modal_clean: false,
+                modal_msg: false,
                 index_url:'/',
                 register_url:'/register',
                 theme1: 'primary',
@@ -333,8 +373,23 @@
                 this.GLOBAL.setUserType('visitor');
                 this.identity = this.GLOBAL.userType;
             },
+            check_news () {
+                setTimeout(() => {
+                    this.modal_msg = false;
+                    this.$Message.success('已读该信息');
+                }, 300);
+            },
             delete_news () {
-                alert('Delete ' + this.news_type + ' News')
+                setTimeout(() => {
+                    this.modal_clean = false;
+                    this.$Message.success('成功清空 '+ this.news_type + ' 信息');
+                }, 300);
+            },
+            del () {
+                setTimeout(() => {
+                    this.modal_delete = false;
+                    this.$Message.success('成功删除');
+                }, 300);
             },
         }
     }
