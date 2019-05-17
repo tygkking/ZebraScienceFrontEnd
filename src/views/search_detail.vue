@@ -38,8 +38,6 @@
                 <div v-if="type=='paper'" style="margin-left: 10%;width: 50%;">
                     <div class="c_font">
                         <a href="https://www.baidu.com" target="_blank">{{item.name}}</a>
-                        <img v-if="iscollected" src="/src/images/未收藏.png" alt="收藏" height="25px" width="25px" @click="test" class="collect_img">
-                        <img v-else src="/src/images/已收藏.png" alt="取消收藏" height="25px" width="25px" @click="shoucang(0)" class="collect_img">
                     </div>
                     <div class="c_abstract">{{item.detail}}</div>
                     <div class="paper-author">作者 - 报刊 - 时间</div>
@@ -78,8 +76,6 @@
                 <div v-else-if="type=='org'" style="margin-left: 10%;width: 50%;">
                     <div class="c_font">
                         <a href="https://www.baidu.com" target="_blank">{{item.name}}</a>
-<!--                        <img v-if="iscollected" src="/src/images/未收藏.png" alt="收藏" height="25px" width="25px" @click="shoucang(1)" class="collect_img">-->
-<!--                        <img v-else src="/src/images/已收藏.png" alt="取消收藏" height="25px" width="25px" @click="shoucang(0)" class="collect_img">-->
                     </div>
                     <div class="c_abstract">{{item.detail}}</div>
                 </div>
@@ -140,19 +136,9 @@
                 this.search_results = this.$route.query.search_detail;
                 this.type = this.$route.query.search_type;
             },
-            shoucang(collect) {
-                if(collect==0)
-                    alert("collect")
-                else
-                    alert("uncollect")
-            },
             iscollected() {
-                if (1)
-                    return true;
-            },
-            test() {
-                this.GLOBAL.setUserID('11');
-                console.log(this.GLOBAL.userID);
+                var result = 1;
+                return result;
             }
         },
         computed: {
@@ -191,6 +177,7 @@
     }
     .paper-author{
         margin-top: 5px;
+        margin-bottom: 5px;
         color: #333333;
         font-size: 15px;
     }
