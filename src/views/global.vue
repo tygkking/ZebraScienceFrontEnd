@@ -7,6 +7,7 @@
     export default {
         name: "global",
         userID: '123456',
+        username: '蔡徐坤',
         userType: 'professer',
         collectList: [],
         followList: [],
