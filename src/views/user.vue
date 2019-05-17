@@ -114,14 +114,16 @@
                             <ul style="list-style-type:none">
                                 <li v-for="item in my_paper_items">
                                     <div class="paper-detail">
-                                        <a href="http://www.baidu.com">
+                                        <a href="http://www.baidu.com" target="_blank">
                                             {{ item.paper_detail.title }}
                                         </a>
                                         <br>
                                         <div style="font-size: 14px">
-                                            {{item.paper_detail.year }}
-                                            {{ item.paper_detail.author }}
-                                            {{ item.paper_detail.source }}
+                                            年份:{{ item.paper_detail.year }}
+                                            &nbsp
+                                            作者:{{ item.paper_detail.author }}
+                                            <br>
+                                            出处:{{ item.paper_detail.source }}
                                         </div>
                                     </div>
                                 </li>
@@ -134,14 +136,16 @@
                             <ul style="list-style-type:none">
                                 <li v-for="item in star_paper_items">
                                     <div class="paper-detail">
-                                        <a href="http://www.baidu.com">
+                                        <a href="http://www.baidu.com" target="_blank">
                                             {{ item.paper_detail.title }}
                                         </a>
                                         <br>
                                         <div style="font-size: 14px">
-                                            {{item.paper_detail.year }}
-                                            {{ item.paper_detail.author }}
-                                            {{ item.paper_detail.source }}
+                                            年份:{{ item.paper_detail.year }}
+                                            &nbsp
+                                            作者:{{ item.paper_detail.author }}
+                                            <br>
+                                            出处:{{ item.paper_detail.source }}
                                         </div>
                                     </div>
                                 </li>

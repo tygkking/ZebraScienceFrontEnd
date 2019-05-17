@@ -14,10 +14,10 @@
         collectList: [
             {
                 paper_detail: {
-                    title: 'This is Paper Title One',
+                    title: 'This is Paper Title One This is Paper Title One This is Paper Title One This is Paper Title One',
                     year: '2018',
-                    author: '郭子溢 黎昆昌 许志达 何浩乾',
-                    source: 'This is Paper Source'
+                    author: '郭子溢 黎昆昌 许志达 何浩乾 郭子溢 黎昆昌 许志达 何浩乾 郭子溢 黎昆昌 许志达 何浩乾',
+                    source: 'This is Paper Source This is Paper Source This is Paper Source'
                 }
             },
             {
