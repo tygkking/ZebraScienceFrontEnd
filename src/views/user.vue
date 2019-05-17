@@ -64,7 +64,7 @@
             <Submenu v-if="identity != 'visitor'" name="2" style="float:right">
                 <template slot="title">
                     <Icon type="ios-contact" size="20"/>
-                    {{this.GLOBAL.username}}
+                    {{this.GLOBAL.userName}}
                 </template>
                 <MenuItem name="2-1" @click.native="user_page()">个人主页</MenuItem>
                 <MenuItem name="2-2" @click.native="news_page()">消息/通知</MenuItem>
@@ -99,7 +99,7 @@
                         </Col>
                         <Col span="19">
                             <div class="person-detail" style="margin-left: 30px; margin-top: 20px">
-                                <h2>{{this.GLOBAL.username}}</h2>
+                                <h2>{{this.GLOBAL.userName}}</h2>
                                 <br>
                                 <h3>邮箱：{{this.GLOBAL.email}}</h3>
                                 <br>
@@ -181,7 +181,7 @@
                 theme1: 'primary',
                 identity: this.GLOBAL.userType,
                 //identity:'professor', //professor user visitor
-                username: '姓名',
+                userName: '姓名',
                 email: '邮箱',
                 introduction: '个人简介',
                 my_paper_items: [

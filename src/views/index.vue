@@ -43,7 +43,7 @@
         <Dropdown v-if="identity != 'visitor'" placement="bottom-start" style="margin-left: 90%; margin-top: 1%; font-size: 14px">
             <a style="color: black">
                 <Icon type="ios-contact"></Icon>
-                {{this.GLOBAL.username}}
+                {{this.GLOBAL.userName}}
                 <Icon type="ios-arrow-down"></Icon>
             </a>
             <DropdownMenu slot="list" style="font-size: 14px">
