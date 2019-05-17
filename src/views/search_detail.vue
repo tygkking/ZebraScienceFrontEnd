@@ -11,7 +11,7 @@
             <Submenu v-if="identity != 'visitor'" name="2" style="float:right">
                 <template slot="title">
                     <Icon type="ios-contact" size="20"/>
-                    用户信息
+                    {{this.GLOBAL.username}}
                 </template>
                 <MenuItem name="2-1" @click.native="user_page()">个人主页</MenuItem>
                 <MenuItem name="2-2" @click.native="news_page()">消息/通知</MenuItem>
@@ -104,7 +104,8 @@
                 modal1: false,
                 index_url:'/',
                 register_url:'/register',
-                identity:'professor', //professor user visitor
+                identity: this.GLOBAL.userType,
+                //identity:'professor', //professor user visitor
                 theme1: 'primary',
                 search_results: [],
                 type: ''
@@ -130,7 +131,8 @@
                 this.$router.push({path: '/setting'})
             },
             logout () {
-                this.identity = 'visitor';
+                this.GLOBAL.setUserType('visitor');
+                this.identity = this.GLOBAL.userType;
             },
             getSearchDetails() {
                 this.search_results = this.$route.query.search_detail;

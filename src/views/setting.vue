@@ -10,7 +10,7 @@
             <Submenu v-if="identity != 'visitor'" name="2" style="float:right">
                 <template slot="title">
                     <Icon type="ios-contact" size="20"/>
-                    用户信息
+                    {{this.GLOBAL.username}}
                 </template>
                 <MenuItem name="2-1" @click.native="user_page()">个人主页</MenuItem>
                 <MenuItem name="2-2" @click.native="news_page()">消息/通知</MenuItem>
@@ -86,7 +86,8 @@
                 index_url:'/',
                 register_url:'/register',
                 theme1: 'primary',
-                identity:'professor', //professor user visitor
+                identity: this.GLOBAL.userType,
+                //identity:'professor', //professor user visitor
                 old_pwd:'123',
                 change_pwd: false,
                 formValidate1: {
@@ -153,7 +154,8 @@
                 this.$router.push({path: '/setting'})
             },
             logout () {
-                this.identity = 'visitor';
+                this.GLOBAL.setUserType('visitor');
+                this.identity = this.GLOBAL.userType;
             },
             handleSubmit (name) {
                 this.$refs[name].validate((valid) => {

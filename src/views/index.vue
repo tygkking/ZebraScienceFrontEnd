@@ -40,14 +40,29 @@
 </style>
 <template>
     <div class="index">
-        <Button type="text" @click="modal1=true" style="margin-left: 89%;font-size: 15px;text-align: right">登录</Button>
-        <Modal v-model="modal1" title="登录" ok-text="登录" cancel-text="取消" @on-ok="login" @on-cancel="cancel">
-            <p>用户名<input style="margin-left: 8px"/></p><br/>
-            <p>密  码<input style="margin-left: 17px"/></p>
-        </Modal>
-        <Button type="text" @click="jump_register" style="font-size: 15px;">注册</Button>
+        <Dropdown v-if="identity != 'visitor'" placement="bottom-start" style="margin-left: 90%; margin-top: 1%; font-size: 14px">
+            <a style="color: black">
+                <Icon type="ios-contact"></Icon>
+                {{this.GLOBAL.username}}
+                <Icon type="ios-arrow-down"></Icon>
+            </a>
+            <DropdownMenu slot="list" style="font-size: 14px">
+                <DropdownItem @click.native="user_page()">个人主页</DropdownItem>
+                <DropdownItem @click.native="news_page()">消息/通知</DropdownItem>
+                <DropdownItem @click.native="setting()">设置</DropdownItem>
+                <DropdownItem @click.native="logout()">退出登录</DropdownItem>
+            </DropdownMenu>
+        </Dropdown>
+        <div v-else style="margin-left: 85%; margin-top:1%;">
+            <Button type="text" @click="modal1=true" style="font-size: 15px; text-align: right; margin-right: 2%">登录</Button>
+            <Modal v-model="modal1" title="登录" ok-text="登录" cancel-text="取消" @on-ok="login" @on-cancel="cancel">
+                <p>邮箱<input v-model="email" type="email" style="margin-left: 17px"/></p><br/>
+                <p>密码<input v-model="password" type="password" style="margin-left: 17px"/></p>
+            </Modal>
+            <Button type="text" @click="jump_register" style="font-size: 15px;">注册</Button>
+        </div>
         <Row type="flex" justify="center" align="middle" style="height: 70%">
-            <Col span="24">
+            <Col span="24" offset="">
                 <h1>
                     <img src="../images/zebra.png">
                 </h1>
@@ -82,6 +97,9 @@
         data () {
             return {
                 modal1: false,
+                email: '',
+                password: '',
+                identity: this.GLOBAL.userType,
                 search_item: '',
                 search_content: '',
                 temp_detail: [
@@ -153,10 +171,30 @@
         },
         methods: {
             login () {
-                this.$Message.info('login');
+                if (this.email === this.GLOBAL.email && this.password === this.GLOBAL.password) {
+                    this.GLOBAL.setUserType('user');
+                    this.identity = this.GLOBAL.userType;
+                    this.$Message.info('成功登录');
+                }
+                else {
+                    this.$Message.info('邮箱或密码错误');
+                }
             },
             cancel () {
                 this.$Message.info('cancel');
+            },
+            user_page () {
+                this.$router.push({path: '/user'})
+            },
+            news_page () {
+                this.$router.push({path: '/news'})
+            },
+            setting () {
+                this.$router.push({path: '/setting'})
+            },
+            logout () {
+                this.GLOBAL.setUserType('visitor');
+                this.identity = this.GLOBAL.userType;
             },
             jump_register(){
                 this.$router.push({path: '/register'})
