@@ -169,7 +169,8 @@
                 modal1: false,
                 index_url:'/',
                 register_url:'/register',
-                identity:'professor', //professor user visitor
+                identity: this.GLOBAL.userType,
+                //identity:'professor', //professor user visitor
                 theme1: 'primary',
                 isliked: false,
                 showlike: '关注',
@@ -305,7 +306,8 @@
                 this.$router.push({path: '/setting'})
             },
             logout () {
-                this.identity = 'visitor';
+                this.GLOBAL.setUserType('visitor');
+                this.identity = this.GLOBAL.userType;
             },
             toggle_like (){
                 if(this.isliked){
@@ -316,6 +318,9 @@
                 }
                 this.isliked = !this.isliked
             }
+        },
+        created() {
+            //判断是否关注
         }
     }
 </script>

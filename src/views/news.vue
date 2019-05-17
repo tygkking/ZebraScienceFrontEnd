@@ -180,10 +180,8 @@
                 register_url:'/register',
                 theme1: 'primary',
                 theme3: 'light',
-                identity:'admin', //professor user visitor admin
-                username: '姓名',
-                email: '邮箱',
-                introduction: '个人简介',
+                identity: this.GLOBAL.userType,
+                //identity:'admin', //professor user visitor admin
                 news_type:'comments', //comments like system verify
                 comments_news: [
                     {
@@ -332,7 +330,8 @@
                 this.$router.push({path: '/setting'})
             },
             logout () {
-                this.identity = 'visitor';
+                this.GLOBAL.setUserType('visitor');
+                this.identity = this.GLOBAL.userType;
             },
             delete_news () {
                 alert('Delete ' + this.news_type + ' News')

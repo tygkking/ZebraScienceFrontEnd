@@ -179,7 +179,8 @@
                 index_url:'/',
                 register_url:'/register',
                 theme1: 'primary',
-                identity:'professor', //professor user visitor
+                identity: this.GLOBAL.userType,
+                //identity:'professor', //professor user visitor
                 username: '姓名',
                 email: '邮箱',
                 introduction: '个人简介',
@@ -244,7 +245,9 @@
                 this.$router.push({path: '/setting'})
             },
             logout () {
-                this.identity = 'visitor';
+                this.GLOBAL.setUserType('visitor');
+                this.identity = this.GLOBAL.userType;
+                this.$router.push({path: '/'})
             },
             applyfor () {
                 this.$router.push({path: '/certify'})

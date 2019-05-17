@@ -108,7 +108,8 @@
                 modal1: false,
                 index_url:'/',
                 register_url:'/register',
-                identity:'professor', //professor user visitor
+                identity: this.GLOBAL.userType,
+                //identity:'professor', //professor user visitor
                 theme1: 'primary',
                 search_results: [],
                 type: ''
@@ -134,7 +135,8 @@
                 this.$router.push({path: '/setting'})
             },
             logout () {
-                this.identity = 'visitor';
+                this.GLOBAL.setUserType('visitor');
+                this.identity = this.GLOBAL.userType;
             },
             getSearchDetails() {
                 this.search_results = this.$route.query.search_detail;

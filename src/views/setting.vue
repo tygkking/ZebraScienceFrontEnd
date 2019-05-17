@@ -86,7 +86,8 @@
                 index_url:'/',
                 register_url:'/register',
                 theme1: 'primary',
-                identity:'professor', //professor user visitor
+                identity: this.GLOBAL.userType,
+                //identity:'professor', //professor user visitor
                 old_pwd:'123',
                 change_pwd: false,
                 formValidate1: {
@@ -153,7 +154,8 @@
                 this.$router.push({path: '/setting'})
             },
             logout () {
-                this.identity = 'visitor';
+                this.GLOBAL.setUserType('visitor');
+                this.identity = this.GLOBAL.userType;
             },
             handleSubmit (name) {
                 this.$refs[name].validate((valid) => {
