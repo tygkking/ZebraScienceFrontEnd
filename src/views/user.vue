@@ -99,16 +99,16 @@
                         </Col>
                         <Col span="19">
                             <div class="person-detail" style="margin-left: 30px; margin-top: 20px">
-                                <h2>用户名：{{username}}</h2>
+                                <h2>{{this.GLOBAL.username}}</h2>
                                 <br>
-                                <h3>邮箱：{{email}}</h3>
+                                <h3>邮箱：{{this.GLOBAL.email}}</h3>
                                 <br>
                                 <h3>个人简介：{{introduction}}</h3>
                             </div>
                         </Col>
                     </Row>
                 </div>
-                <Tabs value="name1">
+                <Tabs value="name2">
                     <TabPane label="我的论文" name="name1" v-if="identity=='professor'">
                         <div class="paper-list">
                             <ul style="list-style-type:none">
@@ -202,30 +202,8 @@
                         }
                     },
                 ],
-                star_paper_items: [
-                    {
-                        paper_detail: {
-                            title: 'This is Paper Title One',
-                            year: '2018',
-                            author: '郭子溢 黎昆昌 许志达 何浩乾',
-                            source: 'This is Paper Source'
-                        }
-                    },
-                    {
-                        paper_detail: {
-                            title: 'This is Paper Title One',
-                            year: '2018',
-                            author: '郭子溢 黎昆昌 许志达 何浩乾',
-                            source: 'This is Paper Source'
-                        }
-                    },
-                ],
-                like_sch: [
-                    { message: '郭子溢' },
-                    { message: '黎昆昌' },
-                    { message: '许志达' },
-                    { message: '何浩乾' }
-                ],
+                star_paper_items: this.GLOBAL.collectList,
+                like_sch: this.GLOBAL.followList,
             }
         },
         methods:{
