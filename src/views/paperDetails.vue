@@ -105,7 +105,11 @@
                         <Divider />
                     </div>
                 </div>
-
+                <Page :current="2" :total="50" simple style="margin-left: 32%"/>
+                <BackTop :height="100" :bottom="200">
+                    <Icon type="md-arrow-up" class="top"/>
+                    <br/>返回顶端
+                </BackTop>
                 <!--<Row>-->
                     <!--<Col span="2">-->
                         <!--<ul style="list-style-type:none; margin-left: 5px; margin-top: 5px">-->
@@ -141,7 +145,7 @@
 
                 <!--</Row>-->
             </div>
-            <Footer class="layout-footer-center" style="background-color: #666666; color: #eeeeee;">
+            <Footer class="layout-footer-center" style="background-color: #666666; color: #eeeeee;margin-top: 3%">
                 2019-2019 &copy; ZebraScience
                 <a href="http://www.baidu.com" style="margin-left: 20px; color: #eeeeee">联系我们</a>
             </Footer>
@@ -287,5 +291,12 @@
     }
     .commentColor{
         color: #444444;
+    }
+    .top{
+        padding: 10px;
+        background: rgba(0, 140, 229, .7);
+        color: #fff;
+        text-align: center;
+        border-radius: 2px;
     }
 </style>
