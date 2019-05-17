@@ -31,7 +31,7 @@
             <Submenu v-if="identity != 'visitor'" name="2" style="float:right">
                 <template slot="title">
                     <Icon type="ios-contact" size="20"/>
-                    {{this.GLOBAL.username}}
+                    {{this.GLOBAL.userName}}
                 </template>
                 <MenuItem name="2-1" @click.native="user_page()">个人主页</MenuItem>
                 <MenuItem name="2-2" @click.native="news_page()">消息/通知</MenuItem>
@@ -59,7 +59,7 @@
                             <img src="../images/zebra.png" height="50px" style="margin: 5px">
                         </div>
                         <div class="person-detail">
-                            用户名：{{this.GLOBAL.username}}
+                            用户名：{{this.GLOBAL.userName}}
                             <br>
                             邮箱：{{this.GLOBAL.email}}
                         </div>

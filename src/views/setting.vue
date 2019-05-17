@@ -10,7 +10,7 @@
             <Submenu v-if="identity != 'visitor'" name="2" style="float:right">
                 <template slot="title">
                     <Icon type="ios-contact" size="20"/>
-                    {{this.GLOBAL.username}}
+                    {{GLOBAL.userName}}
                 </template>
                 <MenuItem name="2-1" @click.native="user_page()">个人主页</MenuItem>
                 <MenuItem name="2-2" @click.native="news_page()">消息/通知</MenuItem>
@@ -35,33 +35,33 @@
                 <h2 style="margin-top: 80px">您还未登录！<br> 请登录后再申请认证</h2>
             </div>
             <Tabs value="name1" :animated="false" style="margin-top: 60px; width: 100%; text-align: center">
-                <TabPane label="修改用户名" name="name1"  @click.native="handleReset ('formValidate2')">
+                <TabPane label="修改用户名" name="name1"  @click.native="handleReset ('change_pwd')">
                     <div class="layout-content-main">
-                        <Form ref="formValidate1" :model="formValidate1" :rules="ruleValidate1" :label-width="100">
+                        <Form ref="change_name" :model="change_name" :rules="change_name_rule" :label-width="100">
                             <FormItem label="新用户名" prop="name">
-                                <Input v-model="formValidate1.name" placeholder="请输入用户名" class="input-select-class"></Input>
+                                <Input v-model="change_name.name" placeholder="请输入用户名" class="input-select-class"></Input>
                             </FormItem>
                             <FormItem>
-                                <Button type="primary" @click="handleSubmit('formValidate1')" >修改</Button>
+                                <Button type="primary" @click="handleSubmit('change_name')" >修改</Button>
                             </FormItem>
                         </Form>
                     </div>
                 </TabPane>
-                <TabPane label="修改密码" name="name2" @click.native="handleReset ('formValidate1')">
+                <TabPane label="修改密码" name="name2" @click.native="handleReset ('change_name')">
                     <div class="layout-content-main">
-                        <Form ref="formValidate2" :model="formValidate2" :rules="ruleValidate2" :label-width="100">
+                        <Form ref="change_pwd" :model="change_pwd" :rules="change_pwd_rule" :label-width="100">
                             <FormItem label="旧密码" prop="old_password">
-                                <Input type="password" v-model="formValidate2.old_password" placeholder="请输入旧密码" class="input-select-class"/>
+                                <Input type="password" v-model="change_pwd.old_password" placeholder="请输入旧密码" class="input-select-class"/>
                             </FormItem>
                             <FormItem label="新密码" prop="password">
-                                <Input type="password" v-model="formValidate2.password" placeholder="请输入长度不超过10的新密码" class="input-select-class"/>
+                                <Input type="password" v-model="change_pwd.password" placeholder="请输入长度不超过10的新密码" class="input-select-class"/>
                             </FormItem>
                             <FormItem label="确认密码" prop="cpwd">
-                                <Input type="password" v-model="formValidate2.cpwd" placeholder="请再次输入密码" class="input-select-class"/>
+                                <Input type="password" v-model="change_pwd.cpwd" placeholder="请再次输入密码" class="input-select-class"/>
                             </FormItem>
                             <FormItem>
-                                <Button type="primary" @click="handleSubmit('formValidate2')" >提交</Button>
-                                <Button type="primary" @click="handleReset('formValidate2')" style="margin-left: 6%" >重置</Button>
+                                <Button type="primary" @click="handleSubmit('change_pwd')" >提交</Button>
+                                <Button type="primary" @click="handleReset('change_pwd')" style="margin-left: 6%" >重置</Button>
                             </FormItem>
                         </Form>
                     </div>
@@ -82,6 +82,7 @@
         name: "setting",
         data () {
             return {
+                userName:'',
                 modal1: false,
                 index_url:'/',
                 register_url:'/register',
@@ -89,21 +90,21 @@
                 identity: this.GLOBAL.userType,
                 //identity:'professor', //professor user visitor
                 old_pwd:'123',
-                change_pwd: false,
-                formValidate1: {
+                //change_pwd: false,
+                change_name: {
                     name: '',
                 },
-                formValidate2: {
+                change_pwd: {
                     old_password: '',
                     password:'',
                     cpwd: '',
                 },
-                ruleValidate1: {
+                change_name_rule: {
                     name: [
                         { required: true, message: '用户名不能为空', trigger: 'blur' }
                     ],
                 },
-                ruleValidate2: {
+                change_pwd_rule: {
                     old_password: [
                         { required: true, message: '旧密码不能为空', trigger: 'blur' },{
                         validator:(rule,value,callback)=>{
@@ -127,7 +128,7 @@
                             if(value===''){
                                 callback(new Error('请再次输入密码'))
                             }
-                            else if(value!==this.formValidate2.password){
+                            else if(value!==this.change_pwd.password){
                                 callback(new Error('两次输入密码不一致'))
                             }else{
                                 callback()
@@ -158,8 +159,21 @@
                 this.identity = this.GLOBAL.userType;
             },
             handleSubmit (name) {
+                console.log(this.GLOBAL.userName);
                 this.$refs[name].validate((valid) => {
                     if (valid) {
+                        if (name === 'change_name') {
+                            console.log('if '+this.change_name.name);
+                            this.GLOBAL.setUserName(this.change_name.name);
+                            console.log('this is ' + this.GLOBAL.userName)
+                        }
+                        else if (name === 'change_pwd') {
+                            console.log('else if')
+                        }
+                        else {
+                            console.log('else')
+                        }
+                        this.$refs[name].resetFields()
                         this.$Message.success('提交成功!')
                     } else {
                         this.$Message.error('表单验证失败!')

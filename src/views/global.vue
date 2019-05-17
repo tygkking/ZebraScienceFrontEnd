@@ -7,7 +7,7 @@
     export default {
         name: "global",
         userID: '123456',
-        username: '蔡徐坤',
+        userName: '蔡徐坤',
         email: 'caixukun@rap.com',
         password: '123', // Just For Test
         userType: 'professer',
@@ -40,7 +40,10 @@
         },
         setUserType(type) {
             this.userType = type;
-        }
+        },
+        setUserName(name) {
+            this.userName = name;
+        },
     }
 </script>
 

@@ -8,7 +8,7 @@
                         首页
                     </MenuItem>
                 </a>
-                <MenuItem>
+                <MenuItem name="5">
                     <Input style="width: 600px;margin: 12px 0 0 90%" v-model="search_content" @keyup.enter.native="search">
                         <Select v-model="search_item" slot="prepend" style="width: 80px;background-color: #eeeeee;color: black">
                             <Option value="prof">专家</Option>
@@ -21,7 +21,7 @@
                 <Submenu v-if="identity != 'visitor'" name="2" style="float:right">
                     <template slot="title">
                         <Icon type="ios-contact" size="20"/>
-                        {{this.GLOBAL.username}}
+                        {{this.GLOBAL.userName}}
                     </template>
                     <MenuItem name="2-1" @click.native="user_page()">个人主页</MenuItem>
                     <MenuItem name="2-2" @click.native="news_page()">消息/通知</MenuItem>
@@ -46,7 +46,7 @@
             <div v-for="item in search_results" class="sc_content">
                 <div v-if="type=='paper'">
                     <div class="c_font">
-                        <a href="https://www.baidu.com" target="_blank" class="color_black">{{item.name}}</a>
+                        <a href="https://www.baidu.com" target="_blank" style="color: black">{{item.name}}</a>
                     </div>
                     <div class="c_abstract">{{item.detail}}</div>
                     <div class="paper-author">作者 - 报刊 - 时间</div>
@@ -84,7 +84,7 @@
 
                 <div v-else-if="type=='org'">
                     <div class="c_font">
-                        <a href="https://www.baidu.com" target="_blank" class="color_black">{{item.name}}</a>
+                        <a href="https://www.baidu.com" target="_blank" style="color: black">{{item.name}}</a>
                     </div>
                     <div class="c_abstract">{{item.detail}}</div>
                 </div>
@@ -116,11 +116,13 @@
                 type: '',
                 search_content: '',
                 search_item: '',
-                temp_detail: [{
-                    name: '名字名字名字名字名字名字名字名字名字名字名字名字名字名字名字名字名字名字名字名字名字名字名字名字名字名字名字名字名字名字名字名字名字名字',
-                    detail: 'detail1detail1detail1detail1detail1detail1detail1detail1detail1detail1detail1detail1detail1detail1detail1detail1detail1detail1detail1detail1detail1',
-                    img_url: ''
-                }],
+                temp_detail: [
+                    {
+                        name: '名字名字名字名字名字名字名字名字名字名字名字名字名字名字名字名字名字名字名字名字名字名字名字名字名字名字名字名字名字名字名字名字名字名字',
+                        detail: 'detail1detail1detail1detail1detail1detail1detail1detail1detail1detail1detail1detail1detail1detail1detail1detail1detail1detail1detail1detail1detail1',
+                        img_url: ''
+                    },
+                ]
             }
         },
         created() {
