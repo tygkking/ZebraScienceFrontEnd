@@ -2,42 +2,51 @@
     <div>
         <div class="top_xf">
             <Menu mode="horizontal" :theme="theme1" active-name="1" style="width:100%; position: fixed">
-            <a :href="index_url" style="float:left">
-                <MenuItem name="1">
-                    <Icon type="ios-home" size="20"/>
-                    首页
+                <a :href="index_url" style="float:left">
+                    <MenuItem name="1">
+                        <Icon type="ios-home" size="20"/>
+                        首页
+                    </MenuItem>
+                </a>
+                <MenuItem>
+                    <Input style="width: 600px;margin: 12px 0 0 90%" v-model="search_content" @keyup.enter.native="search">
+                        <Select v-model="search_item" slot="prepend" style="width: 80px;background-color: #eeeeee;color: black">
+                            <Option value="prof">专家</Option>
+                            <Option value="paper">论文</Option>
+                            <Option value="org">机构</Option>
+                        </Select>
+                        <Button  @click="search"  slot="append" style="background-color:#57c5f7;color: white" icon="ios-search" ></Button>
+                    </Input>
                 </MenuItem>
-            </a>
-            <Submenu v-if="identity != 'visitor'" name="2" style="float:right">
-                <template slot="title">
-                    <Icon type="ios-contact" size="20"/>
-                    {{this.GLOBAL.username}}
-                </template>
-                <MenuItem name="2-1" @click.native="user_page()">个人主页</MenuItem>
-                <MenuItem name="2-2" @click.native="news_page()">消息/通知</MenuItem>
-                <MenuItem name="2-3" @click.native="setting()">设置</MenuItem>
-                <MenuItem name="2-4" @click.native="logout()">退出登录</MenuItem>
-            </Submenu>
-            <MenuItem v-if="identity == 'visitor'" @click.native="modal1=true" name="3" style="float:right">
-                登录
-                <Modal v-model="modal1" title="登录" ok-text="登录" cancel-text="取消" @on-ok="login" @on-cancel="cancel">
-                    <p>用户名<input style="margin-left: 8px"/></p><br/>
-                    <p>密  码<input style="margin-left: 17px"/></p>
-                </Modal>
-            </MenuItem>
-            <a :href="register_url" style="float: right;">
-                <MenuItem v-if="identity == 'visitor'" :href="register_url" name="4">
-                    注册
+                <Submenu v-if="identity != 'visitor'" name="2" style="float:right">
+                    <template slot="title">
+                        <Icon type="ios-contact" size="20"/>
+                        {{this.GLOBAL.username}}
+                    </template>
+                    <MenuItem name="2-1" @click.native="user_page()">个人主页</MenuItem>
+                    <MenuItem name="2-2" @click.native="news_page()">消息/通知</MenuItem>
+                    <MenuItem name="2-3" @click.native="setting()">设置</MenuItem>
+                    <MenuItem name="2-4" @click.native="logout()">退出登录</MenuItem>
+                </Submenu>
+                <MenuItem v-if="identity == 'visitor'" @click.native="modal1=true" name="3" style="float:right">
+                    登录
+                    <Modal v-model="modal1" title="登录" ok-text="登录" cancel-text="取消" @on-ok="login" @on-cancel="cancel">
+                        <p>用户名<input style="margin-left: 8px"/></p><br/>
+                        <p>密  码<input style="margin-left: 17px"/></p>
+                    </Modal>
                 </MenuItem>
-            </a>
-        </Menu>
-            asd
+                <a :href="register_url" style="float: right;">
+                    <MenuItem v-if="identity == 'visitor'" :href="register_url" name="4">
+                        注册
+                    </MenuItem>
+                </a>
+            </Menu>
         </div>
         <div class="sc_detail">
             <div v-for="item in search_results" class="sc_content">
-                <div v-if="type=='paper'" style="margin-left: 10%;width: 50%;">
+                <div v-if="type=='paper'">
                     <div class="c_font">
-                        <a href="https://www.baidu.com" target="_blank">{{item.name}}</a>
+                        <a href="https://www.baidu.com" target="_blank" class="color_black">{{item.name}}</a>
                     </div>
                     <div class="c_abstract">{{item.detail}}</div>
                     <div class="paper-author">作者 - 报刊 - 时间</div>
@@ -73,18 +82,14 @@
                     </div>
                 </div>
 
-                <div v-else-if="type=='org'" style="margin-left: 10%;width: 50%;">
+                <div v-else-if="type=='org'">
                     <div class="c_font">
-                        <a href="https://www.baidu.com" target="_blank">{{item.name}}</a>
+                        <a href="https://www.baidu.com" target="_blank" class="color_black">{{item.name}}</a>
                     </div>
                     <div class="c_abstract">{{item.detail}}</div>
                 </div>
 
             </div>
-        </div>
-        <div v-if="type=='paper'||type=='org'" class="paper-img">
-            <img src="/src/images/zebra.png" style="width: 300px;height: 300px">
-            <p style="text-align: center;font-size: 30px">斑马学术<br>给你不一样的体验</p>
         </div>
         <Layout>
             <Footer class="layout-footer-center" style="background-color: #666666; color: #eeeeee;">
@@ -108,7 +113,14 @@
                 //identity:'professor', //professor user visitor
                 theme1: 'primary',
                 search_results: [],
-                type: ''
+                type: '',
+                search_content: '',
+                search_item: '',
+                temp_detail: [{
+                    name: '名字名字名字名字名字名字名字名字名字名字名字名字名字名字名字名字名字名字名字名字名字名字名字名字名字名字名字名字名字名字名字名字名字名字',
+                    detail: 'detail1detail1detail1detail1detail1detail1detail1detail1detail1detail1detail1detail1detail1detail1detail1detail1detail1detail1detail1detail1detail1',
+                    img_url: ''
+                }],
             }
         },
         created() {
@@ -141,6 +153,18 @@
             iscollected() {
                 var result = 1;
                 return result;
+            },
+            search() {
+                if(this.search_content == "")
+                    return;
+                if (this.search_item=='prof')
+                    alert("专家搜索："+this.search_content);
+                else if (this.search_item=='paper')
+                    alert("论文搜索："+this.search_content);
+                else if (this.search_item=='org')
+                    alert("机构搜索："+this.search_content);
+                this.type=this.search_item;
+                this.search_results=this.temp_detail;
             }
         },
         computed: {
@@ -196,7 +220,7 @@
     }
     .c_font{
         font-family: "Helvetica Neue";
-        font-size: 22px;
+        font-size: 20px;
         word-wrap:break-word;
     }
     .c_abstract{

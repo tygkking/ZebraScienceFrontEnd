@@ -160,7 +160,6 @@
                         img_url: ''
                     },
                 ],
-                search_content: '',
                 professorDetails_url: '/professorDetails',
                 user_url:'/user',
                 paperDetails_url:'/paperDetails',
