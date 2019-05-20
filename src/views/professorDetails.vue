@@ -92,11 +92,13 @@
                         </Col>
                         <Col span="19">
                             <div class="person-detail" style="margin-left: 30px; margin-top: 20px">
-                                <h2>{{userName}}</h2>
+                                <h2>{{userName}}<Tag color="orange" style="margin-left:20px">Scholar ID: {{profID}}</Tag></h2>
                                 <br>
                                 <h3>机构：{{organization}}</h3>
                                 <br>
                                 <h3>领域：{{field}}</h3>
+                                <br>
+                                <h4>发表论文数：{{paper_num}}&nbsp&nbsp被引次数：{{ref_num}}</h4>
                             </div>
                         </Col>
                     </Row>
@@ -133,7 +135,7 @@
                                     <h3>合作学者</h3>
                                     <ul style="list-style-type:none; margin-left: 5px; margin-top: 5px">
                                         <li v-for="item in coop_sch">
-                                            <div class="relevant-detail">
+                                            <div class="relevant-detail" @click="to_scholar(item.message)" style="cursor:pointer; color: #2b85e4; width: fit-content">
                                                 {{ item.message }}
                                             </div>
                                         </li>
@@ -177,8 +179,11 @@
                 isliked: false,
                 showlike: '关注',
                 userName: '姓名',
+                profID: 'ProfID',
                 organization: '机构',
                 field: '领域',
+                paper_num: 120,
+                ref_num: 130,
                 paper_items: [
                     {
                         paper_detail: {
@@ -319,11 +324,21 @@
                     this.showlike = '已关注'
                 }
                 this.isliked = !this.isliked
-            }
+            },
+            to_scholar (name) {
+                this.$router.push({
+                    name: 'search_detail',
+                    query: {
+                        search_detail: name,
+                        search_type: 'prof'
+                    }
+                })
+            },
         },
         created() {
             //判断是否关注
             console.log('sadasdasdas'+this.$route.query.profID);
+            this.profID = this.$route.query.profID;
         }
     }
 </script>
