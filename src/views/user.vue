@@ -40,14 +40,15 @@
 }
 
 .relevant-detail{
-    font-size: 14px;
+    font-family: "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;
+    font-size: 15px;
     margin-bottom: 3px;
 }
 
 .relevant-info{
     margin-left: 30px;
     margin-right: 30px;
-    margin-bottom: 40px
+    margin-bottom: 40px;
 }
 
 </style>
@@ -155,10 +156,23 @@
                     </TabPane>
                     <TabPane label="我的关注" name="name3">
                         <div class="relevant-info">
-                            <ul style="list-style-type:none; margin-left: 5px; margin-top: 5px">
-                                <li v-for="item in like_sch">
-                                    <div class="relevant-detail">
-                                        {{ item.message }}
+                            <ul style="list-style-type:none; margin-left: 5px; margin-top: 5px;">
+                                <li v-for="item in like_sch" style="width:40%; float:left; margin-left: 20px; min-width: 320px">
+                                    <div @click="to_scholar(item.profID)" style="cursor:pointer; margin:5px; padding: 5px; border: #2b85e4 solid 1px; border-radius: 5px; overflow: hidden">
+                                        <Row>
+                                            <Col span="8" style="text-align: center; overflow: hidden; white-space: nowrap; padding-top: 5px">
+                                                <div class="relevant-detail">
+                                                    <b>{{ item.name }}</b>
+                                                </div>
+                                                <Tag color="blue">ID:{{item.profID}}</Tag>
+
+                                            </Col>
+                                            <Col span="15" offset="1" style="font-size:13px; overflow: hidden; white-space: nowrap;">
+                                                机构：{{item.organization}}<br>
+                                                领域：{{item.field}}<br>
+                                                论文数量：{{item.paper_num}} &nbsp被引数量：{{item.ref_num}}
+                                            </Col>
+                                        </Row>
                                     </div>
                                 </li>
                             </ul>
@@ -233,7 +247,15 @@
             },
             applyfor () {
                 this.$router.push({path: '/certify'})
-            }
+            },
+            to_scholar (profID) {
+                //跳转到专家页面
+                console.log('toProfID');
+                this.$router.push({
+                    path: '/professorDetails',
+                    query:{profID:profID},
+                })
+            },
         }
     }
 </script>
