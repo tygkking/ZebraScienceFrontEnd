@@ -8,7 +8,7 @@
                 </FormItem>
                 <FormItem label="邮箱" prop="mail" >
                     <Input v-model="formValidate.mail" placeholder="请输入邮箱" class="input-select-class" icon="ios-mail"></Input>
-                    <Button type="primary" shape="circle">获取验证码</Button>
+                    <Button type="primary" shape="circle" @click="requ_ecode(formValidate.mail)">获取验证码</Button>
                 </FormItem>
                 <FormItem label="验证码" prop="code" >
                     <Input v-model="formValidate.code" placeholder="验证码" class="input-select-class"/>
@@ -20,7 +20,7 @@
                     <Input type="password" v-model="formValidate.cpwd" placeholder="请再次输入密码" class="input-select-class"/>
                 </FormItem>
                 <FormItem>
-                    <Button type="primary" @click="handleSubmit('formValidate')" >提交</Button>
+                    <Button type="primary" @click="handleSubmit('formValidate',formValidate)" >提交</Button>
                     <Button type="primary" @click="handleReset('formValidate')" style="margin-left: 6%" >重置</Button>
                 </FormItem>
             </Form>
@@ -71,10 +71,26 @@
             }
         },
         methods: {
-            handleSubmit (name) {
+            handleSubmit (name,f) {
                 this.$refs[name].validate((valid) => {
                     if (valid) {
                         this.$Message.success('提交成功!')
+                        let params = {'username':f.name,'email':f.mail,'password':f.password,'email_code':f.code}
+                        this.$http.post("http://127.0.0.1:5000/api/v1/register",params,{
+                            headers:{
+                                'Content-Type':"application/json",
+                            }
+                        }).then(function(res){
+                            console.log(res);
+                            var s = JSON.parse(res.body);
+                            if(s["state"]=="fail"){
+                                alert(s["reason"])
+                            }
+                            else
+                                alert("注册成功！")
+                        },function (res) {
+                            console.log(res)
+                        });
                     } else {
                         this.$Message.error('表单验证失败!')
                     }
@@ -82,6 +98,23 @@
             },
             handleReset (name) {
                 this.$refs[name].resetFields()
+            },
+            requ_ecode(mail){
+                if(mail==='')return;
+                console.log(mail)
+                let params = {"email":mail};
+                //let params = {"email":this.formValidate.mail};
+                this.$http.post("http://127.0.0.1:5000/api/v1/email_code",params,{
+                    headers:{
+                        'Content-Type':"application/json",
+                    }
+                }).then(function(res){
+                    console.log(res);
+                    alert("成功发送验证码！")
+                },function (res) {
+                    console.log(res)
+                    alert("发送验证码失败！")
+                });
             }
         }
     }
@@ -94,6 +127,7 @@
         padding-left: 30%;
         overflow: hidden;
         background: #fff;
+
         border-radius: 4px;
     }
     .input-select-class {
