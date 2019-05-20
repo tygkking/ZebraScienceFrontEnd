@@ -46,7 +46,7 @@
             <div v-for="item in search_results" class="sc_content">
                 <div v-if="type=='paper'">
                     <div class="c_font">
-                        <a href="https://www.baidu.com" target="_blank" style="color: black">{{item.name}}</a>
+                        <router-link tag="a" :to="{path:'/paperDetails',query:{paperID:'111111'}}" target="_blank" style="color: black">{{item.name}}</router-link>
                     </div>
                     <div class="c_abstract">{{item.detail}}</div>
                     <div class="paper-author">作者 - 报刊 - 时间</div>
