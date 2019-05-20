@@ -323,6 +323,7 @@
         },
         created() {
             //判断是否关注
+            console.log('sadasdasdas'+this.$route.query.profID);
         }
     }
 </script>

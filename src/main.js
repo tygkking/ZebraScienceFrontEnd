@@ -5,10 +5,12 @@ import Routers from './router';
 import Util from './libs/util';
 import App from './app.vue';
 import 'iview/dist/styles/iview.css';
-import Global from './views/global'
+import Global from './views/global';
+import VueResource from 'vue-resource';
 
 Vue.use(VueRouter);
 Vue.use(iView);
+Vue.use(VueResource);
 Vue.prototype.GLOBAL = Global;
 // 路由配置
 const RouterConfig = {

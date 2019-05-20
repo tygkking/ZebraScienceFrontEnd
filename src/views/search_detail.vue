@@ -9,7 +9,7 @@
                     </MenuItem>
                 </a>
                 <MenuItem name="5">
-                    <Input style="width: 600px;margin: 12px 0 0 90%" v-model="search_content" @keyup.enter.native="search">
+                    <Input style="width: 600px;margin-top: 12px" v-model="search_content" @keyup.enter.native="search">
                         <Select v-model="search_item" slot="prepend" style="width: 80px;background-color: #eeeeee;color: black">
                             <Option value="prof">专家</Option>
                             <Option value="paper">论文</Option>
@@ -55,13 +55,13 @@
 
                 <div v-else-if="type=='prof'">
                     <div class="searchResultItem">
-                        <a class="searchResult_pic" href="https://www.baidu.com" target="_blank">
+                        <router-link tag="a" class="searchResult_pic" :to="{path: '/professorDetails',query:{profID:'11111'}}" target="_blank">
                             <img src="/lib/static/scholar/cache/homepage/img/default_a139b75.png" alt="图片" width="64" height="64">
-                        </a>
+                        </router-link>
                         <div class="searchResult_text">
-                            <a class="personName" href="https://www.baidu.com" target="_blank">
+                            <router-link class="personName" :to="{path: '/professorDetails',query:{profID:'11111'}}" target="_blank">
                                 徐家兴
-                            </a>
+                            </router-link>
                             <p class="personInstitution">空军总医院</p>
                             <div class="personNum">
                                 <p class="personNumItem">
