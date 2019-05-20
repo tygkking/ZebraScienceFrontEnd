@@ -48,9 +48,11 @@
                     <div class="c_font">
                         <router-link tag="a" :to="{path:'/paperDetails',query:{paperID:'111111'}}" target="_blank" style="color: black">{{item.name}}</router-link>
                     </div>
-                    <div class="c_abstract">{{item.detail}}</div>
-                    <div class="paper-author">作者 - 报刊 - 时间</div>
-                    <div class="paper-key">关键词1、关键词2</div>
+                    <div class="c_abstract">{{item.abstract}}</div>
+                    <div class="paper-author">{{item.author}}&nbsp-&nbsp{{item.journam}}&nbsp-&nbsp{{item.time}}</div>
+                    <div class="paper-key">
+                        <div v-for="keyword in item.keyword" style="display: inline">{{keyword}}&nbsp</div>
+                    </div>
                 </div>
 
                 <div v-else-if="type=='prof'">
@@ -60,23 +62,23 @@
                         </router-link>
                         <div class="searchResult_text">
                             <router-link class="personName" :to="{path: '/professorDetails',query:{profID:'11111'}}" target="_blank">
-                                徐家兴
+                                {{item.name}}
                             </router-link>
-                            <p class="personInstitution">空军总医院</p>
+                            <p class="personInstitution">{{item.organization}}</p>
                             <div class="personNum">
                                 <p class="personNumItem">
                                     <span>发表文章：</span>
-                                    <span class="color_black">166</span>
+                                    <span class="color_black">{{item.publish}}</span>
                                 </p>
                                 <p class="personNumItem">
                                     <span>被引次数：</span>
-                                    <span class="color_black">1534</span>
+                                    <span class="color_black">{{item.references}}</span>
                                 </p>
                             </div>
                             <br>
                             <p class="personField">
                                 <span style="display: inline-block">研究领域：</span>
-                                <span class="color_black">肿瘤学</span>
+                                <span class="color_black">{{item.major}}</span>
                             </p>
                         </div>
                     </div>
@@ -86,7 +88,7 @@
                     <div class="c_font">
                         <a href="https://www.baidu.com" target="_blank" style="color: black">{{item.name}}</a>
                     </div>
-                    <div class="c_abstract">{{item.detail}}</div>
+                    <div class="c_abstract">{{item.infomation}}</div>
                 </div>
 
             </div>
@@ -151,6 +153,8 @@
             getSearchDetails() {
                 this.search_results = this.$route.query.search_detail;
                 this.type = this.$route.query.search_type;
+                console.log(this.search_results);
+                console.log(this.type);
             },
             iscollected() {
                 var result = 1;
@@ -160,13 +164,44 @@
                 if(this.search_content == "")
                     return;
                 if (this.search_item=='prof')
-                    alert("专家搜索："+this.search_content);
+                {
+                    var that = this;
+                    this.$http.post("https://www.easy-mock.com/mock/5c833375e0e0f75c246237e4/example/mock",
+                    {professor_name: this.search_content},{emulateJSON:true}).then(function (res) {
+                        that.search_results = res.body.profData.sc_detail;
+                        that.type = 'prof';
+                        return;
+                    },function (res) {
+                        console.log(res);
+                        return;
+                    })
+                }
                 else if (this.search_item=='paper')
-                    alert("论文搜索："+this.search_content);
+                {
+                    var that = this;
+                    this.$http.post("https://www.easy-mock.com/mock/5c833375e0e0f75c246237e4/example/mock",
+                        {professor_name: this.search_content},{emulateJSON:true}).then(function (res) {
+                        that.search_results = res.body.paperData.sc_detail;
+                        that.type = 'paper';
+                        return;
+                    },function (res) {
+                        console.log(res);
+                        return;
+                    })
+                }
                 else if (this.search_item=='org')
-                    alert("机构搜索："+this.search_content);
-                this.type=this.search_item;
-                this.search_results=this.temp_detail;
+                {
+                    var that = this;
+                    this.$http.post("https://www.easy-mock.com/mock/5c833375e0e0f75c246237e4/example/mock",
+                        {professor_name: this.search_content},{emulateJSON:true}).then(function (res) {
+                        that.search_results = res.body.orgData.sc_detail;
+                        that.type = 'org';
+                        return;
+                    },function (res) {
+                        console.log(res);
+                        return;
+                    })
+                }
             }
         },
         computed: {
@@ -204,8 +239,6 @@
         right: 10%;
     }
     .paper-author{
-        margin-top: 5px;
-        margin-bottom: 5px;
         color: #333333;
         font-size: 15px;
     }

@@ -102,64 +102,6 @@
                 identity: this.GLOBAL.userType,
                 search_item: '',
                 search_content: '',
-                temp_detail: [
-                    {
-                        name: '名字名字名字名字名字名字名字名字名字名字名字名字名字名字名字名字名字名字名字名字名字名字名字名字名字名字名字名字名字名字名字名字名字名字',
-                        detail: 'detail1detail1detail1detail1detail1detail1detail1detail1detail1detail1detail1detail1detail1detail1detail1detail1detail1detail1detail1detail1detail1',
-                        img_url: ''
-                    },
-                    {
-                        name: 'name2',
-                        detail: 'detail2'
-                    },
-                    {
-                        name: 'name3',
-                        detail: 'detail3'
-                    },
-                    {
-                        name: 'name1',
-                        detail: 'detail1',
-                        img_url: ''
-                    },
-                    {
-                        name: 'name1',
-                        detail: 'detail1',
-                        img_url: ''
-                    },
-                    {
-                        name: 'name1',
-                        detail: 'detail1',
-                        img_url: ''
-                    },
-                    {
-                        name: 'name1',
-                        detail: 'detail1detail1detail1detail1detail1detail1detail1detail1detail1detail1detail1detail1detail1detail1detail1detail1detail1detail1detail1detail1detail1',
-                        img_url: ''
-                    },
-                    {
-                        name: 'name2',
-                        detail: 'detail2'
-                    },
-                    {
-                        name: 'name3',
-                        detail: 'detail3'
-                    },
-                    {
-                        name: 'name1',
-                        detail: 'detail1',
-                        img_url: ''
-                    },
-                    {
-                        name: 'name1',
-                        detail: 'detail1',
-                        img_url: ''
-                    },
-                    {
-                        name: 'name1',
-                        detail: 'detail1',
-                        img_url: ''
-                    },
-                ],
                 professorDetails_url: '/professorDetails',
                 user_url:'/user',
                 paperDetails_url:'/paperDetails',
@@ -202,18 +144,53 @@
                 if(this.search_content == "")
                     return;
                 if (this.search_item=='prof')
-                    alert("专家搜索："+this.search_content);
+                {
+                    var that = this;
+                    this.$http.post("https://www.easy-mock.com/mock/5c833375e0e0f75c246237e4/example/mock",
+                        {professor_name: this.search_content},{emulateJSON:true}).then(function (res) {
+                        that.$router.push({
+                            name: 'search_detail',
+                            query: {
+                                search_detail: res.body.profData.sc_detail,
+                                search_type: 'prof',
+                            }
+                        })
+                    },function (res) {
+                        console.log(res)
+                    })
+                }
                 else if (this.search_item=='paper')
-                    alert("论文搜索："+this.search_content);
+                {
+                    var that = this;
+                    this.$http.post("https://www.easy-mock.com/mock/5c833375e0e0f75c246237e4/example/mock",
+                        {professor_name: this.search_content},{emulateJSON:true}).then(function (res) {
+                        that.$router.push({
+                            name: 'search_detail',
+                            query: {
+                                search_detail: res.body.paperData.sc_detail,
+                                search_type: 'paper',
+                            }
+                        })
+                    },function (res) {
+                        console.log(res)
+                    })
+                }
                 else if (this.search_item=='org')
-                    alert("机构搜索："+this.search_content);
-                this.$router.push({
-                    name: 'search_detail',
-                    query: {
-                        search_detail: this.temp_detail,
-                        search_type: this.search_item
-                    }
-                })
+                {
+                    var that = this;
+                    this.$http.post("https://www.easy-mock.com/mock/5c833375e0e0f75c246237e4/example/mock",
+                        {professor_name: this.search_content},{emulateJSON:true}).then(function (res) {
+                        that.$router.push({
+                            name: 'search_detail',
+                            query: {
+                                search_detail: res.body.orgData.sc_detail,
+                                search_type: 'paper',
+                            }
+                        })
+                    },function (res) {
+                        console.log(res)
+                    })
+                }
             }
         }
     }
