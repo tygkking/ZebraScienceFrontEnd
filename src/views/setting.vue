@@ -66,6 +66,14 @@
                         </Form>
                     </div>
                 </TabPane>
+                <TabPane label="修改头像" name="name3" >
+                        <div class="layout-content-main">
+                            <img :src="previewImageSrc" alt="请上传头像" height="100px" style="margin: 5px">
+                            <br/>
+                            <input type="file" @change="displayImage" ref="fileInput">
+                            <button @click="upload">上传</button>
+                        </div>
+                </TabPane>
             </Tabs>
         </div>
         <Layout>
@@ -82,6 +90,7 @@
         name: "setting",
         data () {
             return {
+                previewImageSrc:'',
                 userName:'',
                 modal1: false,
                 index_url:'/',
@@ -182,6 +191,19 @@
             },
             handleReset (name) {
                 this.$refs[name].resetFields()
+            },
+            displayImage() {
+                const file = this.$refs.fileInput.files[0]
+                const fr = new FileReader()
+                fr.onload = (e) => {
+                    this.previewImageSrc = e.target.result
+                }
+                fr.readAsDataURL(file)
+            },
+            upload(){
+                if(this.previewImageSrc=="")
+                    return
+                alert("cxk")
             }
         }
     }

@@ -110,14 +110,16 @@
                                 <ul style="list-style-type:none">
                                     <li v-for="item in paper_items">
                                         <div class="paper-detail">
-                                            <a href="http://www.baidu.com">
+                                            <a href="http://www.baidu.com" target="_blank">
                                                 {{ item.paper_detail.title }}
                                             </a>
                                             <br>
                                             <div style="font-size: 14px">
-                                                {{item.paper_detail.year }}
-                                                {{ item.paper_detail.author }}
-                                                {{ item.paper_detail.source }}
+                                                年份:{{ item.paper_detail.year }}
+                                                &nbsp&nbsp&nbsp
+                                                作者:{{ item.paper_detail.author }}
+                                                <br>
+                                                出处:{{ item.paper_detail.source }}
                                             </div>
                                         </div>
                                     </li>
@@ -180,10 +182,10 @@
                 paper_items: [
                     {
                         paper_detail: {
-                            title: 'This is Paper Title One',
+                            title: 'This is Paper Title One This is Paper Title One This is Paper Title One This is Paper Title One',
                             year: '2018',
-                            author: '郭子溢 黎昆昌 许志达 何浩乾',
-                            source: 'This is Paper Source'
+                            author: '郭子溢 黎昆昌 许志达 何浩乾 郭子溢 黎昆昌 许志达 何浩乾 郭子溢 黎昆昌 许志达 何浩乾',
+                            source: 'This is Paper Source This is Paper Source This is Paper Source'
                         }
                     },
                     {
