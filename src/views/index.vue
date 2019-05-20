@@ -112,14 +112,33 @@
         },
         methods: {
             login () {
-                if (this.email === this.GLOBAL.email && this.password === this.GLOBAL.password) {
-                    this.GLOBAL.setUserType('user');
-                    this.identity = this.GLOBAL.userType;
-                    this.$Message.info('成功登录');
-                }
-                else {
-                    this.$Message.info('邮箱或密码错误');
-                }
+                let params = {'email':this.email,'password':this.password}
+                this.$http.post("http://127.0.0.1:5000/api/v1/login",params,{
+                    headers:{
+                        'Content-Type':"application/json",
+                    }
+                }).then(function(res){
+                    console.log(res);
+                    var s = JSON.parse(res.body);
+                    if(s["state"]=="fail"){
+                        this.$Message.info(s["reason"]);
+                    }
+                    else {
+                        this.$Message.info('成功登录');
+                        this.GLOBAL.setUserType('user');
+                        this.identity = this.GLOBAL.userType;
+                    }
+                },function (res) {
+                    console.log(res)
+                });
+                // if (this.email === this.GLOBAL.email && this.password === this.GLOBAL.password) {
+                //     this.GLOBAL.setUserType('user');
+                //     this.identity = this.GLOBAL.userType;
+                //     this.$Message.info('成功登录');
+                // }
+                // else {
+                //     this.$Message.info('邮箱或密码错误');
+                // }
             },
             cancel () {
                 this.$Message.info('cancel');
