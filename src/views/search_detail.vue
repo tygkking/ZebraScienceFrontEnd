@@ -128,7 +128,8 @@
             }
         },
         created() {
-            this.getSearchDetails()
+            this.type = this.$route.query.search_type;
+            this.getSearchDetails(this.type);
         },
         methods: {
             login () {
@@ -150,9 +151,40 @@
                 this.GLOBAL.setUserType('visitor');
                 this.identity = this.GLOBAL.userType;
             },
-            getSearchDetails() {
-                this.search_results = this.$route.query.search_detail;
-                this.type = this.$route.query.search_type;
+            getSearchDetails(temp) {
+                var that = this;
+                console.log(temp);
+                if(temp == "prof")
+                {
+                    this.$http.post("https://www.easy-mock.com/mock/5c833375e0e0f75c246237e4/example/mock",
+                    {professor_name: that.$route.query.search_content},{emulateJSON:true}).then(function (res) {
+                        that.search_results = res.body.profData.sc_detail
+                    },function (res) {
+                        console.log(res)
+                    })
+                }
+                else if (temp == "paper")
+                {
+                    this.$http.post("https://www.easy-mock.com/mock/5c833375e0e0f75c246237e4/example/mock",
+                        {paper_name: that.$route.query.search_content},{emulateJSON:true}).then(function (res) {
+                        that.search_results = res.body.paperData.sc_detail
+                    },function (res) {
+                        console.log(res)
+                    })
+                }
+                else if (temp == "org")
+                {
+                    this.$http.post("https://www.easy-mock.com/mock/5c833375e0e0f75c246237e4/example/mock",
+                        {organization_name: that.$route.query.search_content},{emulateJSON:true}).then(function (res) {
+                        that.search_results = res.body.orgData.sc_detail
+                    },function (res) {
+                        console.log(res)
+                    })
+                }
+                else
+                {
+                    alert("asdasdasdas");
+                }
                 console.log(this.search_results);
                 console.log(this.type);
             },
@@ -163,45 +195,8 @@
             search() {
                 if(this.search_content == "")
                     return;
-                if (this.search_item=='prof')
-                {
-                    var that = this;
-                    this.$http.post("https://www.easy-mock.com/mock/5c833375e0e0f75c246237e4/example/mock",
-                    {professor_name: this.search_content},{emulateJSON:true}).then(function (res) {
-                        that.search_results = res.body.profData.sc_detail;
-                        that.type = 'prof';
-                        return;
-                    },function (res) {
-                        console.log(res);
-                        return;
-                    })
-                }
-                else if (this.search_item=='paper')
-                {
-                    var that = this;
-                    this.$http.post("https://www.easy-mock.com/mock/5c833375e0e0f75c246237e4/example/mock",
-                        {professor_name: this.search_content},{emulateJSON:true}).then(function (res) {
-                        that.search_results = res.body.paperData.sc_detail;
-                        that.type = 'paper';
-                        return;
-                    },function (res) {
-                        console.log(res);
-                        return;
-                    })
-                }
-                else if (this.search_item=='org')
-                {
-                    var that = this;
-                    this.$http.post("https://www.easy-mock.com/mock/5c833375e0e0f75c246237e4/example/mock",
-                        {professor_name: this.search_content},{emulateJSON:true}).then(function (res) {
-                        that.search_results = res.body.orgData.sc_detail;
-                        that.type = 'org';
-                        return;
-                    },function (res) {
-                        console.log(res);
-                        return;
-                    })
-                }
+                this.type = this.search_item;
+                this.getSearchDetails(this.type);
             }
         },
         computed: {
