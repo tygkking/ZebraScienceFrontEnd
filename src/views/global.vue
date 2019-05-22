@@ -5,12 +5,13 @@
 <script>
 
     export default {
+        domain:'http://qsz.lkc1621.xyz',
         name: "global",
         userID: '123456',
-        userName: '蔡徐坤',
+        userName: '',
         email: 'caixukun@rap.com',
         password: '123', // Just For Test
-        userType: 'professer',
+        userType: 'visitor',
         collectList: [
             {
                 paper_detail: {

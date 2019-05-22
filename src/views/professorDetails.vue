@@ -48,12 +48,12 @@
 <template>
     <div class="userpage">
         <Menu mode="horizontal" :theme="theme1" active-name="1" style="width:100%; position: fixed">
-            <a :href="index_url" style="float:left">
+            <router-link :to="index_url" style="float:left">
                 <MenuItem name="1">
                     <Icon type="ios-home" size="20"/>
                     首页
                 </MenuItem>
-            </a>
+            </router-link>
             <Submenu v-if="identity != 'visitor'" name="2" style="float:right">
                 <template slot="title">
                     <Icon type="ios-contact" size="20"/>
@@ -66,9 +66,9 @@
             </Submenu>
             <MenuItem v-if="identity == 'visitor'" @click.native="modal1=true" name="3" style="float:right">
                 登录
-                <Modal v-model="modal1" title="登录" ok-text="登录" cancel-text="取消" @on-ok="login" @on-cancel="cancel">
-                    <p>用户名<input style="margin-left: 8px"/></p><br/>
-                    <p>密  码<input style="margin-left: 17px"/></p>
+                <Modal v-model="modal1" title="登录" ok-text="登录" cancel-text="取消" @on-ok="login" @on-cancel="cancel" @keyup.enter.native="login">
+                    <p>邮箱<input v-model="email" type="email" style="margin-left: 17px"/></p><br/>
+                    <p>密码<input v-model="password" type="password" style="margin-left: 17px"/></p>
                 </Modal>
             </MenuItem>
             <a :href="register_url" style="float: right;">
@@ -298,7 +298,30 @@
         },
         methods:{
             login () {
-                this.$Message.info('login');
+                this.modal1 = false;
+                let params = {'email':this.email,'password':this.password}
+                this.$http.post(this.GLOBAL.domain+"/api/v1/login",params,{
+                    headers:{
+                        'Content-Type':"application/json",
+                    }
+                }).then(function(res){
+                    console.log(res);
+                    var s = JSON.parse(res.body);
+                    if(s["state"]=="fail"){
+                        this.$Message.info(s["reason"]);
+                    }
+                    else {
+                        this.$Message.info('成功登录');
+                        console.log("qqqq"+this.GLOBAL.userType)
+                        this.GLOBAL.setUserType(s["msg"]["user_type"]);
+                        console.log("hhhh"+this.GLOBAL.userType)
+                        this.identity = this.GLOBAL.userType;
+                        this.GLOBAL.setUserName(s["msg"]["username"])
+                        //console.log("hhhh"+this.GLOBAL.userName)
+                    }
+                },function (res) {
+                    console.log(res)
+                });
             },
             cancel () {
                 this.$Message.info('cancel');

@@ -35,7 +35,7 @@
             return {
                 codeContent:'获取验证码',
                 codeCanclick:true,
-                totalTime: 10,
+                totalTime: 60,
                 formValidate: {
                     name: '',
                     mail: '',

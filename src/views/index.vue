@@ -55,7 +55,7 @@
         </Dropdown>
         <div v-else style="margin-left: 85%; margin-top:1%;">
             <Button type="text" @click="modal1=true" style="font-size: 15px; text-align: right; margin-right: 2%">登录</Button>
-            <Modal v-model="modal1" title="登录" ok-text="登录" cancel-text="取消" @on-ok="login" @on-cancel="cancel">
+            <Modal v-model="modal1" title="登录" ok-text="登录" cancel-text="取消" @on-ok="login" @on-cancel="cancel" @keyup.enter.native="login">
                 <p>邮箱<input v-model="email" type="email" style="margin-left: 17px"/></p><br/>
                 <p>密码<input v-model="password" type="password" style="margin-left: 17px"/></p>
             </Modal>
@@ -80,12 +80,12 @@
                 </Input>
             </Col>
         </Row>
-        <a :href="professorDetails_url">专家详情</a>
-        <a :href="user_url">个人主页</a>
-        <a :href="paperDetails_url">论文详情</a>
-        <a :href="news_url">消息界面</a>
-        <a :href="certify_url">申请认证</a>
-        <a :href="setting_url">信息设置</a>
+        <router-link :to="professorDetails_url">专家详情</router-link>
+        <router-link :to="user_url">个人主页</router-link>
+        <router-link :to="paperDetails_url">论文详情</router-link>
+        <router-link :to="news_url">消息界面</router-link>
+        <router-link :to="certify_url">申请认证</router-link>
+        <router-link :to="setting_url">信息设置</router-link>
         <div id="ftCon">
             2019-2019 &copy; ZebraScience
             <a href="http://www.baidu.com">联系我们</a>
@@ -112,8 +112,9 @@
         },
         methods: {
             login () {
+                this.modal1 = false;
                 let params = {'email':this.email,'password':this.password}
-                this.$http.post("http://127.0.0.1:5000/api/v1/login",params,{
+                this.$http.post(this.GLOBAL.domain+"/api/v1/login",params,{
                     headers:{
                         'Content-Type':"application/json",
                     }
@@ -125,20 +126,16 @@
                     }
                     else {
                         this.$Message.info('成功登录');
-                        this.GLOBAL.setUserType('user');
+                        console.log("qqqq"+this.GLOBAL.userType)
+                        this.GLOBAL.setUserType(s["msg"]["user_type"]);
+                        console.log("hhhh"+this.GLOBAL.userType)
                         this.identity = this.GLOBAL.userType;
+                        this.GLOBAL.setUserName(s["msg"]["username"])
+                        //console.log("hhhh"+this.GLOBAL.userName)
                     }
                 },function (res) {
                     console.log(res)
                 });
-                // if (this.email === this.GLOBAL.email && this.password === this.GLOBAL.password) {
-                //     this.GLOBAL.setUserType('user');
-                //     this.identity = this.GLOBAL.userType;
-                //     this.$Message.info('成功登录');
-                // }
-                // else {
-                //     this.$Message.info('邮箱或密码错误');
-                // }
             },
             cancel () {
                 this.$Message.info('cancel');

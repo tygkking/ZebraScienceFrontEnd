@@ -19,9 +19,9 @@
             </Submenu>
             <MenuItem v-if="identity == 'visitor'" @click.native="modal1=true" name="3" style="float:right">
                 登录
-                <Modal v-model="modal1" title="登录" ok-text="登录" cancel-text="取消" @on-ok="login" @on-cancel="cancel">
-                    <p>用户名<input style="margin-left: 8px"/></p><br/>
-                    <p>密  码<input style="margin-left: 17px"/></p>
+                <Modal v-model="modal1" title="登录" ok-text="登录" cancel-text="取消" @on-ok="login" @on-cancel="cancel" @keyup.enter.native="login">
+                    <p>邮箱<input v-model="email" type="email" style="margin-left: 17px"/></p><br/>
+                    <p>密码<input v-model="password" type="password" style="margin-left: 17px"/></p>
                 </Modal>
             </MenuItem>
             <a :href="register_url" style="float: right;">
@@ -34,7 +34,7 @@
             <div v-if="identity == 'visitor'" style="width: 100%; text-align: center; height: 200px;">
                 <h2 style="margin-top: 80px">您还未登录！<br> 请登录后再申请认证</h2>
             </div>
-            <div class="layout-content-main" v-show="identity == 'user'">
+            <div class="layout-content-main" v-show="identity == 'visitor'">
                 <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="100">
                     <FormItem label="真实姓名" prop="name" >
                         <Input v-model="formValidate.name" placeholder="请输入真实名" class="input-select-class"></Input>
@@ -103,7 +103,30 @@
         },
         methods:{
             login () {
-                this.$Message.info('login');
+                this.modal1 = false;
+                let params = {'email':this.email,'password':this.password}
+                this.$http.post(this.GLOBAL.domain+"/api/v1/login",params,{
+                    headers:{
+                        'Content-Type':"application/json",
+                    }
+                }).then(function(res){
+                    console.log(res);
+                    var s = JSON.parse(res.body);
+                    if(s["state"]=="fail"){
+                        this.$Message.info(s["reason"]);
+                    }
+                    else {
+                        this.$Message.info('成功登录');
+                        console.log("qqqq"+this.GLOBAL.userType)
+                        this.GLOBAL.setUserType(s["msg"]["user_type"]);
+                        console.log("hhhh"+this.GLOBAL.userType)
+                        this.identity = this.GLOBAL.userType;
+                        this.GLOBAL.setUserName(s["msg"]["username"])
+                        //console.log("hhhh"+this.GLOBAL.userName)
+                    }
+                },function (res) {
+                    console.log(res)
+                });
             },
             cancel () {
                 this.$Message.info('cancel');

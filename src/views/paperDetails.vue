@@ -1,12 +1,12 @@
 <template>
     <div class="page">
         <Menu mode="horizontal" :theme="theme1" active-name="1" style="width:100%; position: fixed">
-            <a :href="index_url" style="float:left">
+            <router-link :to="index_url" style="float:left">
                 <MenuItem name="1">
                     <Icon type="ios-home" size="20"/>
                     首页
                 </MenuItem>
-            </a>
+            </router-link>
             <Submenu v-if="identity != 'visitor'" name="2" style="float:right">
                 <template slot="title">
                     <Icon type="ios-contact" size="20"/>
@@ -19,9 +19,9 @@
             </Submenu>
             <MenuItem v-if="identity == 'visitor'" @click.native="modal1=true" name="3" style="float:right">
                 登录
-                <Modal v-model="modal1" title="登录" ok-text="登录" cancel-text="取消" @on-ok="login" @on-cancel="cancel">
-                    <p>用户名<input style="margin-left: 8px"/></p><br/>
-                    <p>密  码<input style="margin-left: 17px"/></p>
+                <Modal v-model="modal1" title="登录" ok-text="登录" cancel-text="取消" @on-ok="login" @on-cancel="cancel" @keyup.enter.native="login">
+                    <p>邮箱<input v-model="email" type="email" style="margin-left: 17px"/></p><br/>
+                    <p>密码<input v-model="password" type="password" style="margin-left: 17px"/></p>
                 </Modal>
             </MenuItem>
             <a :href="register_url" style="float: right;">
@@ -75,8 +75,8 @@
                         <Button icon="ios-star" style="width: 20%; font-size: 14px;margin-left: 20%;margin-top: 7px" v-model="showlike" :class="{liked: isliked}" @click.native="toggle_like">
                             {{showlike}}</Button>
                         <Button icon="ios-text" style="width: 20%; font-size: 14px;margin-left: 10%;margin-top: 7px"
-                                @click="modal1=true"> 添加评论</Button>
-                        <Modal v-model="modal1" title="添加评论" ok-text="确定" cancel-text="取消" @on-ok="sub_comment"
+                                @click="modal2=true"> 添加评论</Button>
+                        <Modal v-model="modal2" title="添加评论" ok-text="确定" cancel-text="取消" @on-ok="sub_comment"
                                @on-cancel="cancel" >
                             <textarea v-model="content" placeholder="写下你的想法" style="margin-left: 4%;width:90%;height: 200px"/>
                         </Modal>
@@ -110,40 +110,6 @@
                     <Icon type="md-arrow-up" class="top"/>
                     <br/>返回顶端
                 </BackTop>
-                <!--<Row>-->
-                    <!--<Col span="2">-->
-                        <!--<ul style="list-style-type:none; margin-left: 5px; margin-top: 5px">-->
-                            <!--<li v-for="item in comment">-->
-                                <!--<div class="relevant-detail"style="font-size: 20px">-->
-                                    <!--{{ item.from}}-->
-                                <!--</div>-->
-                                <!--<Divider dashed />-->
-                            <!--</li>-->
-                        <!--</ul>-->
-                    <!--</Col>-->
-                    <!--<Col span="2">-->
-                        <!--<ul style="list-style-type:none; margin-left: 5px; margin-top: 5px">-->
-                            <!--<li v-for="item in comment">-->
-                                <!--<div class="relevant-detail">-->
-                                    <!--{{ item.date}}-->
-                                <!--</div>-->
-                                <!--<Divider dashed />-->
-                            <!--</li>-->
-                        <!--</ul>-->
-                    <!--</Col>-->
-                    <!--<Col span="20">-->
-                        <!--<ul style="list-style-type:none; margin-left: 5px; margin-top: 5px">-->
-                            <!--<li v-for="item in comment">-->
-                                <!--<div class="relevant-detail">-->
-                                    <!--{{ item.content}}-->
-                                <!--</div>-->
-
-                                <!--<Divider dashed />-->
-                            <!--</li>-->
-                        <!--</ul>-->
-                    <!--</Col>-->
-
-                <!--</Row>-->
             </div>
             <Footer class="layout-footer-center" style="background-color: #666666; color: #eeeeee;margin-top: 3%">
                 2019-2019 &copy; ZebraScience
@@ -160,7 +126,10 @@
             return{
                 commentData: [],
                 modal1: false,
+                modal2: false,
                 index_url:'/',
+                email: '',
+                password: '',
                 register_url:'/register',
                 identity: this.GLOBAL.userType,
                 //identity:'professor', //professor user visitor
@@ -208,9 +177,37 @@
                 ]
             }
         },
+        created() {
+            this.identity = this.GLOBAL.userType;
+            console.log(this.GLOBAL.userType);
+            console.log(this.identity)
+        },
         methods:{
             login () {
-                this.$Message.info('login');
+                this.modal1 = false;
+                let params = {'email':this.email,'password':this.password}
+                this.$http.post(this.GLOBAL.domain+"/api/v1/login",params,{
+                    headers:{
+                        'Content-Type':"application/json",
+                    }
+                }).then(function(res){
+                    console.log(res);
+                    var s = JSON.parse(res.body);
+                    if(s["state"]=="fail"){
+                        this.$Message.info(s["reason"]);
+                    }
+                    else {
+                        this.$Message.info('成功登录');
+                        console.log("qqqq"+this.GLOBAL.userType)
+                        this.GLOBAL.setUserType(s["msg"]["user_type"]);
+                        console.log("hhhh"+this.GLOBAL.userType)
+                        this.identity = this.GLOBAL.userType;
+                        this.GLOBAL.setUserName(s["msg"]["username"])
+                        //console.log("hhhh"+this.GLOBAL.userName)
+                    }
+                },function (res) {
+                    console.log(res)
+                });
             },
             cancel () {
                 this.$Message.info('cancel');
