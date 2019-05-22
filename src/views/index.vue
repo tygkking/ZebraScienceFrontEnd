@@ -72,9 +72,9 @@
                 </h2>
                 <Input style="width: 50%; margin-left: 25%" v-model="search_content" @keyup.enter.native="search">
                     <Select v-model="search_item" slot="prepend" style="width: 80px;background-color: #eeeeee;color: black">
-                        <Option value="prof">专家</Option>
+                        <Option value="professor">专家</Option>
                         <Option value="paper">论文</Option>
-                        <Option value="org">机构</Option>
+                        <Option value="organization">机构</Option>
                     </Select>
                     <Button  @click="search"  slot="append" style="background-color:#57c5f7;color: white" icon="ios-search" ></Button>
                 </Input>

@@ -2,18 +2,18 @@
     <div>
         <div class="top_xf">
             <Menu mode="horizontal" :theme="theme1" active-name="1" style="width:100%; position: fixed">
-                <a :href="index_url" style="float:left">
+                <router-link :to="index_url" style="float:left">
                     <MenuItem name="1">
                         <Icon type="ios-home" size="20"/>
                         首页
                     </MenuItem>
-                </a>
+                </router-link>
                 <MenuItem name="5">
-                    <Input style="width: 600px;margin-top: 12px" v-model="search_content" @keyup.enter.native="search">
+                    <Input style="width: 450px;margin-top: 12px" v-model="search_content" @keyup.enter.native="search">
                         <Select v-model="search_item" slot="prepend" style="width: 80px;background-color: #eeeeee;color: black">
-                            <Option value="prof">专家</Option>
+                            <Option value="professor">专家</Option>
                             <Option value="paper">论文</Option>
-                            <Option value="org">机构</Option>
+                            <Option value="organization">机构</Option>
                         </Select>
                         <Button  @click="search"  slot="append" style="background-color:#57c5f7;color: white" icon="ios-search" ></Button>
                     </Input>
@@ -30,9 +30,9 @@
                 </Submenu>
                 <MenuItem v-if="identity == 'visitor'" @click.native="modal1=true" name="3" style="float:right">
                     登录
-                    <Modal v-model="modal1" title="登录" ok-text="登录" cancel-text="取消" @on-ok="login" @on-cancel="cancel">
-                        <p>用户名<input style="margin-left: 8px"/></p><br/>
-                        <p>密  码<input style="margin-left: 17px"/></p>
+                    <Modal v-model="modal1" title="登录" ok-text="登录" cancel-text="取消" @on-ok="login" @on-cancel="cancel" @keyup.enter.native="login">
+                        <p>邮箱<input v-model="email" type="email" style="margin-left: 17px"/></p><br/>
+                        <p>密码<input v-model="password" type="password" style="margin-left: 17px"/></p>
                     </Modal>
                 </MenuItem>
                 <a :href="register_url" style="float: right;">
@@ -49,46 +49,51 @@
                         <router-link tag="a" :to="{path:'/paperDetails',query:{paperID:'111111'}}" target="_blank" style="color: black">{{item.name}}</router-link>
                     </div>
                     <div class="c_abstract">{{item.abstract}}</div>
-                    <div class="paper-author">{{item.author}}&nbsp-&nbsp{{item.journam}}&nbsp-&nbsp{{item.time}}</div>
+                    <div class="paper-author">
+                        <div v-for="(value, key) in item.author" style="display: inline">{{ key }}&nbsp</div>
+                        <div style="display: inline">-&nbsp&nbsp{{item.source_journal.name}}&nbsp&nbsp-&nbsp&nbsp{{item.source_journal.date}}&nbsp&nbsp-&nbsp&nbsp{{item.year}}</div>
+                    </div>
                     <div class="paper-key">
-                        <div v-for="keyword in item.keyword" style="display: inline">{{keyword}}&nbsp</div>
+                        关键词：<div v-for="keyword in item.keyword" style="display: inline">{{keyword}}&nbsp</div>
                     </div>
                 </div>
 
-                <div v-else-if="type=='prof'">
+                <div v-else-if="type=='professor'">
                     <div class="searchResultItem">
                         <router-link tag="a" class="searchResult_pic" :to="{path: '/professorDetails',query:{profID:'11111'}}" target="_blank">
-                            <img src="/lib/static/scholar/cache/homepage/img/default_a139b75.png" alt="图片" width="64" height="64">
+                            <img src="/src/images/zebra.png" alt="图片" width="64" height="64">
                         </router-link>
                         <div class="searchResult_text">
                             <router-link class="personName" :to="{path: '/professorDetails',query:{profID:'11111'}}" target="_blank">
                                 {{item.name}}
                             </router-link>
-                            <p class="personInstitution">{{item.organization}}</p>
+                            <p class="personInstitution">{{item.mechanism}}</p>
                             <div class="personNum">
                                 <p class="personNumItem">
                                     <span>发表文章：</span>
-                                    <span class="color_black">{{item.publish}}</span>
+                                    <span class="color_black">{{item.resultsnumber}}</span>
                                 </p>
                                 <p class="personNumItem">
                                     <span>被引次数：</span>
-                                    <span class="color_black">{{item.references}}</span>
+                                    <span class="color_black">{{item.citedtimes}}</span>
                                 </p>
                             </div>
                             <br>
-                            <p class="personField">
+                            <div class="personField">
                                 <span style="display: inline-block">研究领域：</span>
-                                <span class="color_black">{{item.major}}</span>
-                            </p>
+                                <div v-for="field in item.field" class="color_black" style="display: inline;">
+                                    {{field}}&nbsp
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <div v-else-if="type=='org'">
+                <div v-else-if="type=='organization'">
                     <div class="c_font">
-                        <a href="https://www.baidu.com" target="_blank" style="color: black">{{item.name}}</a>
+                        <a href="https://www.baidu.com" target="_blank" style="color: black">{{item.mechanism}}</a>
                     </div>
-                    <div class="c_abstract">{{item.infomation}}</div>
+                    <div class="c_abstract" v-for="intro in item.introduction">{{intro}}</div>
                 </div>
 
             </div>
@@ -112,28 +117,43 @@
                 index_url:'/',
                 register_url:'/register',
                 identity: this.GLOBAL.userType,
-                //identity:'professor', //professor user visitor
                 theme1: 'primary',
                 search_results: [],
                 type: '',
                 search_content: '',
                 search_item: '',
-                temp_detail: [
-                    {
-                        name: '名字名字名字名字名字名字名字名字名字名字名字名字名字名字名字名字名字名字名字名字名字名字名字名字名字名字名字名字名字名字名字名字名字名字',
-                        detail: 'detail1detail1detail1detail1detail1detail1detail1detail1detail1detail1detail1detail1detail1detail1detail1detail1detail1detail1detail1detail1detail1',
-                        img_url: ''
-                    },
-                ]
             }
         },
         created() {
-            this.type = this.$route.query.search_type;
-            this.getSearchDetails(this.type);
+            this.search_item = this.$route.query.search_type;
+            this.search_content = this.$route.query.search_content;
+            this.getSearchDetails(this.$route.query.search_type);
         },
         methods: {
             login () {
-                this.$Message.info('login');
+                this.modal1 = false;
+                let params = {'email':this.email,'password':this.password}
+                this.$http.post(this.GLOBAL.domain+"/api/v1/login",params,{
+                    headers:{
+                        'Content-Type':"application/json",
+                    }
+                }).then(function(res){
+                    console.log(res);
+                    var s = JSON.parse(res.body);
+                    if(s["state"]=="fail"){
+                        this.$Message.info(s["reason"]);
+                    }
+                    else {
+                        this.$Message.info('成功登录');
+                        console.log("qqqq"+this.GLOBAL.userType)
+                        this.GLOBAL.setUserType(s["msg"]["user_type"]);
+                        console.log("hhhh"+this.GLOBAL.userType)
+                        this.identity = this.GLOBAL.userType;
+                        this.GLOBAL.setUserName(s["msg"]["username"])
+                    }
+                },function (res) {
+                    console.log(res)
+                });
             },
             cancel () {
                 this.$Message.info('cancel');
@@ -153,50 +173,44 @@
             },
             getSearchDetails(temp) {
                 var that = this;
-                console.log(temp);
-                if(temp == "prof")
+                console.log("get +" + temp);
+                if(temp)
                 {
-                    this.$http.post("https://www.easy-mock.com/mock/5c833375e0e0f75c246237e4/example/mock",
-                    {professor_name: that.$route.query.search_content},{emulateJSON:true}).then(function (res) {
-                        that.search_results = res.body.profData.sc_detail
-                    },function (res) {
-                        console.log(res)
-                    })
-                }
-                else if (temp == "paper")
-                {
-                    this.$http.post("https://www.easy-mock.com/mock/5c833375e0e0f75c246237e4/example/mock",
-                        {paper_name: that.$route.query.search_content},{emulateJSON:true}).then(function (res) {
-                        that.search_results = res.body.paperData.sc_detail
-                    },function (res) {
-                        console.log(res)
-                    })
-                }
-                else if (temp == "org")
-                {
-                    this.$http.post("https://www.easy-mock.com/mock/5c833375e0e0f75c246237e4/example/mock",
-                        {organization_name: that.$route.query.search_content},{emulateJSON:true}).then(function (res) {
-                        that.search_results = res.body.orgData.sc_detail
+                    this.$http.get("http://127.0.0.1:5000/api/v1/search_" + temp + "/" + that.search_content)
+                        .then(function (res) {
+                            var detail = JSON.parse(res.body);
+                            console.log(detail);
+                            that.search_results=detail.msg;
+                            that.type = temp;
+                            if(detail.reason == "未搜索到该专家" || detail.reason == "未查找到相关论文" || detail.reason == "未查找到相关机构")
+                                alert(detail.reason);
                     },function (res) {
                         console.log(res)
                     })
                 }
                 else
                 {
-                    alert("asdasdasdas");
+                    alert("请选择搜索类型");
                 }
-                console.log(this.search_results);
-                console.log(this.type);
+                // console.log(this.search_results);
+                // console.log(this.type);
             },
             iscollected() {
                 var result = 1;
                 return result;
             },
             search() {
+                var that = this;
                 if(this.search_content == "")
                     return;
-                this.type = this.search_item;
-                this.getSearchDetails(this.type);
+                this.$router.push({
+                    query:{
+                        search_content: that.search_content,
+                        search_type: that.search_item
+                    }
+                })
+                console.log("search +" + this.search_item);
+                this.getSearchDetails(this.search_item);
             }
         },
         computed: {
@@ -236,6 +250,7 @@
     .paper-author{
         color: #333333;
         font-size: 15px;
+        margin: 2px 0 2px 0;
     }
     .paper-key{
         color: #444444;
@@ -250,18 +265,17 @@
     }
     .c_font{
         font-family: "Helvetica Neue";
+        margin-bottom: 6px;
         font-size: 20px;
         word-wrap:break-word;
+        width: 80%;
     }
     .c_abstract{
-        line-height: 24px;
+        line-height: 17px;
+        width: 80%;
         color: #666;
-        font-size: 15px;
+        font-size: 13px;
         word-wrap:break-word;
-    }
-    .collect_img{
-        margin-left: 30px;
-        vertical-align:middle;
     }
     .searchResultItem {
         float: left;
