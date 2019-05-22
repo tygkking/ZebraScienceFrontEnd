@@ -8,7 +8,7 @@
                 </FormItem>
                 <FormItem label="邮箱" prop="mail" >
                     <Input v-model="formValidate.mail" placeholder="请输入邮箱" class="input-select-class" icon="ios-mail"></Input>
-                    <Button type="primary" shape="circle" @click="requ_ecode(formValidate.mail)">获取验证码</Button>
+                    <Button type="primary" shape="circle" @click="requ_ecode(formValidate.mail)">{{codeContent}}</Button>
                 </FormItem>
                 <FormItem label="验证码" prop="code" >
                     <Input v-model="formValidate.code" placeholder="验证码" class="input-select-class"/>
@@ -33,6 +33,9 @@
         name: "register",
         data () {
             return {
+                codeContent:'获取验证码',
+                codeCanclick:true,
+                totalTime: 10,
                 formValidate: {
                     name: '',
                     mail: '',
@@ -100,21 +103,36 @@
                 this.$refs[name].resetFields()
             },
             requ_ecode(mail){
-                if(mail==='')return;
-                console.log(mail)
-                let params = {"email":mail};
-                //let params = {"email":this.formValidate.mail};
-                this.$http.post("http://127.0.0.1:5000/api/v1/email_code",params,{
-                    headers:{
-                        'Content-Type':"application/json",
-                    }
-                }).then(function(res){
-                    console.log(res);
-                    alert("成功发送验证码！")
-                },function (res) {
-                    console.log(res)
-                    alert("发送验证码失败！")
-                });
+                if(mail==='' || !this.codeCanclick) return;
+                console.log(mail);
+                var re=/^([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$/;
+                if(re.test(mail)) {
+                    let params = {"email": mail};
+                    //let params = {"email":this.formValidate.mail};
+                    this.$http.post("http://127.0.0.1:5000/api/v1/email_code", params, {
+                        headers: {
+                            'Content-Type': "application/json",
+                        }
+                    }).then(function (res) {
+                        console.log(res);
+                        this.$Message.success('发送成功!');
+                        this.codeCanclick = false;
+                        this.codeContent = this.totalTime + 's后可重新发送';
+                        let clock = window.setInterval(() => {
+                            this.totalTime--;
+                            this.codeContent = this.totalTime + 's后重新发送';
+                            if (this.totalTime < 0) {
+                                window.clearInterval(clock);
+                                this.codeContent = '重新发送验证码';
+                                this.totalTime = 10;
+                                this.codeCanclick = true
+                            }
+                        }, 1000)
+                    }, function (res) {
+                        console.log(res)
+                        alert("发送验证码失败！")
+                    });
+                }
             }
         }
     }
