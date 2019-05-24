@@ -131,7 +131,6 @@
                         console.log("hhhh"+this.GLOBAL.userType)
                         this.identity = this.GLOBAL.userType;
                         this.GLOBAL.setUserName(s["msg"]["username"])
-                        //console.log("hhhh"+this.GLOBAL.userName)
                     }
                 },function (res) {
                     console.log(res)
@@ -158,55 +157,15 @@
             },
             search() {
                 if(this.search_content == "")
+                {
+                    alert("请输入搜索内容");
                     return;
-                // if (this.search_item=='prof')
-                // {
-                //     var that = this;
-                //     this.$http.post("https://www.easy-mock.com/mock/5c833375e0e0f75c246237e4/example/mock",
-                //         {professor_name: this.search_content},{emulateJSON:true}).then(function (res) {
-                //         that.$router.push({
-                //             name: 'search_detail',
-                //             query: {
-                //                 search_detail: res.body.profData.sc_detail,
-                //                 search_type: 'prof',
-                //             }
-                //         })
-                //     },function (res) {
-                //         console.log(res)
-                //     })
-                // }
-                // else if (this.search_item=='paper')
-                // {
-                //     var that = this;
-                //     this.$http.post("https://www.easy-mock.com/mock/5c833375e0e0f75c246237e4/example/mock",
-                //         {professor_name: this.search_content},{emulateJSON:true}).then(function (res) {
-                //         that.$router.push({
-                //             name: 'search_detail',
-                //             query: {
-                //                 search_detail: res.body.paperData.sc_detail,
-                //                 search_type: 'paper',
-                //             }
-                //         })
-                //     },function (res) {
-                //         console.log(res)
-                //     })
-                // }
-                // else if (this.search_item=='org')
-                // {
-                //     var that = this;
-                //     this.$http.post("https://www.easy-mock.com/mock/5c833375e0e0f75c246237e4/example/mock",
-                //         {professor_name: this.search_content},{emulateJSON:true}).then(function (res) {
-                //         that.$router.push({
-                //             name: 'search_detail',
-                //             query: {
-                //                 search_detail: res.body.orgData.sc_detail,
-                //                 search_type: 'paper',
-                //             }
-                //         })
-                //     },function (res) {
-                //         console.log(res)
-                //     })
-                // }
+                }
+                if(this.search_item == '')
+                {
+                    alert("请选择搜索类型");
+                    return;
+                }
                 this.$router.push({
                     name: 'search_detail',
                     query:{

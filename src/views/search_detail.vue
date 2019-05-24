@@ -18,7 +18,7 @@
                         <Button  @click="search"  slot="append" style="background-color:#57c5f7;color: white" icon="ios-search" ></Button>
                     </Input>
                 </MenuItem>
-                <Submenu v-if="identity != 'visitor'" name="2" style="float:right">
+                <Submenu v-if="identity != 'VISITOR'" name="2" style="float:right">
                     <template slot="title">
                         <Icon type="ios-contact" size="20"/>
                         {{this.GLOBAL.userName}}
@@ -28,7 +28,7 @@
                     <MenuItem name="2-3" @click.native="setting()">设置</MenuItem>
                     <MenuItem name="2-4" @click.native="logout()">退出登录</MenuItem>
                 </Submenu>
-                <MenuItem v-if="identity == 'visitor'" @click.native="modal1=true" name="3" style="float:right">
+                <MenuItem v-if="identity == 'VISITOR'" @click.native="modal1=true" name="3" style="float:right">
                     登录
                     <Modal v-model="modal1" title="登录" ok-text="登录" cancel-text="取消" @on-ok="login" @on-cancel="cancel" @keyup.enter.native="login">
                         <p>邮箱<input v-model="email" type="email" style="margin-left: 17px"/></p><br/>
@@ -36,7 +36,7 @@
                     </Modal>
                 </MenuItem>
                 <a :href="register_url" style="float: right;">
-                    <MenuItem v-if="identity == 'visitor'" :href="register_url" name="4">
+                    <MenuItem v-if="identity == 'VISITOR'" :href="register_url" name="4">
                         注册
                     </MenuItem>
                 </a>
@@ -46,11 +46,11 @@
             <div v-for="item in search_results" class="sc_content">
                 <div v-if="type=='paper'">
                     <div class="c_font">
-                        <router-link tag="a" :to="{path:'/paperDetails',query:{paperID:'111111'}}" target="_blank" style="color: black">{{item.name}}</router-link>
+                        <router-link tag="a" :to="{path:'/paperDetails',query:{paperID:'111111'}}" target="_blank">{{item.name}}</router-link>
                     </div>
                     <div class="c_abstract">{{item.abstract}}</div>
                     <div class="paper-author">
-                        <div v-for="(value, key) in item.author" style="display: inline">{{ key }}&nbsp</div>
+                        <div v-for="(value, key) in item.author" style="display: inline">{{ key }}&nbsp&nbsp</div>
                         <div style="display: inline">-&nbsp&nbsp{{item.source_journal.name}}&nbsp&nbsp-&nbsp&nbsp{{item.source_journal.date}}&nbsp&nbsp-&nbsp&nbsp{{item.year}}</div>
                     </div>
                     <div class="paper-key">
@@ -108,7 +108,6 @@
 </template>
 
 <script>
-    import temp from './index.vue'
     export default {
         name: "search_paper",
         data() {
@@ -120,6 +119,8 @@
                 theme1: 'primary',
                 search_results: [],
                 type: '',
+                email: '',
+                password: '',
                 search_content: '',
                 search_item: '',
             }
@@ -168,7 +169,7 @@
                 this.$router.push({path: '/setting'})
             },
             logout () {
-                this.GLOBAL.setUserType('visitor');
+                this.GLOBAL.setUserType('VISITOR');
                 this.identity = this.GLOBAL.userType;
             },
             getSearchDetails(temp) {
@@ -176,7 +177,7 @@
                 console.log("get +" + temp);
                 if(temp)
                 {
-                    this.$http.get("http://127.0.0.1:5000/api/v1/search_" + temp + "/" + that.search_content)
+                    this.$http.get(this.GLOBAL.domain + "/api/v1/search_" + temp + "/" + that.search_content)
                         .then(function (res) {
                             var detail = JSON.parse(res.body);
                             console.log(detail);
@@ -192,13 +193,8 @@
                 {
                     alert("请选择搜索类型");
                 }
-                // console.log(this.search_results);
-                // console.log(this.type);
             },
-            iscollected() {
-                var result = 1;
-                return result;
-            },
+
             search() {
                 var that = this;
                 if(this.search_content == "")
@@ -242,23 +238,21 @@
         position: fixed;
         top: 0px;
     }
-    .paper-img{
-        position: fixed;
-        top: 20%;
-        right: 10%;
-    }
     .paper-author{
         color: #333333;
         font-size: 15px;
         margin: 2px 0 2px 0;
+        width: 80%;
     }
     .paper-key{
         color: #444444;
         font-size: 15px;
+        width: 80%;
+        border-bottom: #9999 1px solid;
     }
     .sc_detail{
         margin-left: 10%;
-        margin-top: 7%;
+        margin-top: 6%;
     }
     .sc_content{
         margin-top: 15px;
