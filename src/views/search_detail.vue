@@ -46,7 +46,7 @@
             <div v-for="item in search_results" class="sc_content">
                 <div v-if="type=='paper'">
                     <div class="c_font">
-                        <router-link tag="a" :to="{path:'/paperDetails',query:{paperID:'111111'}}" target="_blank">{{item.name}}</router-link>
+                        <router-link tag="a" :to="{path:'/paperDetails',query:{paperID: item.paperid}}" target="_blank">{{item.name}}</router-link>
                     </div>
                     <div class="c_abstract">{{item.abstract}}</div>
                     <div class="paper-author">
