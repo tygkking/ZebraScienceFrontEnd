@@ -80,7 +80,7 @@
                 </Input>
             </Col>
         </Row>
-        <router-link :to="professorDetails_url">专家详情</router-link>
+        <router-link :to="{path: '/professorDetails',query:{profID: 'CN-BQ73PUWJ'}}">专家详情</router-link>
         <router-link :to="user_url">个人主页</router-link>
         <router-link :to="paperDetails_url">论文详情</router-link>
         <router-link :to="news_url">消息界面</router-link>

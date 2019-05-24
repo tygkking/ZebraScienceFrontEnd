@@ -325,13 +325,39 @@
                 this.identity = this.GLOBAL.userType;
             },
             toggle_like (){
+                let params = {'user_id':this.GLOBAL.email,'professor_id':this.profID}
                 if(this.isliked){
-                    this.showlike = '关注'
+                    this.$http.delete(this.GLOBAL.domain + "/api/v1/follow",params)
+                        .then(function (res) {
+                            var detail = JSON.parse(res.body);
+                            console.log(detail);
+                            if(detail.state == "fail"){
+                                this.$Message.info(detail.reason);
+                            }
+                            else {
+                                this.showlike = '关注';
+                                this.isliked = !this.isliked;
+                            }
+                    },function (res) {
+                        alert(res);
+                    })
                 }
                 else {
-                    this.showlike = '已关注'
+                    this.$http.get(this.GLOBAL.domain + "/api/v1/follow",params)
+                        .then(function (res) {
+                            var detail = JSON.parse(res.body);
+                            console.log(detail);
+                            if(detail.state == "fail"){
+                                this.$Message.info(detail.reason);
+                            }
+                            else {
+                                this.showlike = '已关注';
+                                this.isliked = !this.isliked;
+                            }
+                    },function (res) {
+                        alert(res);
+                    })
                 }
-                this.isliked = !this.isliked
             },
             to_scholar (id) {
                 this.$router.push({
@@ -381,12 +407,33 @@
                     alert('No Such Professor');
                 }
             },
+            checkFollowed () {
+                let params = {'user_id':this.GLOBAL.email,'professor_id':this.profID}
+                this.$http.post(this.GLOBAL.domain+"/api/v1/is_follow",params,{
+                    headers:{
+                        'Content-Type':"application/json",
+                    }
+                }).then(function(res){
+                    console.log(res);
+                    var s = JSON.parse(res.body);
+                    if(s["state"]=="fail"){
+                        this.$Message.info(s["reason"]);
+                    }
+                    else if(s["state"]=="no" && s["reason"]=="用户未关注该专家"){
+                        this.isliked = false;
+                    }
+                    else if(s["state"]=="yes"){
+                        this.isliked = true;
+                    }
+                })
+            },
         },
         created() {
             //判断是否关注
             console.log('sadasdasdas'+this.$route.query.profID);
             //this.profID = this.$route.query.profID;
             this.getProfessorDetails(this.$route.query.profID);
+            this.checkFollowed();
         }
     }
 </script>

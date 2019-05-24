@@ -8,8 +8,8 @@
         domain:'http://qsz.lkc1621.xyz',
         name: "global",
         userID: '123456',
-        userName: '',
-        email: '',
+        userName: 'hhq',
+        email: '1@1.com',
         password: '123', // Just For Test
         userType: 'VISITOR',
         collectList: [
