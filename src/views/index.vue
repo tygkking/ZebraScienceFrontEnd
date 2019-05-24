@@ -93,6 +93,7 @@
     </div>
 </template>
 <script>
+    import CookieUtil from './cookieUtil.vue'
     export default {
         data () {
             return {
@@ -137,6 +138,9 @@
                         this.like_sch = this.GLOBAL.followList;
                         this.GLOBAL.setCollectList(s["msg"]["star_list"]);
                         this.star_paper_items = this.GLOBAL.collectList;
+
+                        CookieUtil.methods.setCookie('email', this.email);
+                        CookieUtil.methods.setCookie('password', this.password);
                     }
                 },function (res) {
                     console.log(res)
@@ -157,6 +161,8 @@
             logout () {
                 this.GLOBAL.setUserType('VISITOR');
                 this.identity = this.GLOBAL.userType;
+                CookieUtil.methods.delCookie('email');
+                CookieUtil.methods.delCookie('password');
             },
             jump_register(){
                 this.$router.push({path: '/register'})
@@ -179,6 +185,13 @@
                         search_type: this.search_item
                     }
                 })
+            }
+        },
+        created() {
+            this.email = CookieUtil.methods.getCookie('email');
+            this.password = CookieUtil.methods.getCookie('password');
+            if(this.email!=''){
+                this.login();
             }
         }
     }
