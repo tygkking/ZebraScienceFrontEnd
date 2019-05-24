@@ -64,7 +64,7 @@
                             <img src="/src/images/zebra.png" alt="图片" width="64" height="64">
                         </router-link>
                         <div class="searchResult_text">
-                            <router-link class="personName" :to="{path: '/professorDetails',query:{profID: item.scid}}" target="_blank">
+                            <router-link class="personName" :to="{path: '/professorDetails',query:{profID:'11111'}}" target="_blank">
                                 {{item.name}}
                             </router-link>
                             <p class="personInstitution">{{item.mechanism}}</p>
