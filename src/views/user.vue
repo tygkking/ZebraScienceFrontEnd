@@ -62,7 +62,7 @@
                     首页
                 </MenuItem>
             </router-link>
-            <Submenu v-if="identity != 'visitor'" name="2" style="float:right">
+            <Submenu v-if="identity != 'VISITOR'" name="2" style="float:right">
                 <template slot="title">
                     <Icon type="ios-contact" size="20"/>
                     {{this.GLOBAL.userName}}
@@ -72,7 +72,7 @@
                 <MenuItem name="2-3" @click.native="setting()">设置</MenuItem>
                 <MenuItem name="2-4" @click.native="logout()">退出登录</MenuItem>
             </Submenu>
-            <MenuItem v-if="identity == 'visitor'" @click.native="modal1=true" name="3" style="float:right">
+            <MenuItem v-if="identity == 'VISITOR'" @click.native="modal1=true" name="3" style="float:right">
                 登录
                 <Modal v-model="modal1" title="登录" ok-text="登录" cancel-text="取消" @on-ok="login" @on-cancel="cancel" @keyup.enter.native="login">
                     <p>邮箱<input v-model="email" type="email" style="margin-left: 17px"/></p><br/>
@@ -80,7 +80,7 @@
                 </Modal>
             </MenuItem>
             <a :href="register_url" style="float: right;">
-                <MenuItem v-if="identity == 'visitor'" :href="register_url" name="4">
+                <MenuItem v-if="identity == 'VISITOR'" :href="register_url" name="4">
                     注册
                 </MenuItem>
             </a>
@@ -93,7 +93,7 @@
                             <div class="person-image" style="text-align: center">
                                 <img src="../images/zebra.png" height="100px" style="margin: 5px">
                                 <br>
-                                <Button v-if="identity == 'user'" style="width: 90%; font-size: 14px" @click.native="applyfor">
+                                <Button v-if="identity == 'USER'" style="width: 90%; font-size: 14px" @click.native="applyfor">
                                     申请认证
                                 </Button>
                             </div>
@@ -110,7 +110,7 @@
                     </Row>
                 </div>
                 <Tabs value="name2">
-                    <TabPane label="我的论文" name="name1" v-if="identity=='professor'">
+                    <TabPane label="我的论文" name="name1" v-if="identity=='EXPERT'">
                         <div class="paper-list">
                             <ul style="list-style-type:none">
                                 <li v-for="item in my_paper_items">
@@ -198,9 +198,9 @@
                 register_url:'/register',
                 theme1: 'primary',
                 identity: this.GLOBAL.userType,
-                //identity:'professor', //professor user visitor
+                //identity:'EXPERT', //EXPERT USER VISITOR
                 userName: '姓名',
-                email: '邮箱',
+                email: '',
                 introduction: '个人简介',
                 my_paper_items: [
                     {
@@ -264,7 +264,7 @@
                 this.$router.push({path: '/setting'})
             },
             logout () {
-                this.GLOBAL.setUserType('visitor');
+                this.GLOBAL.setUserType('VISITOR');
                 this.identity = this.GLOBAL.userType;
                 this.$router.push({path: '/'})
             },

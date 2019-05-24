@@ -11,7 +11,7 @@
         userName: '',
         email: 'caixukun@rap.com',
         password: '123', // Just For Test
-        userType: 'visitor',
+        userType: 'VISITOR',
         collectList: [
             {
                 paper_detail: {

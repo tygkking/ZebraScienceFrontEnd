@@ -229,7 +229,7 @@
                 theme1: 'primary',
                 theme3: 'light',
                 identity: this.GLOBAL.userType,
-                //identity:'admin', //professor user visitor admin
+                //identity:'ADMIN', //EXPERT USER visitor ADMIN
                 news_type:'comments', //comments like system verify
                 comments_news: [
                     {
