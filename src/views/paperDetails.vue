@@ -179,8 +179,8 @@
         },
         created() {
             this.identity = this.GLOBAL.userType;
-            console.log(this.GLOBAL.userType);
-            console.log(this.identity)
+            this.paper.paper_id = this.$route.query.paperID;
+            this.get_paperDetails(this.paper.paper_id)
         },
         methods:{
             login () {
@@ -254,6 +254,14 @@
                         search_type: 'prof'
                     }
                 })
+            },
+            get_paperDetails(pid){
+                this.$http.get(this.GLOBAL.domain + "/api/v1/get_paper_details/" + pid)
+                    .then(function(res) {
+                        var s = JSON.parse(res.body);
+                    },function (res) {
+                        console.log(res)
+                });
             }
         }
     }
