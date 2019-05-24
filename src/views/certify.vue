@@ -154,6 +154,20 @@
                 this.$refs[name].validate((valid) => {
                     if (valid) {
                         this.$Message.success('提交成功!')
+                        //Error 暂时有错误
+                        var form = this.formValidate;
+                        let params = {'email':this.GLOBAL.email,'name':form.name,'ID_num':form.id_num,'field':form.field,'text':form.else_info};
+                        this.$http.get(this.GLOBAL.domain + '/api/v1/certification',params,{
+                            headers:{
+                                'Content-Type':"application/json",
+                            }
+                        }).then(function (res) {
+                                var detail = JSON.parse(res.body);
+                                console.log(detail);
+                            },function (res) {
+                                var detail = JSON.parse(res.body);
+                                console.log(detail);
+                            })
                     } else {
                         this.$Message.error('表单验证失败!')
                     }
