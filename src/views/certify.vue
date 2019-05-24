@@ -34,7 +34,7 @@
             <div v-if="identity == 'VISITOR'" style="width: 100%; text-align: center; height: 200px;">
                 <h2 style="margin-top: 80px">您还未登录！<br> 请登录后再申请认证</h2>
             </div>
-            <div class="layout-content-main" v-show="identity == 'VISITOR'">
+            <div class="layout-content-main" v-show="identity == 'USER' || identity == 'ADMIN'">
                 <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="100">
                     <FormItem label="真实姓名" prop="name" >
                         <Input v-model="formValidate.name" placeholder="请输入真实名" class="input-select-class"></Input>
@@ -121,7 +121,13 @@
                         this.GLOBAL.setUserType(s["msg"]["user_type"]);
                         console.log("hhhh"+this.GLOBAL.userType)
                         this.identity = this.GLOBAL.userType;
-                        this.GLOBAL.setUserName(s["msg"]["username"])
+                        this.GLOBAL.setUserName(s["msg"]["username"]);
+                        this.GLOBAL.setUserEmail(s["msg"]["email"]);
+                        this.email = this.GLOBAL.email;
+                        this.GLOBAL.setFollowList(s["msg"]["follow_list"]);
+                        this.like_sch = this.GLOBAL.followList;
+                        this.GLOBAL.setCollectList(s["msg"]["star_list"]);
+                        this.star_paper_items = this.GLOBAL.collectList;
                         //console.log("hhhh"+this.GLOBAL.userName)
                     }
                 },function (res) {

@@ -9,7 +9,7 @@
         name: "global",
         userID: '123456',
         userName: '',
-        email: 'caixukun@rap.com',
+        email: '',
         password: '123', // Just For Test
         userType: 'VISITOR',
         collectList: [
@@ -64,6 +64,20 @@
                 ref_num: 92,
             }
         ],
+        paperList: [
+            {
+                title: 'This is Paper Title One',
+                year: '2018',
+                author: '郭子溢 黎昆昌 许志达 何浩乾',
+                source: 'This is Paper Source'
+            },
+            {
+                title: 'This is Paper Title One',
+                year: '2018',
+                author: '郭子溢 黎昆昌 许志达 何浩乾',
+                source: 'This is Paper Source'
+            },
+        ],
         setUserID(id) {
             this.userID = id;
         },
@@ -73,6 +87,15 @@
         setUserName(name) {
             this.userName = name;
         },
+        setUserEmail(email) {
+            this.email = email;
+        },
+        setFollowList(flist) {
+            this.followList = flist;
+        },
+        setCollectList(clist) {
+            this.collectList = clist;
+        }
     }
 </script>
 

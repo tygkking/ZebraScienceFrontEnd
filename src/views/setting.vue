@@ -167,7 +167,13 @@
                         this.GLOBAL.setUserType(s["msg"]["user_type"]);
                         console.log("hhhh"+this.GLOBAL.userType)
                         this.identity = this.GLOBAL.userType;
-                        this.GLOBAL.setUserName(s["msg"]["username"])
+                        this.GLOBAL.setUserName(s["msg"]["username"]);
+                        this.GLOBAL.setUserEmail(s["msg"]["email"]);
+                        this.email = this.GLOBAL.email;
+                        this.GLOBAL.setFollowList(s["msg"]["follow_list"]);
+                        this.like_sch = this.GLOBAL.followList;
+                        this.GLOBAL.setCollectList(s["msg"]["star_list"]);
+                        this.star_paper_items = this.GLOBAL.collectList;
                         //console.log("hhhh"+this.GLOBAL.userName)
                     }
                 },function (res) {
