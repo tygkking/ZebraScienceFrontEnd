@@ -119,7 +119,7 @@
                                 <ul style="list-style-type:none">
                                     <li v-for="item in paper_items">
                                         <div class="paper-detail">
-                                            <a href="http://www.baidu.com" target="_blank">
+                                            <a @click="to_paper(item.paperid)" target="_blank">
                                                 {{ item.name }}
                                             </a>
                                             <br>
@@ -335,6 +335,14 @@
                     }
                 })
                 this.getProfessorDetails(this.$route.query.profID);
+            },
+            to_paper (id) {
+                this.$router.push({
+                    path: 'paperDetails',
+                    query: {
+                        paperID: id
+                    }
+                })
             },
             getProfessorDetails (profID) {
                 var that = this;
