@@ -7,7 +7,7 @@
                     首页
                 </MenuItem>
             </a>
-            <Submenu v-if="identity != 'visitor'" name="2" style="float:right">
+            <Submenu v-if="identity != 'VISITOR'" name="2" style="float:right">
                 <template slot="title">
                     <Icon type="ios-contact" size="20"/>
                     {{this.GLOBAL.userName}}
@@ -17,7 +17,7 @@
                 <MenuItem name="2-3" @click.native="setting()">设置</MenuItem>
                 <MenuItem name="2-4" @click.native="logout()">退出登录</MenuItem>
             </Submenu>
-            <MenuItem v-if="identity == 'visitor'" @click.native="modal1=true" name="3" style="float:right">
+            <MenuItem v-if="identity == 'VISITOR'" @click.native="modal1=true" name="3" style="float:right">
                 登录
                 <Modal v-model="modal1" title="登录" ok-text="登录" cancel-text="取消" @on-ok="login" @on-cancel="cancel" @keyup.enter.native="login">
                     <p>邮箱<input v-model="email" type="email" style="margin-left: 17px"/></p><br/>
@@ -25,16 +25,16 @@
                 </Modal>
             </MenuItem>
             <a :href="register_url" style="float: right;">
-                <MenuItem v-if="identity == 'visitor'" :href="register_url" name="4">
+                <MenuItem v-if="identity == 'VISITOR'" :href="register_url" name="4">
                     注册
                 </MenuItem>
             </a>
         </Menu>
         <div class="certify-detail">
-            <div v-if="identity == 'visitor'" style="width: 100%; text-align: center; height: 200px;">
+            <div v-if="identity == 'VISITOR'" style="width: 100%; text-align: center; height: 200px;">
                 <h2 style="margin-top: 80px">您还未登录！<br> 请登录后再申请认证</h2>
             </div>
-            <div class="layout-content-main" v-show="identity == 'visitor'">
+            <div class="layout-content-main" v-show="identity == 'VISITOR'">
                 <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="100">
                     <FormItem label="真实姓名" prop="name" >
                         <Input v-model="formValidate.name" placeholder="请输入真实名" class="input-select-class"></Input>
@@ -77,7 +77,7 @@
                 register_url:'/register',
                 theme1: 'primary',
                 identity: this.GLOBAL.userType,
-                //identity:'professor', //professor user visitor
+                //identity:'EXPERT', //EXPERT USER VISITOR
                 formValidate: {
                     name: '',
                     id_num: '',
@@ -141,7 +141,7 @@
                 this.$router.push({path: '/setting'})
             },
             logout () {
-                this.GLOBAL.setUserType('visitor');
+                this.GLOBAL.setUserType('VISITOR');
                 this.identity = this.GLOBAL.userType;
             },
             handleSubmit (name) {

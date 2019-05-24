@@ -40,7 +40,7 @@
 </style>
 <template>
     <div class="index">
-        <Dropdown v-if="identity != 'visitor'" placement="bottom-start" style="margin-left: 90%; margin-top: 1%; font-size: 14px">
+        <Dropdown v-if="identity != 'VISITOR'" placement="bottom-start" style="margin-left: 90%; margin-top: 1%; font-size: 14px">
             <a style="color: black">
                 <Icon type="ios-contact"></Icon>
                 {{this.GLOBAL.userName}}
@@ -150,7 +150,7 @@
                 this.$router.push({path: '/setting'})
             },
             logout () {
-                this.GLOBAL.setUserType('visitor');
+                this.GLOBAL.setUserType('VISITOR');
                 this.identity = this.GLOBAL.userType;
             },
             jump_register(){
