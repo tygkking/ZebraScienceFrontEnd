@@ -46,7 +46,7 @@
             <div v-for="item in search_results" class="sc_content">
                 <div v-if="type=='paper'">
                     <div class="c_font">
-                        <router-link tag="a" :to="{path:'/paperDetails',query:{paperID:'111111'}}" target="_blank">{{item.name}}</router-link>
+                        <router-link tag="a" :to="{path:'/paperDetails',query:{paperID: item.paperid}}" target="_blank">{{item.name}}</router-link>
                     </div>
                     <div class="c_abstract">{{item.abstract}}</div>
                     <div class="paper-author">
@@ -60,7 +60,7 @@
 
                 <div v-else-if="type=='professor'">
                     <div class="searchResultItem">
-                        <router-link tag="a" class="searchResult_pic" :to="{path: '/professorDetails',query:{profID:'11111'}}" target="_blank">
+                        <router-link tag="a" class="searchResult_pic" :to="{path: '/professorDetails',query:{profID: item.scid}}" target="_blank">
                             <img src="/src/images/zebra.png" alt="图片" width="64" height="64">
                         </router-link>
                         <div class="searchResult_text">
@@ -150,7 +150,13 @@
                         this.GLOBAL.setUserType(s["msg"]["user_type"]);
                         console.log("hhhh"+this.GLOBAL.userType)
                         this.identity = this.GLOBAL.userType;
-                        this.GLOBAL.setUserName(s["msg"]["username"])
+                        this.GLOBAL.setUserName(s["msg"]["username"]);
+                        this.GLOBAL.setUserEmail(s["msg"]["email"]);
+                        this.email = this.GLOBAL.email;
+                        this.GLOBAL.setFollowList(s["msg"]["follow_list"]);
+                        this.like_sch = this.GLOBAL.followList;
+                        this.GLOBAL.setCollectList(s["msg"]["star_list"]);
+                        this.star_paper_items = this.GLOBAL.collectList;
                     }
                 },function (res) {
                     console.log(res)
