@@ -36,11 +36,17 @@
     margin-bottom: 10px;
     /*font-family: 华文中宋;*/
     font-size: 18px;
+    border-bottom: dashed #8391a5 1px;
+    padding-bottom: 10px;
 }
 
 .relevant-detail{
     font-size: 14px;
-    margin-bottom: 3px;
+    margin-bottom: 6px;
+    border-bottom: dashed #8391a5 1px;
+    /*border-radius: 5px;*/
+    padding: 3px;
+    min-width: 30%;
 }
 
 </style>
@@ -96,7 +102,8 @@
                                 <br>
                                 <h3>机构：{{organization}}</h3>
                                 <br>
-                                <h3>领域：{{field}}</h3>
+                                <h3 style="display: inline">领域：</h3> <h3 style="display: inline" v-for="item in field">{{item}}&nbsp</h3>
+                                <br>
                                 <br>
                                 <h4>发表论文数：{{paper_num}}&nbsp&nbsp被引次数：{{ref_num}}</h4>
                             </div>
@@ -113,15 +120,15 @@
                                     <li v-for="item in paper_items">
                                         <div class="paper-detail">
                                             <a href="http://www.baidu.com" target="_blank">
-                                                {{ item.paper_detail.title }}
+                                                {{ item.name }}
                                             </a>
                                             <br>
-                                            <div style="font-size: 14px">
-                                                年份:{{ item.paper_detail.year }}
+                                            <div style="font-size: 14px;">
+                                                年份：{{ item.year }}
                                                 &nbsp&nbsp&nbsp
-                                                作者:{{ item.paper_detail.author }}
+                                                作者：<div style="display: inline" v-for="name in item.author">{{ name }}&nbsp&nbsp</div>
                                                 <br>
-                                                出处:{{ item.paper_detail.source }}
+                                                出处：{{ item.source_journal.name }}&nbsp{{item.source_journal.date}}
                                             </div>
                                         </div>
                                     </li>
@@ -135,8 +142,10 @@
                                     <h3>合作学者</h3>
                                     <ul style="list-style-type:none; margin-left: 5px; margin-top: 5px">
                                         <li v-for="item in coop_sch">
-                                            <div class="relevant-detail" @click="to_scholar(item.message)" style="cursor:pointer; color: #2b85e4; width: fit-content">
-                                                {{ item.message }}
+                                            <div class="relevant-detail" @click="to_scholar(item.scid)" style="cursor:pointer; color: #2b85e4; width: fit-content">
+                                                {{item.name}}&nbsp&nbsp合作次数：{{ item.count }}
+                                                <br>
+                                                {{ item.mechanism }}
                                             </div>
                                         </li>
                                     </ul>
@@ -177,6 +186,8 @@
                 //identity:'EXPERT', //EXPERT USER VISITOR
                 theme1: 'primary',
                 isliked: false,
+                password: '',
+                email: '',
                 showlike: '关注',
                 userName: '姓名',
                 profID: 'ProfID',
@@ -191,38 +202,6 @@
                             year: '2018',
                             author: '郭子溢 黎昆昌 许志达 何浩乾 郭子溢 黎昆昌 许志达 何浩乾 郭子溢 黎昆昌 许志达 何浩乾',
                             source: 'This is Paper Source This is Paper Source This is Paper Source'
-                        }
-                    },
-                    {
-                        paper_detail: {
-                            title: 'This is Paper Title One',
-                            year: '2018',
-                            author: '郭子溢 黎昆昌 许志达 何浩乾',
-                            source: 'This is Paper Source'
-                        }
-                    },
-                    {
-                        paper_detail: {
-                            title: 'This is Paper Title One',
-                            year: '2018',
-                            author: '郭子溢 黎昆昌 许志达 何浩乾',
-                            source: 'This is Paper Source'
-                        }
-                    },
-                    {
-                        paper_detail: {
-                            title: 'This is Paper Title One',
-                            year: '2018',
-                            author: '郭子溢 黎昆昌 许志达 何浩乾',
-                            source: 'This is Paper Source'
-                        }
-                    },
-                    {
-                        paper_detail: {
-                            title: 'This is Paper Title One',
-                            year: '2018',
-                            author: '郭子溢 黎昆昌 许志达 何浩乾',
-                            source: 'This is Paper Source'
                         }
                     },
                     {
@@ -348,20 +327,52 @@
                 }
                 this.isliked = !this.isliked
             },
-            to_scholar (name) {
+            to_scholar (id) {
                 this.$router.push({
-                    name: 'search_detail',
+                    path: '/professorDetails',
                     query: {
-                        search_detail: name,
-                        search_type: 'prof'
+                        profID: id
                     }
                 })
+                this.getProfessorDetails(this.$route.query.profID);
+            },
+            getProfessorDetails (profID) {
+                var that = this;
+                console.log("get +" + profID);
+                if(profID)
+                {
+                    this.$http.get(this.GLOBAL.domain + "/api/v1/professor_detail/" + profID)
+                        .then(function (res) {
+                            var detail = JSON.parse(res.body);
+                            console.log(detail);
+                            if(detail.state == 'fail'){
+                                alert(detail.reason)
+                                that.to_scholar(that.profID);
+                            }
+                            else{
+                                that.userName = detail.msg.name;
+                                that.profID = profID;
+                                that.organization = detail.msg.mechanism;
+                                that.field = detail.msg.field;
+                                that.paper_num = detail.msg.resultsnumber;
+                                that.ref_num = detail.msg.citedtimes;
+                                that.coop_sch = detail.msg.copinfo;
+                                that.paper_items = detail.msg.paper;
+                            }
+                    },function (res) {
+                        console.log(res)
+                    })
+                }
+                else {
+                    alert('No Such Professor');
+                }
             },
         },
         created() {
             //判断是否关注
             console.log('sadasdasdas'+this.$route.query.profID);
-            this.profID = this.$route.query.profID;
+            //this.profID = this.$route.query.profID;
+            this.getProfessorDetails(this.$route.query.profID);
         }
     }
 </script>
