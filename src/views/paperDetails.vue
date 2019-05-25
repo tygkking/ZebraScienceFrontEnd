@@ -15,7 +15,7 @@
                                     <label style="width: 90px;color: #999999" >作者：</label>
                                 </Col>
                                 <Col span="22">
-                                    <label @click="jump_man" v-for="auth in paper.author" style="color: #2b85e4;font-size: 14px">{{auth}}&nbsp;&nbsp;&nbsp;</label>
+                                    <label @click="jump_man" v-for="(value, key) in paper.author" style="color: #2b85e4;font-size: 14px">{{key}}&nbsp;&nbsp;&nbsp;</label>
                                 </Col>
                             </Row>
                             <!--<label style="width: 60px;color: #999999" >作者：</label>-->
@@ -152,6 +152,9 @@
             this.get_paperDetails(this.paper.paper_id)
         },
         methods:{
+            cancel () {
+                this.$Message.info('cancel');
+            },
             toggle_like (){
                 if(this.isliked){
                     this.showlike = '收藏'
@@ -177,11 +180,20 @@
                 })
             },
             get_paperDetails(pid) {
-                this.$http.get(this.GLOBAL.domain + "/api/v1/get_paper_details/" + pid)
+                this.$http.get(this.GLOBAL.domain + "/api/v1/paper_detail/" + pid)
                     .then(function (res) {
-                        var s = JSON.parse(res.body);
+                        var detail = JSON.parse(res.body);
+                        console.log(detail);
+                        this.paper.name = detail.msg.name;
+                        this.paper.abstract = detail.msg.abstract;
+                        this.paper.keyword = detail.msg.keyword;
+                        this.paper.year = detail.msg.year;
+                        this.paper.author = detail.msg.author;
+                        this.paper.source_journal = detail.msg.source_journal;
+                        this.paper.source_url = detail.msg.source_url;
                     }, function (res) {
-                        console.log(res)
+                        var detail = JSON.parse(res.body);
+                        console.log(detail);
                 });
             }
         }
