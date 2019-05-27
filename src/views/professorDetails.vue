@@ -53,7 +53,7 @@
 
 <template>
     <div class="userpage">
-        <MenuBar></MenuBar>
+        <MenuBar  v-on:user="identity = 'USER'" v-on:visitor="identity = 'VISITOR'"></MenuBar>
         <Layout id="layout">
             <Content :style="{padding: '0 50px'}">
                 <div class="user-intro">
@@ -155,6 +155,7 @@
         data () {
             return {
                 isliked: false,
+                identity: this.GLOBAL.userType,
                 showlike: '关注',
                 userName: '姓名',
                 profID: 'ProfID',
@@ -287,6 +288,7 @@
                     }
                 })
                 this.getProfessorDetails(this.$route.query.profID);
+                this.checkFollowed(id);
             },
             to_paper (id) {
                 this.$router.push({
@@ -327,23 +329,25 @@
                     alert('No Such Professor');
                 }
             },
-            checkFollowed () {
-                let params = {'user_id':this.GLOBAL.email,'professor_id':this.profID}
+            checkFollowed (nowprofID) {
+                let params = {'user_id':this.GLOBAL.email,'professor_id':nowprofID}
                 this.$http.post(this.GLOBAL.domain+"/api/v1/is_follow",params,{
                     headers:{
                         'Content-Type':"application/json",
                     }
                 }).then(function(res){
-                    console.log(res);
-                    var s = JSON.parse(res.body);
-                    if(s["state"]=="fail"){
+                    var detail = JSON.parse(res.body);
+                    console.log(detail)
+                    if(detail.state=="fail"){
                         this.$Message.info(s["reason"]);
                     }
-                    else if(s["state"]=="no" && s["reason"]=="用户未关注该专家"){
+                    else if(detail.state=="no"){
                         this.isliked = false;
+                        this.showlike = '关注';
                     }
-                    else if(s["state"]=="yes"){
+                    else if(detail.state=="yes"){
                         this.isliked = true;
+                        this.showlike = '已关注';
                     }
                 })
             },
@@ -353,7 +357,7 @@
             console.log('sadasdasdas'+this.$route.query.profID);
             //this.profID = this.$route.query.profID;
             this.getProfessorDetails(this.$route.query.profID);
-            this.checkFollowed();
+            this.checkFollowed(this.$route.query.profID);
         }
     }
 </script>

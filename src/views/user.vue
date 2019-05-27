@@ -57,9 +57,12 @@
 
 <template>
     <div class="userpage">
-        <MenuBar></MenuBar>
+        <MenuBar  v-on:user="identity = 'USER'" v-on:visitor="identity = 'VISITOR'"></MenuBar>
         <Layout id="layout">
-            <Content :style="{padding: '0 50px'}">
+            <div v-if="identity == 'VISITOR'" style="width: 100%; text-align: center; height: 200px;">
+                <h2 style="margin-top: 80px">您还未登录！<br> 无法查看个人主页</h2>
+            </div>
+            <Content v-else :style="{padding: '0 50px'}">
                 <div class="user-intro">
                     <Row>
                         <Col span="5">
