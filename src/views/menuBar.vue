@@ -77,6 +77,8 @@
                         this.GLOBAL.setCollectList(s["msg"]["star_list"]);
                         this.star_paper_items = this.GLOBAL.collectList;
                         //console.log("hhhh"+this.GLOBAL.userName)
+
+                        this.$emit('user')
                     }
                 },function (res) {
                     console.log(res)
@@ -97,6 +99,7 @@
             logout () {
                 this.GLOBAL.setUserType('VISITOR');
                 this.identity = this.GLOBAL.userType;
+                this.$emit('visitor')
             },
         }
     }
