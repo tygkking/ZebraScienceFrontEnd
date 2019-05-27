@@ -35,7 +35,7 @@
                             邮箱：{{this.GLOBAL.email}}
                         </div>
                     </div>
-                    <Menu :theme="theme3" active-name="1" style="padding-top: 20px">
+                    <Menu :theme="theme3" active-name="1" style="padding-top: 20px; max-width: 80%">
                         <MenuItem name="1" @click.native="news_type = 'comments'">
                             <Icon type="md-chatbubbles" />
                             评论
@@ -92,7 +92,7 @@
                         <Button type="error" size="large"  @click="check_verify('No')">拒绝</Button>
                     </div>
                 </Modal>
-                <Col span="16" offset="1" style="padding-top: 30px; margin: 0px">
+                <Col span="16" style="padding-top: 30px; margin: 0px">
                     <div class="comments_news" v-if="news_type=='comments'">
                         <Button @click="modal_clean=true" style="float: right;">
                             清空
@@ -385,6 +385,21 @@
                     this.$Message.success('成功删除');
                 }, 300);
             },
+        },
+        created() {
+            this.$http.get(this.GLOBAL.domain + '/api/v1/get_sys_message',{params: {'email':this.GLOBAL.email}})
+                .then(function (res) {
+                    var detail = JSON.parse(res.body);
+                    console.log(detail);
+                    if(detail.state == 'fail'){
+                        this.$Message.info('Fail，未查找到信息');
+                    }
+                    else{
+                        console.log('Test' + detail);
+                    }
+                },function (res) {
+                    console.log(res);
+            })
         }
     }
 </script>
