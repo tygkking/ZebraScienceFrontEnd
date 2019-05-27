@@ -62,7 +62,7 @@
                             <div class="person-image" style="text-align: center">
                                 <img src="../images/zebra.png" height="100px" style="margin: 5px">
                                 <br>
-                                <Button icon="ios-heart" style="width: 90%; font-size: 14px" v-model="showlike" :class="{liked: isliked}" @click.native="toggle_like">
+                                <Button v-if="identity != 'VISITOR'" icon="ios-heart" style="width: 90%; font-size: 14px" v-model="showlike" :class="{liked: isliked}" @click.native="toggle_like">
                                     {{showlike}}
                                 </Button>
                             </div>
@@ -245,8 +245,9 @@
         methods:{
             toggle_like (){
                 let params = {'user_id':this.GLOBAL.email,'professor_id':this.profID}
+                console.log(params)
                 if(this.isliked){
-                    this.$http.delete(this.GLOBAL.domain + "/api/v1/follow",params)
+                    this.$http.delete(this.GLOBAL.domain + "/api/v1/follow",{params: params})
                         .then(function (res) {
                             var detail = JSON.parse(res.body);
                             console.log(detail);
@@ -262,7 +263,7 @@
                     })
                 }
                 else {
-                    this.$http.get(this.GLOBAL.domain + "/api/v1/follow",params)
+                    this.$http.get(this.GLOBAL.domain + "/api/v1/follow",{params: params})
                         .then(function (res) {
                             var detail = JSON.parse(res.body);
                             console.log(detail);
@@ -289,7 +290,7 @@
             },
             to_paper (id) {
                 this.$router.push({
-                    path: 'paperDetails',
+                    path: '/paperDetails',
                     query: {
                         paperID: id
                     }

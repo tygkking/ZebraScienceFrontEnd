@@ -31,6 +31,8 @@
     margin-bottom: 10px;
     /*font-family: 华文中宋;*/
     font-size: 18px;
+    border-bottom: dashed #8391a5 1px;
+    padding-bottom: 10px;
 }
 
 .paper-list{
@@ -86,16 +88,15 @@
                             <ul style="list-style-type:none">
                                 <li v-for="item in my_paper_items">
                                     <div class="paper-detail">
-                                        <a href="http://www.baidu.com" target="_blank">
-                                            {{ item.paper_detail.title }}
-                                        </a>
+                                        <div @click="to_paper(item.paperid)" style="cursor:pointer; color: #2b85e4;">{{ item.name }}</div>
                                         <br>
+                                        <div @click="to_paper(item.paperid)" style="cursor:pointer; color: #2b85e4;">{{ item.name }}</div>
                                         <div style="font-size: 14px">
-                                            年份:{{ item.paper_detail.year }}
+                                            年份：{{ item.year }}
                                             &nbsp
-                                            作者:{{ item.paper_detail.author }}
+                                            作者：<div style="display: inline" v-for="(key, value) in item.author">{{ value }}&nbsp&nbsp</div>
                                             <br>
-                                            出处:{{ item.paper_detail.source }}
+                                            出处：{{ item.source_journal.name }}&nbsp&nbsp{{ item.source_journal.date }}
                                         </div>
                                     </div>
                                 </li>
@@ -108,16 +109,13 @@
                             <ul style="list-style-type:none">
                                 <li v-for="item in star_paper_items">
                                     <div class="paper-detail">
-                                        <a href="http://www.baidu.com" target="_blank">
-                                            {{ item.paper_detail.title }}
-                                        </a>
-                                        <br>
+                                        <div @click="to_paper(item.paperid)" style="cursor:pointer; color: #2b85e4;">{{ item.name }}</div>
                                         <div style="font-size: 14px">
-                                            年份:{{ item.paper_detail.year }}
+                                            年份：{{ item.year }}
                                             &nbsp
-                                            作者:{{ item.paper_detail.author }}
+                                            作者：<div style="display: inline" v-for="(key, value) in item.author">{{ value }}&nbsp&nbsp</div>
                                             <br>
-                                            出处:{{ item.paper_detail.source }}
+                                            出处：{{ item.source_journal.name }}&nbsp&nbsp{{ item.source_journal.date }}
                                         </div>
                                     </div>
                                 </li>
@@ -129,19 +127,20 @@
                         <div class="relevant-info">
                             <ul style="list-style-type:none; margin-left: 5px; margin-top: 5px;">
                                 <li v-for="item in like_sch" style="width:40%; float:left; margin-left: 20px; min-width: 320px">
-                                    <div @click="to_scholar(item.profID)" style="cursor:pointer; margin:5px; padding: 5px; border: #2b85e4 solid 1px; border-radius: 5px; overflow: hidden">
+                                    <div @click="to_scholar(item.scid)" style="cursor:pointer; margin:5px; padding: 5px; border: #2b85e4 solid 1px; border-radius: 5px; overflow: hidden">
                                         <Row>
-                                            <Col span="8" style="text-align: center; overflow: hidden; white-space: nowrap; padding-top: 5px">
+                                            <Col span="9" style="text-align: center; overflow: hidden; white-space: nowrap; padding-top: 5px">
                                                 <div class="relevant-detail">
                                                     <b>{{ item.name }}</b>
                                                 </div>
-                                                <Tag color="blue">ID:{{item.profID}}</Tag>
+                                                <Tag color="blue">ID:{{item.scid}}</Tag>
 
                                             </Col>
-                                            <Col span="15" offset="1" style="font-size:13px; overflow: hidden; white-space: nowrap;">
-                                                机构：{{item.organization}}<br>
-                                                领域：{{item.field}}<br>
-                                                论文数量：{{item.paper_num}} &nbsp被引数量：{{item.ref_num}}
+                                            <Col span="14" offset="1" style="font-size:13px; overflow: hidden; white-space: nowrap;">
+                                                机构：{{item.mechanism}}<br>
+                                                领域：<div style="display: inline" v-for="value in item.field">{{value}}&nbsp</div>
+                                                <br>
+                                                论文数量：{{item.resultsnumber}} &nbsp被引数量：{{item.citedtimes}}
                                             </Col>
                                         </Row>
                                     </div>
@@ -173,20 +172,16 @@
                 introduction: '个人简介',
                 my_paper_items: [
                     {
-                        paper_detail: {
-                            title: 'This is Paper Title One',
-                            year: '2018',
-                            author: '郭子溢 黎昆昌 许志达 何浩乾',
-                            source: 'This is Paper Source'
-                        }
+                        name: 'This is Paper Title One',
+                        year: '2018',
+                        author: '郭子溢 黎昆昌 许志达 何浩乾',
+                        source: 'This is Paper Source'
                     },
                     {
-                        paper_detail: {
-                            title: 'This is Paper Title One',
-                            year: '2018',
-                            author: '郭子溢 黎昆昌 许志达 何浩乾',
-                            source: 'This is Paper Source'
-                        }
+                        name: 'This is Paper Title One',
+                        year: '2018',
+                        author: '郭子溢 黎昆昌 许志达 何浩乾',
+                        source: 'This is Paper Source'
                     },
                 ],
                 star_paper_items: this.GLOBAL.collectList,
@@ -205,10 +200,19 @@
                     query:{profID:profID},
                 })
             },
+            to_paper (paperID) {
+                this.$router.push({
+                    path: '/paperDetails',
+                    query:{paperID: paperID},
+                })
+            },
         },
         created() {
             this.userName = this.GLOBAL.userName;
             this.email = this.GLOBAL.email;
+            this.star_paper_items = this.GLOBAL.collectList;
+            this.like_sch = this.GLOBAL.followList;
+            console.log()
         }
     }
 </script>
