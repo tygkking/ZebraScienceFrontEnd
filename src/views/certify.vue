@@ -6,10 +6,6 @@
             <div slot="footer">
                 <Button type="primary"  @click="check_ok">确定</Button>
             </div>
-                    </FormItem>
-                    <FormItem label="备注" prop="else_info">
-                        <Input type="textarea" v-model="formValidate.else_info" placeholder="备注信息" class="input-select-class" :maxlength="140" :rows="6"/>
-                    </FormItem>
         </Modal>
         <Layout>
             <Content>
