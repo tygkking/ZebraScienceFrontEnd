@@ -84,6 +84,7 @@
                         this.GLOBAL.setUserType(s["msg"]["user_type"]);
                         console.log("hhhh"+this.GLOBAL.userType)
                         this.identity = this.GLOBAL.userType;
+                        // console.log(this.identity);
                         this.GLOBAL.setUserName(s["msg"]["username"]);
                         this.GLOBAL.setUserEmail(s["msg"]["email"]);
                         this.email = this.GLOBAL.email;
@@ -92,7 +93,10 @@
                         this.GLOBAL.setCollectList(s["msg"]["star_list"]);
                         this.star_paper_items = this.GLOBAL.collectList;
                         //console.log("hhhh"+this.GLOBAL.userName)
-
+                        if(this.GLOBAL.userType == 'EXPERT'){
+                            // console.log(s["msg"]["paper_list"]);
+                            this.GLOBAL.setMyList(s["msg"]["paper_list"]);
+                        }
                         CookieUtil.methods.setCookie('email', this.email);
                         CookieUtil.methods.setCookie('password', this.password);
                         this.$emit('user')

@@ -138,7 +138,10 @@
                         this.like_sch = this.GLOBAL.followList;
                         this.GLOBAL.setCollectList(s["msg"]["star_list"]);
                         this.star_paper_items = this.GLOBAL.collectList;
-
+                        if(this.GLOBAL.userType == 'EXPERT'){
+                            // console.log(s["msg"]["paper_list"]);
+                            this.GLOBAL.setMyList(s["msg"]["paper_list"]);
+                        }
                         CookieUtil.methods.setCookie('email', this.email);
                         CookieUtil.methods.setCookie('password', this.password);
                     }

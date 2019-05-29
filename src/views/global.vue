@@ -104,6 +104,9 @@
         },
         setCollectList(clist) {
             this.collectList = clist;
+        },
+        setMyList(plist) {
+            this.paperList = plist;
         }
     }
 </script>

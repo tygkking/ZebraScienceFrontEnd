@@ -57,7 +57,7 @@
 
 <template>
     <div class="userpage">
-        <MenuBar  v-on:user="identity = 'USER'" v-on:visitor="identity = 'VISITOR'"></MenuBar>
+        <MenuBar  v-on:user="identity = 'EXPERT'" v-on:visitor="identity = 'VISITOR'"></MenuBar>
         <Layout id="layout">
             <div v-if="identity == 'VISITOR'" style="width: 100%; text-align: center; height: 200px;">
                 <h2 style="margin-top: 80px">您还未登录！<br> 无法查看个人主页</h2>
@@ -69,7 +69,7 @@
                             <div class="person-image" style="text-align: center">
                                 <img src="../images/zebra.png" height="100px" style="margin: 5px">
                                 <br>
-                                <Button v-if="identity == 'USER'" style="width: 90%; font-size: 14px" @click.native="applyfor">
+                                <Button v-if="identity != 'EXPERT'" style="width: 90%; font-size: 14px" @click.native="applyfor">
                                     申请认证
                                 </Button>
                             </div>
@@ -89,15 +89,13 @@
                     <TabPane label="我的论文" name="name1" v-if="identity=='EXPERT'">
                         <div class="paper-list">
                             <ul style="list-style-type:none">
-                                <li v-for="item in my_paper_items">
+                                <li v-for="item in my_paper_items.slice((pageNum_M-1)*pageSize, pageNum_M*pageSize)">
                                     <div class="paper-detail">
-                                        <div @click="to_paper(item.paperid)" style="cursor:pointer; color: #2b85e4;">{{ item.name }}</div>
-                                        <br>
                                         <div @click="to_paper(item.paperid)" style="cursor:pointer; color: #2b85e4;">{{ item.name }}</div>
                                         <div style="font-size: 14px">
                                             年份：{{ item.year }}
                                             &nbsp
-                                            作者：<div style="display: inline" v-for="(key, value) in item.author">{{ value }}&nbsp&nbsp</div>
+                                            作者：<div style="display: inline" v-for="(key, value) in item.author">{{ key }}&nbsp&nbsp</div>
                                             <br>
                                             出处：{{ item.source_journal.name }}&nbsp&nbsp{{ item.source_journal.date }}
                                         </div>
@@ -105,12 +103,12 @@
                                 </li>
                             </ul>
                         </div>
-                        <Page :current="1" :total="50" simple style="text-align: center; margin-bottom: 20px"/>
+                        <Page :current="pageNum_M" :total="my_paper_num" :page-size="pageSize" @on-change="change_page_M" simple style="text-align: center; margin-bottom: 20px"/>
                     </TabPane>
                     <TabPane label="我的收藏" name="name2">
                         <div class="paper-list">
                             <ul style="list-style-type:none">
-                                <li v-for="item in star_paper_items">
+                                <li v-for="item in star_paper_items.slice((pageNum_S-1)*pageSize, pageNum_S*pageSize)">
                                     <div class="paper-detail">
                                         <div @click="to_paper(item.paperid)" style="cursor:pointer; color: #2b85e4;">{{ item.name }}</div>
                                         <div style="font-size: 14px">
@@ -124,7 +122,7 @@
                                 </li>
                             </ul>
                         </div>
-                        <Page :current="1" :total="50" simple style="text-align: center; margin-bottom: 20px"/>
+                        <Page :current="pageNum_S" :total="star_paper_num" :page-size="pageSize" @on-change="change_page_S" simple style="text-align: center; margin-bottom: 20px"/>
                     </TabPane>
                     <TabPane label="我的关注" name="name3">
                         <div class="relevant-info">
@@ -173,21 +171,33 @@
                 identity: this.GLOBAL.userType,
                 userName: '姓名',
                 introduction: '个人简介',
-                my_paper_items: [
-                    {
-                        name: 'This is Paper Title One',
-                        year: '2018',
-                        author: '郭子溢 黎昆昌 许志达 何浩乾',
-                        source: 'This is Paper Source'
-                    },
-                    {
-                        name: 'This is Paper Title One',
-                        year: '2018',
-                        author: '郭子溢 黎昆昌 许志达 何浩乾',
-                        source: 'This is Paper Source'
-                    },
-                ],
+                pageNum_M: 1,
+                pageNum_S: 1,
+                pageSize: 10,
+                // my_paper_items: [
+                //     {
+                //         name: 'This is Paper Title One This is Paper Title One This is Paper Title One This is Paper Title One',
+                //         year: '2018',
+                //         author: {'郭子溢':'1', '黎昆昌':'2', '许志达':'3', '何浩乾':'4'},
+                //         source_journal: {
+                //             name: 'This is Paper Source',
+                //             date: 2018,
+                //         }
+                //     },
+                //     {
+                //         name: 'This is Paper Title One',
+                //         year: '2018',
+                //         author: {'郭子溢':'1', '黎昆昌':'2', '许志达':'3', '何浩乾':'4'},
+                //         source_journal: {
+                //             name: 'This is Paper Source',
+                //             date: 2019,
+                //         }
+                //     },
+                // ],
+                my_paper_items: this.GLOBAL.paperList,
+                my_paper_num: 0,
                 star_paper_items: this.GLOBAL.collectList,
+                star_paper_num: this.GLOBAL.collectList.length,
                 like_sch: this.GLOBAL.followList,
             }
         },
@@ -209,13 +219,26 @@
                     query:{paperID: paperID},
                 })
             },
+            change_page_S (value) {
+                this.pageNum_S = value;
+                console.log(this.pageNum_S);
+                document.body.scrollTop = 0;
+                document.documentElement.scrollTop = 0;
+            },
+            change_page_M (value) {
+                this.pageNum_M = value;
+                console.log(this.pageNum_M);
+                document.body.scrollTop = 0;
+                document.documentElement.scrollTop = 0;
+            },
         },
         created() {
             this.userName = this.GLOBAL.userName;
             this.email = this.GLOBAL.email;
             this.star_paper_items = this.GLOBAL.collectList;
             this.like_sch = this.GLOBAL.followList;
-            console.log()
+            this.my_paper_num = this.my_paper_items.length;
+            console.log(this.my_paper_items.length)
         }
     }
 </script>
