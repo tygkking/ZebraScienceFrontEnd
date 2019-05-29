@@ -56,26 +56,35 @@
                     </div>
                 </div>
 
-            <div style="margin-left: 26%;margin-top: 30px; width: 55%">
+            <div style="margin-left: 26%;margin-top: 25px; width: 55%">
                 <h2 style="">评论</h2>
-                <Divider/>
+                <Divider style="height: 85%" />
                 <p v-if="comment.length==0">暂无评论，我来发表第一篇评论！</p>
-                <div v-else st>
-                    <div  v-for="item in comment"  >
-                        <b style="color: #52c41a;font-size: 16px ">{{item.from}}
-                            <span style="color: #999999;font-size: 12px">{{item.date}}</span>
+                <div v-else >
+                    <div  v-for="item in comment" >
+                        <b style="color: #52c41a;font-size: 17px ">{{item.from.username}}
+                            <span style="color: #999999;font-size: 12px">{{item.date}}</span>&nbsp&nbsp&nbsp
+                            <Button type="text" shape="circle" icon="md-chatboxes" style="color: #999999" @click="add_reply"></Button>
+                            <Modal v-model="modal3" title="添加评论" ok-text="确定" cancel-text="取消" @on-ok="reply_comment"
+                                   @on-cancel="cancel" >
+                                <textarea v-model="content" placeholder="写下你的想法" style="margin-left: 4%;width:90%;height: 200px"/>
+                            </Modal>
                         </b>
                         <p class="commentColor">{{item.content}}</p>
-                        <div v-if="item.reply.length>0">
-                            <div style="margin-left: 20px" v-for="reply in item.reply">
-                                <b style="color: #52c41a ">{{reply.responder}}&nbsp;&nbsp;回复&nbsp;&nbsp;{{reply.reviewers}}
-                                    <span style="color: #999999">{{reply.time}}
-                                    </span>
+                        <div v-if="item.replies.length>0">
+                            <div style="margin-left: 20px" v-for="reply in item.replies">
+                                <b style="color: #52c41a;font-size: 14px">{{reply.responder}}&nbsp;&nbsp;回复&nbsp;&nbsp;{{reply.reviewers}}
+                                    <span style="color: #999999">{{reply.time}}</span>&nbsp&nbsp
+                                    <Button type="text" shape="circle" icon="md-chatboxes" style="color: #999999" @click="add_reply"></Button>
+                                    <Modal v-model="modal3" title="添加评论" ok-text="确定" cancel-text="取消" @on-ok="reply_comment"
+                                           @on-cancel="cancel" >
+                                        <textarea v-model="content" placeholder="写下你的想法" style="margin-left: 4%;width:90%;height: 200px"/>
+                                    </Modal>
                                 </b>
                                 <p class="commentColor">{{reply.content}}</p>
                             </div>
                         </div>
-                        <Divider />
+                        <Divider style="height: 85%" dash="true"/>
                     </div>
                 </div>
                 <Page :current="2" :total="50" simple style="margin-left: 32%"/>
@@ -103,6 +112,7 @@
             return{
                 commentData: [],
                 modal2: false,
+                modal3: false,
                 identity:this.GLOBAL.userType,
                 //identity:'EXPERT', //EXPERT USER VISITOR
                 isliked: '',
@@ -126,9 +136,9 @@
                 },
                 comment:[
                     {
-                        date:'2019-5-16',from:'cxk',
+                        date:'2019-5-16',from:{username:"cxk",userid:"111@123.com"},
                         content:'你打篮球像我！',
-                        reply: [{              //回复评论的信息，是一个数组，如果没内容就是一个空数组
+                        replies: [{              //回复评论的信息，是一个数组，如果没内容就是一个空数组
                                 responder: "xzd",    //评论者
                                 reviewers: "cxk",         //被评论者
                                 time: "2016-09-05",
@@ -136,9 +146,9 @@
                             }]
                     },
                     {
-                        date:'2019-5-15',from:'xzd',
+                        date:'2019-5-15',from:{username:"xzd",userid:"111@12354.com"},
                         content:'你打篮球像cxk！',
-                        reply:[],
+                        replies:[],
                     },
                 ]
             }
@@ -146,18 +156,22 @@
         created() {
             this.paper.paper_id = this.$route.query.paperID;
             this.get_paperDetails(this.paper.paper_id);
-            this.judge_like()
-    },
+            this.judge_like();
+            this.get_comment();
+        },
         methods:{
             cancel () {
-                this.$Message.info('cancel');
+                //this.$Message.info('cancel');
+            },
+            judge_login(){
+                if(this.identity === "VISITOR"){
+                    this.$Message.info("请先登录");
+                    return false;
+                }
             },
             toggle_like (){
                 console.log(this.identity);
-                if(this.identity === "VISITOR"){
-                    this.$Message.info("请先登录");
-                    return
-                }
+                if(this.judge_login()==false)return;
                 let params = {'user_id':this.GLOBAL.email,'paper_id':this.paper.paper_id};
                 if(this.isliked){
                     this.$http.delete(this.GLOBAL.domain + "/api/v1/collect",{params:params})
@@ -192,13 +206,32 @@
                         });
                 }
             },
+            get_comment(){
+                let params = {'paper_id':this.paper.paper_id};
+                this.$http.get(this.GLOBAL.domain + "/api/v1/comment",{params:params})
+                    .then(function (res) {
+                        var detail = JSON.parse(res.body);
+                        console.log(detail);
+                        if(detail.state=="fail"){
+                            this.$Message.info("获取评论失败")
+                        }
+                        else{
+                            this.comment = detail.msg;
+                            console.log(this.comment)
+                        }
+                    }, function (res) {
+                        alert(res);
+                    });
+            },
             add_comment(){
-                console.log(this.identity)
-                if(this.identity === "VISITOR"){
-                    this.$Message.info("请先登录");
-                    return
-                }
+                console.log(this.identity);
+                if(this.judge_login()==false)return;
                 this.modal2 = true;
+            },
+            add_reply(){
+                console.log(this.identity);
+                if(this.judge_login()==false)return;
+                this.modal3 = true;
             },
             sub_comment(){
                 if(this.content=='')
@@ -217,6 +250,9 @@
                             alert(res);
                         });
                 }
+            },
+            reply_comment(){
+
             },
             jump_man(){
                 this.$router.push({
