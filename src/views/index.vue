@@ -37,6 +37,11 @@
             font-size: 13px;
         }
     }
+
+    .advance_item{
+        display: inline;
+        align-items: center;
+    }
 </style>
 <template>
     <div class="index">
@@ -76,8 +81,39 @@
                         <Option value="paper">论文</Option>
                         <Option value="organization">机构</Option>
                     </Select>
-                    <Button  @click="search"  slot="append" style="background-color:#57c5f7;color: white" icon="ios-search" ></Button>
+                    <Button  @click="search"  slot="append" style="background-color:#57c5f7;color: white" icon="ios-search"></Button>
+                    <Button v-if="search_item=='paper'" @click="advance=!advance"  slot="append" style="background-color:#57c5f7;color: white;border-left: 1px solid white; margin-left: 2px">高级检索↓</Button>
+
                 </Input>
+                <div style="width: 50%; margin-left: 25%; text-align: left" v-show="advance&&search_item=='paper'">
+                    <div style="font-size: 16px; line-height: 32px; padding-top: 10px">
+                        并含：
+                        <div v-for="item in and_times" class="advance_item" >
+                            <Input style="width: 20%;margin-right: 3px" v-model="advance_data.and[item]"></Input>
+                        </div>
+                        <div style="display: inline">
+                            <img v-if="and_times<4" src="/src/images/add.png" @click="and_times++" height="20" width="20" style="vertical-align:middle">
+                        </div>
+                    </div>
+                    <div style="font-size: 16px; line-height: 32px; padding-top: 10px">
+                        或含：
+                        <div v-for="item in or_times" class="advance_item">
+                            <Input style="width: 20%;margin-right: 3px" v-model="advance_data.or[item]"></Input>
+                        </div>
+                        <div style="display: inline">
+                            <img v-if="or_times<4" src="/src/images/add.png" @click="or_times++" height="20" width="20" style="vertical-align:middle">
+                        </div>
+                    </div>
+                    <div style="font-size: 16px; line-height: 32px; padding-top: 10px">
+                        不含：
+                        <div v-for="item in none_times" class="advance_item" >
+                            <Input style="width: 20%;margin-right: 3px" v-model="advance_data.none[item]"></Input>
+                        </div>
+                        <div style="display: inline">
+                            <img v-if="none_times<4" src="/src/images/add.png" @click="none_times++" height="20" width="20" style="vertical-align:middle">
+                        </div>
+                    </div>
+                </div>
             </Col>
         </Row>
         <router-link :to="{path: '/professorDetails',query:{profID: 'CN-BQ73PUWJ'}}">专家详情</router-link>
@@ -109,6 +145,15 @@
                 news_url:'/news',
                 certify_url:'/certify',
                 setting_url:'/setting',
+                advance: false,
+                and_times: 1,
+                or_times: 1,
+                none_times: 1,
+                advance_data:{
+                    and:[],
+                    or:[],
+                    none:[]
+                },
             }
         },
         methods: {
@@ -171,6 +216,12 @@
                 this.$router.push({path: '/register'})
             },
             search() {
+                this.and_times = 1;
+                this.or_times = 1;
+                this.none_times = 1;
+                this.advance_data.and = null;
+                this.advance_data.or = null;
+                this.advance_data.none = null;
                 if(this.search_content == "")
                 {
                     alert("请输入搜索内容");
@@ -181,13 +232,27 @@
                     alert("请选择搜索类型");
                     return;
                 }
-                this.$router.push({
-                    name: 'search_detail',
-                    query:{
-                        search_content: this.search_content,
-                        search_type: this.search_item
-                    }
-                })
+                if(!this.advance)
+                {
+                    this.$router.push({
+                        name: 'search_detail',
+                        query:{
+                            search_content: this.search_content,
+                            search_type: this.search_item,
+                        }
+                    })
+                }
+                else
+                {
+                    this.$router.push({
+                        name: 'search_detail',
+                        query:{
+                            search_content: this.search_content,
+                            search_type: this.search_item,
+                            advance_data: this.advance_data,
+                        }
+                    })
+                }
             }
         },
         created() {

@@ -52,26 +52,27 @@
 
                 <div v-else-if="type=='organization'">
                     <div class="c_font">
-                        <a href="https://www.baidu.com" target="_blank" style="color: black">{{item.mechanism}}</a>
+                        <a href="https://www.baidu.com" target="_blank">{{item.mechanism}}</a>
                     </div>
                     <div class="c_abstract" v-for="intro in item.introduction">{{intro}}</div>
+                    <hr style="width: 80%">
                 </div>
 
             </div>
+            <div v-if="this.$route.query.search_type == 'paper' || this.$route.query.search_type == 'organization'" style="margin: 3% 20% 10% 0">
+                <Page :current="pageNum" :total="totalNum" :page-size=10 @on-change="change_page" simple style="text-align: center;"/>
+            </div>
+
         </div>
-<!--        <Layout>
-            <Footer class="layout-footer-center" style="background-color: #666666; color: #eeeeee;">
-                2019-2019 &copy; ZebraScience
-                <a href="http://www.baidu.com" style="margin-left: 20px; color: #eeeeee">联系我们</a>
-            </Footer>
-        </Layout>-->
     </div>
 </template>
 
 <script>
     import menuBar from './menuBar.vue'
+    import Button from "../../dist/vendors";
     export default {
         components: {
+            Button,
             menuBar
         },
         name: "search_paper",
@@ -84,38 +85,51 @@
                 theme1: 'primary',
                 search_results: [],
                 type: '',
+                pageNum: 1,
+                totalNum: 0,
             }
         },
         created() {
-            this.search_item = this.$route.query.search_type;
-            this.search_content = this.$route.query.search_content;
             this.getSearchDetails(this.$route.query.search_type, this.$route.query.search_content);
         },
         methods: {
             getSearchDetails(item, content) {
                 var that = this;
-                console.log("get +" + item);
-                if(item)
+                console.log("get: item + " + item + "; content + " + content + "; pageNum + " + this.pageNum);
+                if(this.$route.query.advance_data)
                 {
-                    this.$http.get(this.GLOBAL.domain + "/api/v1/search_" + item + "/" + content)
-                        .then(function (res) {
-                            var detail = JSON.parse(res.body);
-                            console.log(detail);
-                            that.search_results=detail.msg;
-                            that.type = item;
-                            if(detail.reason == "未搜索到该专家" || detail.reason == "未查找到相关论文" || detail.reason == "未查找到相关机构")
-                                alert(detail.reason);
-                    },function (res) {
-                        console.log(res)
-                    })
+
                 }
                 else
                 {
-                    alert("请选择搜索类型");
+                    if(item)
+                    {
+                        let param = {'page_num' : this.pageNum};
+                        console.log(param)
+                        this.$http.get(this.GLOBAL.domain + "/api/v1/search_" + item + "/" + content, {params:param})
+                            .then(function (res) {
+                                var detail = JSON.parse(res.body);
+                                console.log(detail);
+                                that.search_results=detail.msg;
+                                that.type = item;
+                                if(detail.reason == "未搜索到该专家" || detail.reason == "未查找到相关论文" || detail.reason == "未查找到相关机构")
+                                    alert(detail.reason);
+                                if(item == 'paper' || item == 'organization')
+                                    that.totalNum = detail.count
+                                window.scrollTo(0,0);
+                            },function (res) {
+                                console.log(res)
+                            })
+                    }
+                    else
+                    {
+                        console.log("请选择搜索类型");
+                    }
                 }
             },
 
             search(item, content) {
+                this.pageNum = 1;
                 var that = this;
                 if(content == "")
                     return;
@@ -125,9 +139,15 @@
                         search_type: item
                     }
                 })
-                console.log("search +" + this.search_item);
+                console.log("item + " + item + "; search + " + content);
                 this.getSearchDetails(item, content);
+            },
+            change_page(value) {
+
+                this.pageNum = value;
+                this.getSearchDetails(this.$route.query.search_type, this.$route.query.search_content);
             }
+
         },
         computed: {
 
@@ -189,7 +209,11 @@
         width: 80%;
         color: #666;
         font-size: 13px;
-        word-wrap:break-word;
+        word-break: break-all;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;  /*限制在一个块元素显示的文本的行数*/
+        -webkit-box-orient: vertical;
+        overflow: hidden;
     }
     .searchResultItem {
         float: left;
