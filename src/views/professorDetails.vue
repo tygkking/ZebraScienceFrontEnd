@@ -358,6 +358,8 @@
             //this.profID = this.$route.query.profID;
             this.getProfessorDetails(this.$route.query.profID);
             this.checkFollowed(this.$route.query.profID);
+
+            console.log(this.GLOBAL.userType + 'prof global')
         }
     }
 </script>

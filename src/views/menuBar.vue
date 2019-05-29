@@ -32,6 +32,7 @@
 </template>
 
 <script>
+    import CookieUtil from './cookieUtil.vue'
     export default {
         name: "MenuBar",
         props:{
@@ -64,7 +65,7 @@
                         this.$Message.info(s["reason"]);
                     }
                     else {
-                        this.$Message.info('成功登录');
+                        //this.$Message.info('成功登录');
                         console.log("qqqq"+this.GLOBAL.userType)
                         this.GLOBAL.setUserType(s["msg"]["user_type"]);
                         console.log("hhhh"+this.GLOBAL.userType)
@@ -100,7 +101,18 @@
                 this.GLOBAL.setUserType('VISITOR');
                 this.identity = this.GLOBAL.userType;
                 this.$emit('visitor')
+                CookieUtil.methods.delCookie('email');
+                CookieUtil.methods.delCookie('password');
             },
+        },
+        created() {
+            console.log(this.GLOBAL.userType + 'global meunbar')
+            console.log(this.identity + 'meunbar')
+            this.email = CookieUtil.methods.getCookie('email');
+            this.password = CookieUtil.methods.getCookie('password');
+            if(this.email!=''){
+                this.login();
+            }
         }
     }
 </script>

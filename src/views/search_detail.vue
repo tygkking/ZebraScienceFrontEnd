@@ -177,6 +177,8 @@
             logout () {
                 this.GLOBAL.setUserType('VISITOR');
                 this.identity = this.GLOBAL.userType;
+                CookieUtil.methods.delCookie('email');
+                CookieUtil.methods.delCookie('password');
             },
             getSearchDetails(temp) {
                 var that = this;
