@@ -21,7 +21,7 @@
 
 <template>
     <div class="news_page">
-        <MenuBar></MenuBar>
+        <MenuBar  v-on:user="identity = 'USER'" v-on:visitor="identity = 'VISITOR'"></MenuBar>
         <div style="margin-top: 60px">
             <Row>
                 <Col span="7">
@@ -48,7 +48,7 @@
                             <Icon type="md-alert" />
                             系统通知
                         </MenuItem>
-                        <MenuItem name="4" @click.native="news_type = 'verify'" v-if="identity == 'admin'">
+                        <MenuItem name="4" @click.native="news_type = 'verify'" v-if="identity == 'ADMIN'">
                             <Icon type="md-checkbox" />
                             认证信息
                         </MenuItem>
