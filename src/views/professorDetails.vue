@@ -88,7 +88,7 @@
                             <h3>论文列表</h3>
                             <div class="paper-list">
                                 <ul style="list-style-type:none">
-                                    <li v-for="item in paper_items">
+                                    <li v-for="item in paper_items.slice((pageNum-1)*pageSize, pageNum*pageSize)">
                                         <div class="paper-detail">
                                             <a @click="to_paper(item.paperid)" target="_blank">
                                                 {{ item.name }}
@@ -105,7 +105,7 @@
                                     </li>
                                 </ul>
                             </div>
-                            <Page :current="1" :total="50" simple style="text-align: center; margin-bottom: 20px"/>
+                            <Page :current="pageNum" :total="got_paper_num" :page-size="pageSize" @on-change="change_page" simple style="text-align: center; margin-bottom: 20px"/>
                         </Col>
                         <Col span="8" offset="2">
                             <div class="relevant-info">
@@ -163,6 +163,9 @@
                 field: '领域',
                 paper_num: 120,
                 ref_num: 130,
+                pageNum: 1,
+                pageSize: 10,
+                got_paper_num: 1,
                 paper_items: [
                     {
                         paper_detail: {
@@ -320,6 +323,7 @@
                                 that.ref_num = detail.msg.citedtimes;
                                 that.coop_sch = detail.msg.copinfo;
                                 that.paper_items = detail.msg.paper;
+                                that.got_paper_num = detail.msg.paper.length;
                             }
                     },function (res) {
                         console.log(res)
@@ -337,7 +341,7 @@
                     }
                 }).then(function(res){
                     var detail = JSON.parse(res.body);
-                    console.log(detail)
+                    console.log(detail);
                     if(detail.state=="fail"){
                         this.$Message.info(s["reason"]);
                     }
@@ -350,6 +354,12 @@
                         this.showlike = '已关注';
                     }
                 })
+            },
+            change_page (value) {
+                this.pageNum = value;
+                console.log(this.pageNum);
+                document.body.scrollTop = 0;
+                document.documentElement.scrollTop = 0;
             },
         },
         created() {
