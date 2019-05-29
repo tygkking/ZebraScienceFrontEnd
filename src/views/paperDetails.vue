@@ -1,21 +1,23 @@
 <template>
     <div class="page">
-        <MenuBar></MenuBar>
+        <MenuBar v-on:user="identity = 'USER'" v-on:visitor="identity = 'VISITOR'"></MenuBar>
         <Layout id="layout">
                 <div style="margin-left: 26%;width: 50%">
-                    <h3 style="color: #06c;font-size: 24px;font-weight: bold;word-break: break-all">{{paper.name}}</h3>
+                    <h3 style="color: #06c;font-size: 26px;font-weight: bold;word-break: break-all">{{paper.name}}</h3>
                     <div class="dtl_l_content">
-                        <div class="dtl_l_love_wr">
+                        <div class="dtl_l_love_wr ">
                             <span>来自</span>
                             <a :href=paper.source_url[0]>{{paper.source_url[0]}}</a>
+                            <p style="margin-top: 2%;color: #363e4f"> {{this.paper.source_journal.name}}&nbsp-&nbsp{{this.paper.source_journal.date}}</p>
                         </div>
+
                         <div class="dtl_l_love_auth_wr" >
                             <Row>
                                 <Col span="2">
                                     <label style="width: 90px;color: #999999" >作者：</label>
                                 </Col>
                                 <Col span="22">
-                                    <label @click="jump_man" v-for="(value, key) in paper.author" style="color: #2b85e4;font-size: 14px">{{key}}&nbsp;&nbsp;&nbsp;</label>
+                                    <label @click="jump_man" v-for="(value, key) in paper.author" style="color: #2b85e4;font-size: 15px">{{key}}&nbsp;&nbsp;&nbsp;</label>
                                 </Col>
                             </Row>
                             <!--<label style="width: 60px;color: #999999" >作者：</label>-->
@@ -37,7 +39,7 @@
                                     <label style="width: 90px;color: #999999" >关键字：</label>
                                 </Col>
                                 <Col span="22">
-                                    <label v-for="word in paper.keyword" style="color: #2b85e4;font-size: 14px;word-break: break-all">{{word}}&nbsp;&nbsp;&nbsp;</label>
+                                    <label v-for="word in paper.keyword" style="color: #2b85e4;font-size: 15px;word-break: break-all">{{word}}&nbsp;&nbsp;&nbsp;</label>
                                 </Col>
                             </Row>
                             <!--<label style="width: 60px;color: #999999" >作者：</label>-->
@@ -46,7 +48,7 @@
                         <Button icon="ios-star" style="width: 20%; font-size: 14px;margin-left: 20%;margin-top: 7px" v-model="showlike" :class="{liked: isliked}" @click.native="toggle_like">
                             {{showlike}}</Button>
                         <Button icon="ios-text" style="width: 20%; font-size: 14px;margin-left: 10%;margin-top: 7px"
-                                @click="modal2=true"> 添加评论</Button>
+                                @click="add_comment"> 添加评论</Button>
                         <Modal v-model="modal2" title="添加评论" ok-text="确定" cancel-text="取消" @on-ok="sub_comment"
                                @on-cancel="cancel" >
                             <textarea v-model="content" placeholder="写下你的想法" style="margin-left: 4%;width:90%;height: 200px"/>
@@ -101,14 +103,14 @@
             return{
                 commentData: [],
                 modal2: false,
-                identity: this.GLOBAL.userType,
+                identity:this.GLOBAL.userType,
                 //identity:'EXPERT', //EXPERT USER VISITOR
-                isliked: false,
-                showlike: '收藏',
+                isliked: '',
+                showlike: '',
                 content:'',
                 other_cmt:[],
                 paper:{
-                    paper_id:'',
+                    paper_id:'13e8bab7244258710c462441e19afbad',
                     name:'Matlab toolbox for pet / ct image segmentation with the',
                     year:'',
                     source_url:['http://www.baidu.com'],
@@ -119,13 +121,8 @@
                     },
                     author:['Chan-Vese model','xjx'],
                     keyword:['deep learning','computer vision','chan-vese',],
-                    abstract:'1. Unpack the toolbox (\'chanvese_tb_1.0.zip\') to a directory of your choice2. Optionally unpack ' +
-                        'the examples folder (\'examples.zip\') to a directory of your choice3. Start Matlab4. Add directory containi' +
-                        'ng the toolbox to the Matlab path. To do this: a) choose toolbox directory as Matlab working directory,' +
-                        ' execute the following commands:1. Unpack the toolbox (\'chanvese_tb_1.0.zip\') to a directory of your choice2. ' +
-                        'Optionally unpack the examples folder (\'examples.zip\') to a directory of your choice3. Start Matlab4. Add ' +
-                        'directory containing the toolbox to the Matlab path. To do this: a) choose toolbox directory as Matlab working ' +
-                        'directory, execute the following commands:'
+                    abstract:'大多数情况下,麻醉药物的选择对神经外科手术的过程和患者的转归并无决定性影响。深入理解CNS的' +
+                        '生理学、神经生理学和麻醉药物对大脑的影响,掌握熟练的麻醉技术,才是决定神经外科手术患者转归的关键。'
                 },
                 comment:[
                     {
@@ -147,28 +144,79 @@
             }
         },
         created() {
-            this.identity = this.GLOBAL.userType;
             this.paper.paper_id = this.$route.query.paperID;
-            this.get_paperDetails(this.paper.paper_id)
-        },
+            this.get_paperDetails(this.paper.paper_id);
+            this.judge_like()
+    },
         methods:{
             cancel () {
                 this.$Message.info('cancel');
             },
             toggle_like (){
+                console.log(this.identity);
+                if(this.identity === "VISITOR"){
+                    this.$Message.info("请先登录");
+                    return
+                }
+                let params = {'user_id':this.GLOBAL.email,'paper_id':this.paper.paper_id};
                 if(this.isliked){
-                    this.showlike = '收藏'
+                    this.$http.delete(this.GLOBAL.domain + "/api/v1/collect",{params:params})
+                        .then(function (res) {
+                            var detail = JSON.parse(res.body);
+                            console.log(detail);
+                            if(detail.state == "fail"){
+                                this.$Message.info("取消收藏失败");
+                            }
+                            else {
+                                this.showlike = '收藏';
+                                this.isliked = !this.isliked;
+                            }
+                        },function (res) {
+                            alert(res);
+                        })
                 }
                 else {
-                    this.showlike = '已收藏'
+                    this.$http.get(this.GLOBAL.domain + "/api/v1/collect",{params:params})
+                        .then(function (res) {
+                            var detail = JSON.parse(res.body);
+                            console.log(detail);
+                            if(detail.state=="fail"){
+                                this.$Message.info("收藏失败")
+                            }
+                            else {
+                                this.showlike = '已收藏';
+                                this.isliked = !this.isliked
+                            }
+                        }, function (res) {
+                            alert(res);
+                        });
                 }
-                this.isliked = !this.isliked
+            },
+            add_comment(){
+                console.log(this.identity)
+                if(this.identity === "VISITOR"){
+                    this.$Message.info("请先登录");
+                    return
+                }
+                this.modal2 = true;
             },
             sub_comment(){
                 if(this.content=='')
                     return
-                else
-                    this.$Message.info('评论成功!');
+                else {
+                    console.log(this.paper.paper_id)
+                    let params = {'from_email':this.GLOBAL.email,'paper_id':this.paper.paper_id,'content':this.content};
+                    this.$http.get(this.GLOBAL.domain + "/api/v1/comment",{params:params})
+                        .then(function (res) {
+                            var detail = JSON.parse(res.body);
+                            console.log(detail);
+                            if(detail.state=="fail"){
+                                this.$Message.info("评论失败")
+                            }
+                        }, function (res) {
+                            alert(res);
+                        });
+                }
             },
             jump_man(){
                 this.$router.push({
@@ -195,6 +243,25 @@
                         var detail = JSON.parse(res.body);
                         console.log(detail);
                 });
+            },
+            judge_like(){
+                let params = {'user_id':this.GLOBAL.email,'paper_id':this.paper.paper_id};
+                this.$http.post(this.GLOBAL.domain+"/api/v1/is_collect",params,{
+                    headers:{
+                        'Content-Type':"application/json",
+                    }
+                }).then(function(res){
+                    var detail = JSON.parse(res.body);
+                    if(detail.state=="yes") {
+                        this.showlike = "已收藏";
+                        this.isliked = true;
+                    }
+                    else {
+                        this.showlike = "收藏";
+                        this.isliked = false;
+                    }
+                },function (res) {
+                });
             }
         }
     }
@@ -209,7 +276,7 @@
         overflow: hidden;
     }
     #layout{
-        margin-top: 60px;
+        margin-top: 55px;
         padding-top: 40px;
     }
     .layout-footer-center{
@@ -222,16 +289,17 @@
         margin-top: 5px;
     }
     .dtl_l_love_wr {
-         font-size: 13px;
+         font-size: 15px;
          overflow: hidden;
          line-height: 15px;
-         margin: 15px 0 24px;
+         margin: 15px 0 12px;
          color: #999999;
      }
     .dtl_l_love_auth_wr{
         width: 100%;
         overflow: hidden;
         color: #999;
+        margin-top: 2px;
     }
     .multiLineText{
         word-break: break-all;
