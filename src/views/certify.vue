@@ -111,16 +111,30 @@
             handleSubmit (name) {
                 this.$refs[name].validate((valid) => {
                     if (valid) {
-                        this.$Message.success('提交成功!')
+                        this.$Message.success('提交成功!');
+                        console.log(this.formValidate.name);
                         //获取同名专家列表
-                        this.$http.get(this.GLOBAL.domain + '/api/v1/common_name', {params:{'professor_name':this.formValidate.name}})
+                        // this.$http.get(this.GLOBAL.domain + '/api/v1/common_name', {params:{'professor_name':this.formValidate.name}})
+                        //     .then(function (res) {
+                        //         var detail = JSON.parse(res);
+                        //         console.log(detail);
+                        //         this.same_name = true;
+                        //     },function (res) {
+                        //         console.log('Failed');
+                        //     });
+                        this.same_name = true;
+                        this.$http.get(this.GLOBAL.domain + '/api/v1/search_professor/' + this.formValidate.name)
                             .then(function (res) {
-                                var detail = JSON.parse(res);
+                                //this.same_name = true;
+                                var detail = JSON.parse(res.body);
+                                this.same_name_sch = detail.msg;
                                 console.log(detail);
-                                this.same_name = true;
                             },function (res) {
                                 console.log('Failed');
-                            });
+                                var detail = JSON.parse(res.body);
+                                console.log(detail);
+                                this.$Message.info(detail);
+                            })
                     } else {
                         this.$Message.error('表单验证失败!')
                     }
@@ -133,7 +147,8 @@
                 this.profID = id;
                 console.log(id);
                 var form = this.formValidate;
-                let params = {'email':this.GLOBAL.email,'name':form.name,'ID_num':form.id_num,'field':form.field,'text':form.else_info};
+                let params = {'email':this.GLOBAL.email,'name':form.name,'ID_num':form.id_num,'field':form.field,'text':form.else_info,'scid':id};
+                console.log(params);
                 this.$http.get(this.GLOBAL.domain + '/api/v1/certification',params,{
                     headers:{
                         'Content-Type':"application/json",
