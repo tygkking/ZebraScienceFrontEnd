@@ -1,46 +1,7 @@
 <template>
     <div>
         <div class="top_xf">
-            <Menu mode="horizontal" :theme="theme1" active-name="1" style="width:100%; position: fixed">
-                <router-link :to="index_url" style="float:left">
-                    <MenuItem name="1">
-                        <Icon type="ios-home" size="20"/>
-                        首页
-                    </MenuItem>
-                </router-link>
-                <MenuItem name="5">
-                    <Input style="width: 450px;margin-top: 12px" v-model="search_content" @keyup.enter.native="search">
-                        <Select v-model="search_item" slot="prepend" style="width: 80px;background-color: #eeeeee;color: black">
-                            <Option value="professor">专家</Option>
-                            <Option value="paper">论文</Option>
-                            <Option value="organization">机构</Option>
-                        </Select>
-                        <Button  @click="search"  slot="append" style="background-color:#57c5f7;color: white" icon="ios-search" ></Button>
-                    </Input>
-                </MenuItem>
-                <Submenu v-if="identity != 'VISITOR'" name="2" style="float:right">
-                    <template slot="title">
-                        <Icon type="ios-contact" size="20"/>
-                        {{this.GLOBAL.userName}}
-                    </template>
-                    <MenuItem name="2-1" @click.native="user_page()">个人主页</MenuItem>
-                    <MenuItem name="2-2" @click.native="news_page()">消息/通知</MenuItem>
-                    <MenuItem name="2-3" @click.native="setting()">设置</MenuItem>
-                    <MenuItem name="2-4" @click.native="logout()">退出登录</MenuItem>
-                </Submenu>
-                <MenuItem v-if="identity == 'VISITOR'" @click.native="modal1=true" name="3" style="float:right">
-                    登录
-                    <Modal v-model="modal1" title="登录" ok-text="登录" cancel-text="取消" @on-ok="login" @on-cancel="cancel" @keyup.enter.native="login">
-                        <p>邮箱<input v-model="email" type="email" style="margin-left: 17px"/></p><br/>
-                        <p>密码<input v-model="password" type="password" style="margin-left: 17px"/></p>
-                    </Modal>
-                </MenuItem>
-                <a :href="register_url" style="float: right;">
-                    <MenuItem v-if="identity == 'VISITOR'" :href="register_url" name="4">
-                        注册
-                    </MenuItem>
-                </a>
-            </Menu>
+            <menuBar :input=true :search_content='this.$route.query.search_content' :search_item="this.$route.query.search_type" @search="search"></menuBar>
         </div>
         <div class="sc_detail">
             <div v-for="item in search_results" class="sc_content">
@@ -98,17 +59,21 @@
 
             </div>
         </div>
-        <Layout>
+<!--        <Layout>
             <Footer class="layout-footer-center" style="background-color: #666666; color: #eeeeee;">
                 2019-2019 &copy; ZebraScience
                 <a href="http://www.baidu.com" style="margin-left: 20px; color: #eeeeee">联系我们</a>
             </Footer>
-        </Layout>
+        </Layout>-->
     </div>
 </template>
 
 <script>
+    import menuBar from './menuBar.vue'
     export default {
+        components: {
+            menuBar
+        },
         name: "search_paper",
         data() {
             return {
@@ -119,78 +84,25 @@
                 theme1: 'primary',
                 search_results: [],
                 type: '',
-                email: '',
-                password: '',
-                search_content: '',
-                search_item: '',
             }
         },
         created() {
             this.search_item = this.$route.query.search_type;
             this.search_content = this.$route.query.search_content;
-            this.getSearchDetails(this.$route.query.search_type);
+            this.getSearchDetails(this.$route.query.search_type, this.$route.query.search_content);
         },
         methods: {
-            login () {
-                this.modal1 = false;
-                let params = {'email':this.email,'password':this.password}
-                this.$http.post(this.GLOBAL.domain+"/api/v1/login",params,{
-                    headers:{
-                        'Content-Type':"application/json",
-                    }
-                }).then(function(res){
-                    console.log(res);
-                    var s = JSON.parse(res.body);
-                    if(s["state"]=="fail"){
-                        this.$Message.info(s["reason"]);
-                    }
-                    else {
-                        this.$Message.info('成功登录');
-                        console.log("qqqq"+this.GLOBAL.userType)
-                        this.GLOBAL.setUserType(s["msg"]["user_type"]);
-                        console.log("hhhh"+this.GLOBAL.userType)
-                        this.identity = this.GLOBAL.userType;
-                        this.GLOBAL.setUserName(s["msg"]["username"]);
-                        this.GLOBAL.setUserEmail(s["msg"]["email"]);
-                        this.email = this.GLOBAL.email;
-                        this.GLOBAL.setFollowList(s["msg"]["follow_list"]);
-                        this.like_sch = this.GLOBAL.followList;
-                        this.GLOBAL.setCollectList(s["msg"]["star_list"]);
-                        this.star_paper_items = this.GLOBAL.collectList;
-                    }
-                },function (res) {
-                    console.log(res)
-                });
-            },
-            cancel () {
-                this.$Message.info('cancel');
-            },
-            user_page () {
-                this.$router.push({path: '/user'})
-            },
-            news_page () {
-                this.$router.push({path: '/news'})
-            },
-            setting () {
-                this.$router.push({path: '/setting'})
-            },
-            logout () {
-                this.GLOBAL.setUserType('VISITOR');
-                this.identity = this.GLOBAL.userType;
-                CookieUtil.methods.delCookie('email');
-                CookieUtil.methods.delCookie('password');
-            },
-            getSearchDetails(temp) {
+            getSearchDetails(item, content) {
                 var that = this;
-                console.log("get +" + temp);
-                if(temp)
+                console.log("get +" + item);
+                if(item)
                 {
-                    this.$http.get(this.GLOBAL.domain + "/api/v1/search_" + temp + "/" + that.search_content)
+                    this.$http.get(this.GLOBAL.domain + "/api/v1/search_" + item + "/" + content)
                         .then(function (res) {
                             var detail = JSON.parse(res.body);
                             console.log(detail);
                             that.search_results=detail.msg;
-                            that.type = temp;
+                            that.type = item;
                             if(detail.reason == "未搜索到该专家" || detail.reason == "未查找到相关论文" || detail.reason == "未查找到相关机构")
                                 alert(detail.reason);
                     },function (res) {
@@ -203,18 +115,18 @@
                 }
             },
 
-            search() {
+            search(item, content) {
                 var that = this;
-                if(this.search_content == "")
+                if(content == "")
                     return;
                 this.$router.push({
                     query:{
-                        search_content: that.search_content,
-                        search_type: that.search_item
+                        search_content: content,
+                        search_type: item
                     }
                 })
                 console.log("search +" + this.search_item);
-                this.getSearchDetails(this.search_item);
+                this.getSearchDetails(item, content);
             }
         },
         computed: {

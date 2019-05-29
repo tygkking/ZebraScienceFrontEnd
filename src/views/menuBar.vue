@@ -6,6 +6,16 @@
                 首页
             </MenuItem>
         </router-link>
+        <MenuItem name="5" v-if="input">
+            <Input style="width: 450px;margin-top: 12px" v-model="temp_content" @keyup.enter.native="search">
+                <Select v-model="temp_item" slot="prepend" style="width: 80px;background-color: #eeeeee;color: black">
+                    <Option value="professor">专家</Option>
+                    <Option value="paper">论文</Option>
+                    <Option value="organization">机构</Option>
+                </Select>
+                <Button  @click="search"  slot="append" style="background-color:#57c5f7;color: white" icon="ios-search" ></Button>
+            </Input>
+        </MenuItem>
         <Submenu v-if="identity != 'VISITOR'" name="2" style="float:right">
             <template slot="title">
                 <Icon type="ios-contact" size="20"/>
@@ -38,6 +48,8 @@
         props:{
             main:'',
             input:'',
+            search_content: '',
+            search_item:'',
         },
         data(){
             return{
@@ -48,6 +60,8 @@
                 email: '',
                 password: '',
                 identity: this.GLOBAL.userType,
+                temp_content: this.search_content,
+                temp_item: this.search_item,
             }
         },
         methods:{
@@ -79,6 +93,8 @@
                         this.star_paper_items = this.GLOBAL.collectList;
                         //console.log("hhhh"+this.GLOBAL.userName)
 
+                        CookieUtil.methods.setCookie('email', this.email);
+                        CookieUtil.methods.setCookie('password', this.password);
                         this.$emit('user')
                     }
                 },function (res) {
@@ -104,11 +120,15 @@
                 CookieUtil.methods.delCookie('email');
                 CookieUtil.methods.delCookie('password');
             },
+            search() {
+                this.$emit('search', this.temp_item, this.temp_content)
+            }
         },
         created() {
             console.log(this.GLOBAL.userType + 'global meunbar')
             console.log(this.identity + 'meunbar')
             this.email = CookieUtil.methods.getCookie('email');
+            console.log('created menubar' + CookieUtil.methods.getCookie('email'))
             this.password = CookieUtil.methods.getCookie('password');
             if(this.email!=''){
                 this.login();
