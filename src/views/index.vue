@@ -83,6 +83,7 @@
                     </Select>
                     <Button  @click="search"  slot="append" style="background-color:#57c5f7;color: white" icon="ios-search"></Button>
                     <Button v-if="search_item=='paper'" @click="advance=!advance"  slot="append" style="background-color:#57c5f7;color: white;border-left: 1px solid white; margin-left: 2px">高级检索↓</Button>
+                    <Button v-if="search_item=='professor'" @click="extra_org=!extra_org"  slot="append" style="background-color:#57c5f7;color: white;border-left: 1px solid white; margin-left: 2px">所在机构↓</Button>
 
                 </Input>
                 <div style="width: 50%; margin-left: 25%; text-align: left" v-show="advance&&search_item=='paper'">
@@ -112,6 +113,12 @@
                         <div style="display: inline">
                             <img v-if="none_times<4" src="/src/images/add.png" @click="none_times++" height="20" width="20" style="vertical-align:middle">
                         </div>
+                    </div>
+                </div>
+                <div style="width: 50%; margin-left: 25%; text-align: left" v-show="extra_org&&search_item=='professor'">
+                    <div style="font-size: 16px; line-height: 32px; padding-top: 10px">
+                        机构：
+                        <Input style="width: 20%;margin-right: 3px" v-model="extra_org_name"></Input>
                     </div>
                 </div>
             </Col>
@@ -154,6 +161,8 @@
                     or:[],
                     none:[]
                 },
+                extra_org: false,
+                extra_org_name: '',
             }
         },
         methods: {
@@ -189,7 +198,7 @@
                         }
                         CookieUtil.methods.setCookie('email', this.email);
                         CookieUtil.methods.setCookie('password', this.password);
-                        
+
                         switch (this.GLOBAL.userType) {
                             case 'USER':
                                 this.$emit('user');
@@ -231,9 +240,10 @@
                 this.and_times = 1;
                 this.or_times = 1;
                 this.none_times = 1;
-                this.advance_data.and = null;
-                this.advance_data.or = null;
-                this.advance_data.none = null;
+                this.advance_data.and = [];
+                this.advance_data.or = [];
+                this.advance_data.none = [];
+                this.extra_org_name = '';
                 if(this.search_content == "")
                 {
                     alert("请输入搜索内容");
@@ -244,13 +254,37 @@
                     alert("请选择搜索类型");
                     return;
                 }
-                if(!this.advance)
+
+                if (this.search_item == 'paper' && this.advance)
                 {
+                    console.log(this.advance_data)
+                    if(this.advance_data.and == [] && this.advance_data.or == [] && this.advance_data.none == [])
+                    {
+                        alert("请输入高级检索信息");
+                        return;
+                    }
                     this.$router.push({
                         name: 'search_detail',
                         query:{
                             search_content: this.search_content,
                             search_type: this.search_item,
+                            advance_data: this.advance_data,
+                        }
+                    })
+                }
+                else if (this.search_item == 'professor' && this.extra_org)
+                {
+                    if(this.extra_org_name == '')
+                    {
+                        alert("请输入所在机构");
+                        return;
+                    }
+                    this.$router.push({
+                        name: 'search_detail',
+                        query:{
+                            search_content: this.search_content,
+                            search_type: this.search_item,
+                            extra_org_name: this.extra_org_name,
                         }
                     })
                 }
@@ -261,7 +295,6 @@
                         query:{
                             search_content: this.search_content,
                             search_type: this.search_item,
-                            advance_data: this.advance_data,
                         }
                     })
                 }

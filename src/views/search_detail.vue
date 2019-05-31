@@ -3,7 +3,7 @@
         <div class="top_xf">
             <MenuBar :input=true :search_content='this.$route.query.search_content' :search_item="this.$route.query.search_type" @search="search"></MenuBar>
         </div>
-        <div class="sc_detail">
+        <div class="sc_detail" id="showArea">
             <div v-for="item in search_results" class="sc_content">
                 <div v-if="type=='paper'">
                     <div class="c_font">
@@ -90,13 +90,30 @@
             }
         },
         created() {
-            this.getSearchDetails(this.$route.query.search_type, this.$route.query.search_content);
+            this.getSearchDetails(this.$route.query.search_type, this.$route.query.search_content)
         },
         methods: {
             getSearchDetails(item, content) {
                 var that = this;
                 console.log("get: item + " + item + "; content + " + content + "; pageNum + " + this.pageNum);
                 if(this.$route.query.advance_data)
+                {
+                    this.$http.post("http://qsz.lkc1621.xyz/api/v1/search_paper_nb/", {advance_data: this.$route.query.advance_data, title: content}, {emulateJSON:true}).then(function (res) {
+                        var detail = JSON.parse(res.body);
+                        console.log(detail);
+                        that.search_results = detail.msg;
+                        that.type = item;
+                        if (detail.reason == "未搜索到该专家" || detail.reason == "未查找到相关论文" || detail.reason == "未查找到相关机构")
+                            alert(detail.reason);
+                        if (item == 'paper' || item == 'organization')
+                            that.totalNum = detail.count;
+
+                        window.scrollTo(0, 0);
+                    },function (res) {
+                        console.log(res)
+                    })
+                }
+                else if(this.$route.query.extra_org_name)
                 {
 
                 }
@@ -105,7 +122,7 @@
                     if(item)
                     {
                         let param = {'page_num' : this.pageNum};
-                        console.log(param)
+                        console.log(param);
                         this.$http.get(this.GLOBAL.domain + "/api/v1/search_" + item + "/" + content, {params:param})
                             .then(function (res) {
                                 var detail = JSON.parse(res.body);
@@ -118,7 +135,7 @@
                                     that.totalNum = detail.count
                                 window.scrollTo(0,0);
                             },function (res) {
-                                console.log(res)
+                                console.log(res);
                             })
                     }
                     else
@@ -138,7 +155,7 @@
                         search_content: content,
                         search_type: item
                     }
-                })
+                });
                 console.log("item + " + item + "; search + " + content);
                 this.getSearchDetails(item, content);
             },
@@ -146,12 +163,21 @@
 
                 this.pageNum = value;
                 this.getSearchDetails(this.$route.query.search_type, this.$route.query.search_content);
-            }
+            },
+            highlight() {
+                var key = this.$route.query.search_content;
+                var txt = document.getElementById("showArea").innerHTML;
+                var temp = txt.split(key);
+                txt = temp.join('<span style="color:red;">' + key + '</span>');
+                console.log('mount')
+                console.log(txt);
+            },
 
         },
         computed: {
 
-        }
+        },
+
 
     }
 </script>
