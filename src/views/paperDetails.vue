@@ -1,5 +1,5 @@
 <template>
-    <div class="page">
+    <div v-if="flag" class="page">
         <MenuBar  v-on:user="identity = 'USER'" v-on:visitor="identity = 'VISITOR'" v-on:expert="identity = 'EXPERT'" v-on:admin="identity = 'ADMIN'"></MenuBar>
         <Layout id="layout">
                 <div style="margin-left: 26%;width: 50%">
@@ -10,7 +10,6 @@
                             <a :href=paper.source_url[0]>{{paper.source_url[0]}}</a>
                             <p style="margin-top: 2%;color: #363e4f"> {{this.paper.source_journal.name}}&nbsp-&nbsp{{this.paper.source_journal.date}}</p>
                         </div>
-
                         <div class="dtl_l_love_auth_wr" >
                             <Row>
                                 <Col span="2">
@@ -61,7 +60,7 @@
                 <Divider style="height: 85%" />
                 <p v-if="comment.length==0">暂无评论，我来发表第一篇评论！</p>
                 <div v-else >
-                    <div  v-for="item in comment" >
+                    <div  v-for="item in this.comment.slice((pageNum-1)*pageSize, pageNum*pageSize)" >
                         <b style="color: #52c41a;font-size: 17px ">{{item.from.username}}
                             <span style="color: #999999;font-size: 12px">{{item.date}}</span>&nbsp&nbsp&nbsp
                             <Button type="text" shape="circle" icon="md-chatboxes" style="color: #999999" @click="add_reply"></Button>
@@ -86,8 +85,9 @@
                         </div>
                         <Divider style="height: 85%" dash="true"/>
                     </div>
+                    <Page :current="pageNum" :total="comment.length" :page-size="pageSize" @on-change="change_page"
+                          simple style="margin-left: 32%"/>
                 </div>
-                <Page :current="2" :total="50" simple style="margin-left: 32%"/>
                 <BackTop :height="100" :bottom="200">
                     <Icon type="md-arrow-up" class="top"/>
                     <br/>返回顶端
@@ -98,7 +98,7 @@
                 <a href="http://www.baidu.com" style="margin-left: 20px; color: #eeeeee">联系我们</a>
             </Footer>
         </Layout>
-    </div>
+        </div>
 </template>
 
 <script>
@@ -110,7 +110,7 @@
         name: "paperDetails",
         data(){
             return{
-                commentData: [],
+                flag:false,
                 modal2: false,
                 modal3: false,
                 identity:this.GLOBAL.userType,
@@ -118,44 +118,46 @@
                 isliked: '',
                 showlike: '',
                 content:'',
+                pageNum:1,
+                pageSize:5,
                 other_cmt:[],
                 paper:{
-                    paper_id:'13e8bab7244258710c462441e19afbad',
-                    name:'Matlab toolbox for pet / ct image segmentation with the',
-                    year:'',
-                    source_url:['http://www.baidu.com'],
-                    free_url:[],
-                    source_journal:{
-                        name:'',
-                        date:''
-                    },
-                    author:['Chan-Vese model','xjx'],
-                    keyword:['deep learning','computer vision','chan-vese',],
-                    abstract:'大多数情况下,麻醉药物的选择对神经外科手术的过程和患者的转归并无决定性影响。深入理解CNS的' +
-                        '生理学、神经生理学和麻醉药物对大脑的影响,掌握熟练的麻醉技术,才是决定神经外科手术患者转归的关键。'
+                    // paper_id:'', //'13e8bab7244258710c462441e19afbad',
+                    // name:'',
+                    // year:'',
+                    // source_url:[],
+                    // free_url:[],
+                    // source_journal:{
+                    //     name:'',
+                    //     date:''
+                    // },
+                    // author:[],
+                    // keyword:[],
+                    // abstract:''
                 },
                 comment:[
-                    {
-                        date:'2019-5-16',from:{username:"cxk",userid:"111@123.com"},
-                        content:'你打篮球像我！',
-                        replies: [{              //回复评论的信息，是一个数组，如果没内容就是一个空数组
-                                responder: "xzd",    //评论者
-                                reviewers: "cxk",         //被评论者
-                                time: "2016-09-05",
-                                content: "你写代码像蔡徐坤"
-                            }]
-                    },
-                    {
-                        date:'2019-5-15',from:{username:"xzd",userid:"111@12354.com"},
-                        content:'你打篮球像cxk！',
-                        replies:[],
-                    },
+                    // {
+                    //     date:'2019-5-16',from:{username:"cxk",userid:"111@123.com"},
+                    //     content:'你打篮球像我！',
+                    //     replies: [{              //回复评论的信息，是一个数组，如果没内容就是一个空数组
+                    //             responder: "xzd",    //评论者
+                    //             reviewers: "cxk",         //被评论者
+                    //             time: "2016-09-05",
+                    //             content: "你写代码像蔡徐坤"
+                    //         }]
+                    // },
+                    // {
+                    //     date:'2019-5-15',from:{username:"xzd",userid:"111@12354.com"},
+                    //     content:'你打篮球像cxk！',
+                    //     replies:[],
+                    // },
                 ]
             }
         },
         created() {
             this.paper.paper_id = this.$route.query.paperID;
             this.get_paperDetails(this.paper.paper_id);
+            console.log("1111"+this.flag);
             this.judge_like();
             this.get_comment();
         },
@@ -184,6 +186,7 @@
                             else {
                                 this.showlike = '收藏';
                                 this.isliked = !this.isliked;
+                                this.refresh_user_info();
                             }
                         },function (res) {
                             alert(res);
@@ -199,7 +202,8 @@
                             }
                             else {
                                 this.showlike = '已收藏';
-                                this.isliked = !this.isliked
+                                this.isliked = !this.isliked;
+                                this.refresh_user_info();
                             }
                         }, function (res) {
                             alert(res);
@@ -213,7 +217,7 @@
                         var detail = JSON.parse(res.body);
                         console.log(detail);
                         if(detail.state=="fail"){
-                            this.$Message.info("获取评论失败")
+                            //this.$Message.info("获取评论失败")
                         }
                         else{
                             this.comment = detail.msg;
@@ -222,6 +226,12 @@
                     }, function (res) {
                         alert(res);
                     });
+            },
+            change_page (value) {
+                this.pageNum = value;
+                console.log(this.pageNum);
+                document.body.scrollTop = 0;
+                document.documentElement.scrollTop = 0;
             },
             add_comment(){
                 console.log(this.identity);
@@ -239,12 +249,18 @@
                 else {
                     console.log(this.paper.paper_id)
                     let params = {'from_email':this.GLOBAL.email,'paper_id':this.paper.paper_id,'content':this.content};
-                    this.$http.get(this.GLOBAL.domain + "/api/v1/comment",{params:params})
-                        .then(function (res) {
+                    this.$http.post(this.GLOBAL.domain + "/api/v1/comment",params,{
+                        headers:{
+                            'Content-Type':"application/json",
+                        }
+                    }).then(function (res) {
                             var detail = JSON.parse(res.body);
                             console.log(detail);
                             if(detail.state=="fail"){
                                 this.$Message.info("评论失败")
+                            }
+                            else{
+                                this.get_comment()
                             }
                         }, function (res) {
                             alert(res);
@@ -252,6 +268,7 @@
                 }
             },
             reply_comment(){
+
 
             },
             jump_man(){
@@ -275,6 +292,7 @@
                         this.paper.author = detail.msg.author;
                         this.paper.source_journal = detail.msg.source_journal;
                         this.paper.source_url = detail.msg.source_url;
+                        this.flag=true
                     }, function (res) {
                         var detail = JSON.parse(res.body);
                         console.log(detail);
@@ -298,6 +316,19 @@
                     }
                 },function (res) {
                 });
+            },
+            refresh_user_info () {
+                this.$http.get(this.GLOBAL.domain + '/api/v1/user_detail/' + this.GLOBAL.email)
+                    .then(function (res) {
+                        var detail = JSON.parse(res.body);
+                        console.log(detail);
+                        this.GLOBAL.setFollowList(detail.msg.follow_list);
+                        this.GLOBAL.setCollectList(detail.msg.star_list);
+                    },function (res) {
+                        console.log('Failed');
+                        var detail = JSON.parse(res.body);
+                        console.log(detail);
+                    })
             }
         }
     }
