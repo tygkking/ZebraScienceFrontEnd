@@ -16,7 +16,7 @@
                                     <label style="width: 90px;color: #999999" >作者：</label>
                                 </Col>
                                 <Col span="22">
-                                    <label @click="jump_man" v-for="(value, key) in paper.author" style="color: #2b85e4;font-size: 15px">{{key}}&nbsp;&nbsp;&nbsp;</label>
+                                    <label @click="jump_man(key)" v-for="(value, key) in paper.author" style="color: #2b85e4;font-size: 15px">{{key}}&nbsp;&nbsp;&nbsp;</label>
                                 </Col>
                             </Row>
                             <!--<label style="width: 60px;color: #999999" >作者：</label>-->
@@ -271,12 +271,12 @@
 
 
             },
-            jump_man(){
+            jump_man(man){
                 this.$router.push({
                     name: 'search_detail',
                     query: {
-                        search_detail: this.temp_detail,
-                        search_type: 'prof'
+                        search_content: man,
+                        search_type: 'professor'
                     }
                 })
             },
