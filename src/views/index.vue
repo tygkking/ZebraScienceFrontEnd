@@ -42,6 +42,17 @@
         display: inline;
         align-items: center;
     }
+
+    .extra-item{
+        font-size: 16px;
+        line-height: 32px;
+        padding-top: 10px;
+    }
+
+    .extra-input{
+        width: 20%;
+        margin-right: 3px
+    }
 </style>
 <template>
     <div class="index">
@@ -87,32 +98,46 @@
 
                 </Input>
                 <div style="width: 50%; margin-left: 25%; text-align: left" v-show="advance&&search_item=='paper'">
-                    <div style="font-size: 16px; line-height: 32px; padding-top: 10px">
+                    <div class="extra-item">
                         并含：
                         <div v-for="item in and_times" class="advance_item" >
-                            <Input style="width: 20%;margin-right: 3px" v-model="advance_data.and[item]"></Input>
+                            <Input class="extra-input" v-model="advance_data.and[item - 1]"></Input>
                         </div>
                         <div style="display: inline">
                             <img v-if="and_times<4" src="/src/images/add.png" @click="and_times++" height="20" width="20" style="vertical-align:middle">
                         </div>
                     </div>
-                    <div style="font-size: 16px; line-height: 32px; padding-top: 10px">
+                    <div class="extra-item">
                         或含：
                         <div v-for="item in or_times" class="advance_item">
-                            <Input style="width: 20%;margin-right: 3px" v-model="advance_data.or[item]"></Input>
+                            <Input class="extra-input" v-model="advance_data.or[item - 1]"></Input>
                         </div>
                         <div style="display: inline">
                             <img v-if="or_times<4" src="/src/images/add.png" @click="or_times++" height="20" width="20" style="vertical-align:middle">
                         </div>
                     </div>
-                    <div style="font-size: 16px; line-height: 32px; padding-top: 10px">
+                    <div class="extra-item">
                         不含：
                         <div v-for="item in none_times" class="advance_item" >
-                            <Input style="width: 20%;margin-right: 3px" v-model="advance_data.none[item]"></Input>
+                            <Input class="extra-input" v-model="advance_data.none[item - 1]"></Input>
                         </div>
                         <div style="display: inline">
                             <img v-if="none_times<4" src="/src/images/add.png" @click="none_times++" height="20" width="20" style="vertical-align:middle">
                         </div>
+                    </div>
+                    <div class="extra-item">
+                        作者：
+                        <Input class="extra-input" v-model="advance_writer"></Input>
+                    </div>
+                    <div class="extra-item">
+                        刊物：
+                        <Input class="extra-input" v-model="advance_book"></Input>
+                    </div>
+                    <div class="extra-item">
+                        发表时间：
+                        <Input class="extra-input" v-model="advance_time[0]"></Input>
+                        -
+                        <Input class="extra-input" v-model="advance_time[1]"></Input>
                     </div>
                 </div>
                 <div style="width: 50%; margin-left: 25%; text-align: left" v-show="extra_org&&search_item=='professor'">
@@ -161,6 +186,9 @@
                     or:[],
                     none:[]
                 },
+                advance_writer: '',
+                advance_book: '',
+                advance_time: [1900, 2019],
                 extra_org: false,
                 extra_org_name: '',
             }
@@ -237,13 +265,7 @@
                 this.$router.push({path: '/register'})
             },
             search() {
-                this.and_times = 1;
-                this.or_times = 1;
-                this.none_times = 1;
-                this.advance_data.and = [];
-                this.advance_data.or = [];
-                this.advance_data.none = [];
-                this.extra_org_name = '';
+                console.log(this.advance_data)
                 if(this.search_content == "")
                 {
                     alert("请输入搜索内容");
@@ -258,9 +280,9 @@
                 if (this.search_item == 'paper' && this.advance)
                 {
                     console.log(this.advance_data)
-                    if(this.advance_data.and == [] && this.advance_data.or == [] && this.advance_data.none == [])
+                    if(this.advance_time[0] < 0 || this.advance_time[1] > 2019)
                     {
-                        alert("请输入高级检索信息");
+                        alert("请输入正确的时间");
                         return;
                     }
                     this.$router.push({
@@ -269,6 +291,9 @@
                             search_content: this.search_content,
                             search_type: this.search_item,
                             advance_data: this.advance_data,
+                            advance_writer: this.advance_writer,
+                            advance_time: this.advance_time,
+                            advance_book: this.advance_book,
                         }
                     })
                 }
@@ -298,6 +323,16 @@
                         }
                     })
                 }
+
+            },
+            init(){
+                this.and_times = 1;
+                this.or_times = 1;
+                this.none_times = 1;
+                this.advance_data.and = [];
+                this.advance_data.or = [];
+                this.advance_data.none = [];
+                this.extra_org_name = '';
             }
         },
         created() {

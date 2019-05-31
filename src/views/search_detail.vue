@@ -98,7 +98,13 @@
                 console.log("get: item + " + item + "; content + " + content + "; pageNum + " + this.pageNum);
                 if(this.$route.query.advance_data)
                 {
-                    this.$http.post("http://qsz.lkc1621.xyz/api/v1/search_paper_nb/", {advance_data: this.$route.query.advance_data, title: content}, {emulateJSON:true}).then(function (res) {
+                    this.$http.post("http://qsz.lkc1621.xyz/api/v1/search_paper_nb/", {
+                        advance_data: this.$route.query.advance_data,
+                        title: content,
+                        writer: this.$route.query.advance_writer,
+                        book: this.$route.query.advance_book,
+                        time: this.$route.query.advance_time
+                    }, {emulateJSON:true}).then(function (res) {
                         var detail = JSON.parse(res.body);
                         console.log(detail);
                         that.search_results = detail.msg;
@@ -115,37 +121,51 @@
                 }
                 else if(this.$route.query.extra_org_name)
                 {
+                    this.$http.post("http://qsz.lkc1621.xyz/api/v1/search_professer_nb/", {
+                        extra_org_name: this.$route.query.extra_org_name,
+                        title: content,
+                    }, {emulateJSON:true}).then(function (res) {
+                        var detail = JSON.parse(res.body);
+                        console.log(detail);
+                        that.search_results = detail.msg;
+                        that.type = item;
+                        if (detail.reason == "未搜索到该专家" || detail.reason == "未查找到相关论文" || detail.reason == "未查找到相关机构")
+                            alert(detail.reason);
+                        if (item == 'paper' || item == 'organization')
+                            that.totalNum = detail.count;
 
+                        window.scrollTo(0, 0);
+                    },function (res) {
+                        console.log(res)
+                    })
                 }
                 else
                 {
-                    if(item)
-                    {
-                        let param = {'page_num' : this.pageNum};
-                        console.log(param);
-                        this.$http.get(this.GLOBAL.domain + "/api/v1/search_" + item + "/" + content, {params:param})
-                            .then(function (res) {
-                                var detail = JSON.parse(res.body);
-                                console.log(detail);
-                                that.search_results=detail.msg;
-                                that.type = item;
-                                if(detail.reason == "未搜索到该专家" || detail.reason == "未查找到相关论文" || detail.reason == "未查找到相关机构")
-                                    alert(detail.reason);
-                                if(item == 'paper' || item == 'organization')
-                                    that.totalNum = detail.count
-                                window.scrollTo(0,0);
-                            },function (res) {
-                                console.log(res);
-                            })
-                    }
-                    else
-                    {
-                        console.log("请选择搜索类型");
-                    }
+                    let param = {'page_num' : this.pageNum};
+                    console.log(param);
+                    this.$http.get(this.GLOBAL.domain + "/api/v1/search_" + item + "/" + content, {params:param})
+                        .then(function (res) {
+                            var detail = JSON.parse(res.body);
+                            console.log(detail);
+                            that.search_results=detail.msg;
+                            that.type = item;
+                            if(detail.reason == "未搜索到该专家" || detail.reason == "未查找到相关论文" || detail.reason == "未查找到相关机构")
+                                alert(detail.reason);
+                            if(item == 'paper' || item == 'organization')
+                                that.totalNum = detail.count
+                            window.scrollTo(0,0);
+                        },function (res) {
+                            console.log(res);
+                        })
                 }
             },
 
             search(item, content) {
+                if(item=="")
+                {
+                    alert("请输入搜索类型");
+                    return;
+                }
                 this.pageNum = 1;
                 var that = this;
                 if(content == "")
@@ -164,14 +184,14 @@
                 this.pageNum = value;
                 this.getSearchDetails(this.$route.query.search_type, this.$route.query.search_content);
             },
-            highlight() {
-                var key = this.$route.query.search_content;
-                var txt = document.getElementById("showArea").innerHTML;
-                var temp = txt.split(key);
-                txt = temp.join('<span style="color:red;">' + key + '</span>');
-                console.log('mount')
-                console.log(txt);
-            },
+            // highlight() {
+            //     var key = this.$route.query.search_content;
+            //     var txt = document.getElementById("showArea").innerHTML;
+            //     var temp = txt.split(key);
+            //     txt = temp.join('<span style="color:red;">' + key + '</span>');
+            //     console.log('mount')
+            //     console.log(txt);
+            // },
 
         },
         computed: {
