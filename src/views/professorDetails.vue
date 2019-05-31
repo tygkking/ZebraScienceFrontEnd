@@ -122,16 +122,16 @@
                                     </ul>
                                 </div>
                                 <Divider dashed/>
-                                <div>
-                                    <h3>合作机构</h3>
-                                    <ul style="list-style-type:none; margin-left: 5px; margin-top: 5px">
-                                    <li v-for="item in coop_org">
-                                        <div class="relevant-detail">
-                                            {{ item.message }}
-                                        </div>
-                                    </li>
-                                </ul>
-                                </div>
+<!--                                <div>-->
+<!--                                    <h3>合作机构</h3>-->
+<!--                                    <ul style="list-style-type:none; margin-left: 5px; margin-top: 5px">-->
+<!--                                    <li v-for="item in coop_org">-->
+<!--                                        <div class="relevant-detail">-->
+<!--                                            {{ item.message }}-->
+<!--                                        </div>-->
+<!--                                    </li>-->
+<!--                                </ul>-->
+<!--                                </div>-->
                             </div>
                         </Col>
                     </Row>
