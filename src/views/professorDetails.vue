@@ -53,7 +53,7 @@
 
 <template>
     <div class="userpage">
-        <MenuBar  v-on:user="identity = 'USER'" v-on:visitor="identity = 'VISITOR'"></MenuBar>
+        <MenuBar  v-on:user="identity = 'USER'" v-on:visitor="identity = 'VISITOR'" v-on:expert="identity = 'EXPERT'" v-on:admin="identity = 'ADMIN'"></MenuBar>
         <Layout id="layout">
             <Content :style="{padding: '0 50px'}">
                 <div class="user-intro">

@@ -189,6 +189,18 @@
                         }
                         CookieUtil.methods.setCookie('email', this.email);
                         CookieUtil.methods.setCookie('password', this.password);
+                        
+                        switch (this.GLOBAL.userType) {
+                            case 'USER':
+                                this.$emit('user');
+                                break;
+                            case 'ADMIN':
+                                this.$emit('admin');
+                                break;
+                            case 'EXPERT':
+                                this.$emit('expert');
+                                break;
+                        }
                     }
                 },function (res) {
                     console.log(res)

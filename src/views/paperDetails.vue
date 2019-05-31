@@ -1,6 +1,6 @@
 <template>
     <div class="page">
-        <MenuBar v-on:user="identity = 'USER'" v-on:visitor="identity = 'VISITOR'"></MenuBar>
+        <MenuBar  v-on:user="identity = 'USER'" v-on:visitor="identity = 'VISITOR'" v-on:expert="identity = 'EXPERT'" v-on:admin="identity = 'ADMIN'"></MenuBar>
         <Layout id="layout">
                 <div style="margin-left: 26%;width: 50%">
                     <h3 style="color: #06c;font-size: 26px;font-weight: bold;word-break: break-all">{{paper.name}}</h3>

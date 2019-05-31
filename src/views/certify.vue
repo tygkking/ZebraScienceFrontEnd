@@ -1,6 +1,6 @@
 <template>
     <div>
-        <MenuBar v-on:user="identity = 'USER'" v-on:visitor="identity = 'VISITOR'"></MenuBar>
+        <MenuBar  v-on:user="identity = 'USER'" v-on:visitor="identity = 'VISITOR'" v-on:expert="identity = 'EXPERT'" v-on:admin="identity = 'ADMIN'"></MenuBar>
         <Modal v-model="modal1" cancel-text="取消" @on-cancel="check_ok" draggable scrollable title="发送申请成功">
             <h3>您已成功发送申请，请耐心等待管理员审核</h3>
             <div slot="footer">

@@ -1,6 +1,6 @@
 <template>
     <div>
-        <MenuBar></MenuBar>
+        <MenuBar  v-on:user="identity = 'USER'" v-on:visitor="identity = 'VISITOR'" v-on:expert="identity = 'EXPERT'" v-on:admin="identity = 'ADMIN'"></MenuBar>
         <div class="certify-detail">
             <div v-if="identity == 'VISITOR'" style="width: 100%; text-align: center; height: 200px;">
                 <h2 style="margin-top: 80px">您还未登录！<br> Zebra 请您登录</h2>

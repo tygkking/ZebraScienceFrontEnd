@@ -21,7 +21,7 @@
 
 <template>
     <div class="news_page">
-        <MenuBar  v-on:user="identity = 'USER'" v-on:visitor="identity = 'VISITOR'"></MenuBar>
+        <MenuBar  v-on:user="identity = 'USER'" v-on:visitor="identity = 'VISITOR'" v-on:expert="identity = 'EXPERT'" v-on:admin="identity = 'ADMIN'"></MenuBar>
         <div style="margin-top: 60px">
             <Row>
                 <Col span="7">

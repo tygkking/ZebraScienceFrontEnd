@@ -57,7 +57,7 @@
 
 <template>
     <div class="userpage">
-        <MenuBar  v-on:user="identity = 'USER'" v-on:visitor="identity = 'VISITOR'"></MenuBar>
+        <MenuBar  v-on:user="identity = 'USER'" v-on:visitor="identity = 'VISITOR'" v-on:expert="identity = 'EXPERT'" v-on:admin="identity = 'ADMIN'"></MenuBar>
         <Layout id="layout">
             <div v-if="identity == 'VISITOR'" style="width: 100%; text-align: center; height: 200px;">
                 <h2 style="margin-top: 80px">您还未登录！<br> 无法查看个人主页</h2>

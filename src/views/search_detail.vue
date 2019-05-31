@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="top_xf">
-            <menuBar :input=true :search_content='this.$route.query.search_content' :search_item="this.$route.query.search_type" @search="search"></menuBar>
+            <MenuBar :input=true :search_content='this.$route.query.search_content' :search_item="this.$route.query.search_type" @search="search"></MenuBar>
         </div>
         <div class="sc_detail">
             <div v-for="item in search_results" class="sc_content">
