@@ -5,12 +5,12 @@
             <div v-if="identity == 'VISITOR'" style="width: 100%; text-align: center; height: 200px;">
                 <h2 style="margin-top: 80px">您还未登录！<br> Zebra 请您登录</h2>
             </div>
-            <Tabs value="name1" :animated="false" style="margin-top: 60px; width: 100%; text-align: center" v-show="identity != 'VISITOR'">
-                <TabPane label="修改用户名" name="name1"  @click.native="handleReset ('change_pwd')">
+            <Tabs value="name2" :animated="false" style="margin-top: 60px; width: 100%; text-align: center" v-show="identity != 'VISITOR'">
+                <TabPane label="修改用户名" name="name1"  @click.native="handleReset ('change_pwd')" v-if="identity != 'EXPERT'">
                     <div class="layout-content-main">
                         <Form ref="change_name" :model="change_name" :rules="change_name_rule" :label-width="100">
                             <FormItem label="新用户名" prop="name">
-                                <Input v-model="change_name.name" placeholder="请输入用户名" class="input-select-class"></Input>
+                                <Input v-model="change_name.name" placeholder="请输入用户名" class="input-select-class" onkeypress="if(event.keyCode == 13) return false;"></Input>
                             </FormItem>
                             <FormItem>
                                 <Button type="primary" @click="handleSubmit('change_name')" >修改</Button>
@@ -69,7 +69,7 @@
                 userName:'',
                 identity: this.GLOBAL.userType,
                 //identity:'EXPERT', //EXPERT USER VISITOR
-                old_pwd:'123',
+                //old_pwd:'123',
                 //change_pwd: false,
                 change_name: {
                     name: '',
@@ -86,18 +86,7 @@
                 },
                 change_pwd_rule: {
                     old_password: [
-                        { required: true, message: '旧密码不能为空', trigger: 'blur' },{
-                        validator:(rule,value,callback)=>{
-                            if(value===''){
-                                callback(new Error('请输入旧密码'))
-                            }
-                            else if(value!==this.old_pwd){
-                                console.log(this.old_pwd);
-                                callback(new Error('旧密码输入错误'))
-                            }else{
-                                callback()
-                            }
-                        },trigger:'blur'}
+                        { required: true, message: '旧密码不能为空', trigger: 'blur' }
                     ],
                     password: [
                         { required: true, message: '密码不能为空', trigger: 'blur' },
@@ -120,29 +109,64 @@
         },
         methods:{
             handleSubmit (name) {
+                // console.log(name);
                 console.log(this.GLOBAL.userName);
                 this.$refs[name].validate((valid) => {
                     if (valid) {
                         if (name === 'change_name') {
                             console.log('if '+this.change_name.name);
-                            this.GLOBAL.setUserName(this.change_name.name);
-                            console.log('this is ' + this.GLOBAL.userName)
+                            // this.GLOBAL.setUserName(this.change_name.name);
+                            // console.log('this is ' + this.GLOBAL.userName)
+                            let params = {'user_id':this.GLOBAL.email, 'username':this.change_name.name}
+                            this.$http.post(this.GLOBAL.domain + '/api/v1/information_change',params)
+                                .then(function (res) {
+                                    var detail = JSON.parse(res.body);
+                                    console.log(detail);
+                                    if(detail.state === 'success'){
+                                        this.$Message.success('修改成功!')
+                                    }
+                                    else{
+                                        this.$Message.error('修改失败!')
+                                    }
+                                },function (res) {
+                                    console.log('Failed');
+                                    var detail = JSON.parse(res.body);
+                                    console.log(detail);
+                                })
                         }
                         else if (name === 'change_pwd') {
                             console.log('else if')
+                            let params = {'user_id':this.GLOBAL.email, 'old_password':this.change_pwd.old_password, 'new_password':this.change_pwd.password}
+                            console.log(params);
+                            this.$http.post(this.GLOBAL.domain + '/api/v1/password_change', params)
+                                .then(function (res) {
+                                    var detail = JSON.parse(res.body);
+                                    console.log(detail);
+                                    if(detail.state === 'fail'){
+                                        this.$Message.error(detail.reason);
+                                    }
+                                    else{
+                                        this.$Message.success(detail.reason);
+                                    }
+                                },function (res) {
+                                    console.log('Failed');
+                                    var detail = JSON.parse(res.body);
+                                    console.log(detail);
+                                })
                         }
                         else {
                             console.log('else')
                         }
                         this.$refs[name].resetFields()
-                        this.$Message.success('提交成功!')
+                        // this.$Message.success('提交成功!')
                     } else {
                         this.$Message.error('表单验证失败!')
                     }
                 })
             },
             handleReset (name) {
-                this.$refs[name].resetFields()
+                if(this.identity !== 'EXPERT')
+                    this.$refs[name].resetFields()
             },
             displayImage() {
                 const file = this.$refs.fileInput.files[0]
