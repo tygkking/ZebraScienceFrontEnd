@@ -10,7 +10,7 @@
         <Layout>
             <Content>
                 <div v-show=same_name class="same-name-expert">
-                    <h2>检测到同名专家，请选择您是哪一位</h2>
+                    <h2 style="margin-left: 30%">{{showedMessage}}</h2>
                     <ul style="list-style-type:none; margin-left: 5px; margin-top: 5px;">
                         <li v-for="item in same_name_sch" style="width:40%; float:left; margin-left: 20px; min-width: 320px">
                                 <div onmouseover="this.style.background = '#e7e7e7'" onmouseout="this.style.background = '#f5f7f9'" @click="confirm_prof_id(item.scid)" style="cursor:pointer; margin:5px; padding: 5px; border: #2b85e4 solid 1px; border-radius: 5px; overflow: hidden">
@@ -83,6 +83,7 @@
                 same_name: false,
                 modal1: false,
                 profID: '',
+                showedMessage: '正在检测同名专家...',
                 formValidate: {
                     name: '',
                     id_num: '',
@@ -104,7 +105,7 @@
                         { required: true, message: '所属机构不能为空', trigger: 'blur' },
                     ],
                 },
-                same_name_sch: this.GLOBAL.followList, //暂时为了方便排版
+                same_name_sch: '',
             }
         },
         methods:{
@@ -127,7 +128,13 @@
                             .then(function (res) {
                                 //this.same_name = true;
                                 var detail = JSON.parse(res.body);
-                                this.same_name_sch = detail.msg;
+                                if(detail.state === 'fail'){
+                                    this.showedMessage = detail.reason;
+                                }
+                                else{
+                                    this.same_name_sch = detail.msg;
+                                    this.showedMessage = '检测到同名专家，请选择您是哪一位';
+                                }
                                 console.log(detail);
                             },function (res) {
                                 console.log('Failed');
@@ -149,21 +156,17 @@
                 var form = this.formValidate;
                 let params = {'email':this.GLOBAL.email,'name':form.name,'ID_num':form.id_num,'field':form.field,'text':form.else_info,'scid':id};
                 console.log(params);
-                this.$http.get(this.GLOBAL.domain + '/api/v1/certification',params,{
-                    headers:{
-                        'Content-Type':"application/json",
-                    }
-                }).then(function (res) {
-                    console.log('Success');
-                    var detail = JSON.parse(res.body);
-                    console.log(detail);
-                    this.modal1 = true;
-
-                },function (res) {
-                    console.log("Failed");
-                    var detail = JSON.parse(res.body);
-                    console.log(detail);
-                })
+                this.$http.get(this.GLOBAL.domain + '/api/v1/certification',{params:params})
+                    .then(function (res) {
+                        console.log('SuccessFFF');
+                        var detail = JSON.parse(res.body);
+                        console.log(detail);
+                        this.modal1 = true;
+                    },function (res) {
+                        console.log("Failed");
+                        var detail = JSON.parse(res.body);
+                        console.log(detail);
+                    })
             },
             check_ok () {
                 setTimeout(() => {
