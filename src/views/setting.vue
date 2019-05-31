@@ -123,7 +123,8 @@
                                     var detail = JSON.parse(res.body);
                                     console.log(detail);
                                     if(detail.state === 'success'){
-                                        this.$Message.success('修改成功!')
+                                        this.refresh_user_info();
+                                        this.$Message.success('修改成功!');
                                     }
                                     else{
                                         this.$Message.error('修改失败!')
@@ -180,7 +181,19 @@
                 if(this.previewImageSrc=="")
                     return
                 alert("cxk")
-            }
+            },
+            refresh_user_info () {
+                this.$http.get(this.GLOBAL.domain + '/api/v1/user_detail/' + this.GLOBAL.email)
+                    .then(function (res) {
+                        var detail = JSON.parse(res.body);
+                        console.log(detail);
+                        this.GLOBAL.setUserName(detail.msg.username);
+                    },function (res) {
+                        console.log('Failed');
+                        var detail = JSON.parse(res.body);
+                        console.log(detail);
+                    })
+            },
         }
     }
 </script>

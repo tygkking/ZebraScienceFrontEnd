@@ -261,6 +261,7 @@
                             else {
                                 this.showlike = '关注';
                                 this.isliked = !this.isliked;
+                                this.refresh_user_info();
                             }
                     },function (res) {
                         alert(res);
@@ -277,6 +278,7 @@
                             else {
                                 this.showlike = '已关注';
                                 this.isliked = !this.isliked;
+                                this.refresh_user_info();
                             }
                     },function (res) {
                         alert(res);
@@ -360,6 +362,19 @@
                 console.log(this.pageNum);
                 document.body.scrollTop = 0;
                 document.documentElement.scrollTop = 0;
+            },
+            refresh_user_info () {
+                this.$http.get(this.GLOBAL.domain + '/api/v1/user_detail/' + this.GLOBAL.email)
+                    .then(function (res) {
+                        var detail = JSON.parse(res.body);
+                        console.log(detail);
+                        this.GLOBAL.setFollowList(detail.msg.follow_list);
+                        this.GLOBAL.setCollectList(detail.msg.star_list);
+                    },function (res) {
+                        console.log('Failed');
+                        var detail = JSON.parse(res.body);
+                        console.log(detail);
+                    })
             },
         },
         created() {

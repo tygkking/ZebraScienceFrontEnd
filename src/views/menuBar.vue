@@ -73,8 +73,9 @@
                         'Content-Type':"application/json",
                     }
                 }).then(function(res){
-                    console.log(res);
+                    // console.log(res);
                     var s = JSON.parse(res.body);
+                    console.log(s);
                     if(s["state"]=="fail"){
                         this.$Message.info(s["reason"]);
                     }
