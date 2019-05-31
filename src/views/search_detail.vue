@@ -68,12 +68,12 @@
 </template>
 
 <script>
-    import menuBar from './menuBar.vue'
+    import MenuBar from './menuBar.vue'
     import Button from "../../dist/vendors";
     export default {
         components: {
             Button,
-            menuBar
+            MenuBar
         },
         name: "search_paper",
         data() {
