@@ -67,7 +67,7 @@
                     <Row>
                         <Col span="5">
                             <div class="person-image" style="text-align: center">
-                                <img src="../images/zebra.png" height="100px" style="margin: 5px">
+                                <img :src=this.GLOBAL.avatar height="125px" style="margin: 5px; border-radius: 20%; padding: 3px; background-color: #fff; border: 1px solid rgba(0, 0, 0, 0.15);">
                                 <br>
                                 <Button v-if="identity != 'EXPERT'" style="width: 90%; font-size: 14px" @click.native="applyfor">
                                     申请认证

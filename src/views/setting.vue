@@ -39,10 +39,25 @@
                 </TabPane>
                 <TabPane label="修改头像" name="name3" >
                         <div class="layout-content-main">
-                            <img :src="previewImageSrc" alt="请上传头像" height="100px" style="margin: 5px">
-                            <br/>
-                            <input type="file" @change="displayImage" ref="fileInput">
-                            <button @click="upload">上传</button>
+<!--                            <img :src="previewImageSrc" alt="请上传头像" height="100px" style="margin: 5px">-->
+<!--                            <br/>-->
+<!--                            <input type="file" @change="displayImage" ref="fileInput">-->
+<!--                            <button @click="upload">上传</button>-->
+<!--                            <a class="btn" @click="toggleShow">设置头像</a>-->
+                            <my-upload field="img"
+                                @crop-success="cropSuccess"
+                                @crop-upload-success="cropUploadSuccess"
+                                @crop-upload-fail="cropUploadFail"
+                                v-model="show"
+                                :width="150"
+                                :height="150"
+                                :url=this.upload_url
+                                :params="params"
+                                :headers="headers"
+                                img-format="png"></my-upload>
+                            <img :src="imgDataUrl" style="border-radius: 20%; padding: 3px; background-color: #fff; border: 1px solid rgba(0, 0, 0, 0.15);">
+                            <br><br>
+                            <Button @click="toggleShow">设置头像</Button>
                         </div>
                 </TabPane>
             </Tabs>
@@ -58,9 +73,11 @@
 
 <script>
     import MenuBar from './menuBar.vue'
+    import myUpload from 'vue-image-crop-upload';
     export default {
         components:{
-            MenuBar
+            MenuBar,
+            'my-upload': myUpload,
         },
         name: "setting",
         data () {
@@ -71,6 +88,16 @@
                 //identity:'EXPERT', //EXPERT USER VISITOR
                 //old_pwd:'123',
                 //change_pwd: false,
+                show: false,
+                upload_url: this.GLOBAL.domain + '/api/v1/upload_avatar',
+                params: {
+                    token: '123456798',
+                    name: 'avatar'
+                },
+                headers: {
+                    smail: '*_~'
+                },
+                imgDataUrl: this.GLOBAL.avatar, // the datebase64 url of created image
                 change_name: {
                     name: '',
                 },
@@ -188,12 +215,67 @@
                         var detail = JSON.parse(res.body);
                         console.log(detail);
                         this.GLOBAL.setUserName(detail.msg.username);
+                        this.GLOBAL.setAvatar(detail.msg.avatar);
                     },function (res) {
                         console.log('Failed');
                         var detail = JSON.parse(res.body);
                         console.log(detail);
                     })
             },
+            toggleShow() {
+				this.show = !this.show;
+			},
+            cropSuccess(imgDataUrl, field){
+				console.log('-------- crop success --------');
+				this.imgDataUrl = imgDataUrl;
+			},
+            /**
+			 * upload success
+			 *
+			 * [param] jsonData   服务器返回数据，已进行json转码
+			 * [param] field
+			 */
+			cropUploadSuccess(jsonData, field){
+				console.log('-------- upload success --------');
+				console.log(jsonData);
+				console.log('field: ' + field);
+				var detail = JSON.parse(jsonData);
+				console.log(detail.url);
+				if(detail.state == 'success'){
+				    let params = { 'user_id':this.GLOBAL.email, 'avatar':detail.url };
+                    this.$http.post(this.GLOBAL.domain + '/api/v1/information_change',params)
+                        .then(function (res) {
+                            var detail = JSON.parse(res.body);
+                            console.log(detail);
+                            if(detail.state === 'success'){
+                                this.refresh_user_info();
+                                this.show = !this.show;
+                                this.$Message.success('修改成功!');
+                            }
+                            else{
+                                this.$Message.error('修改失败!')
+                            }
+                        },function (res) {
+                            console.log('Failed');
+                            var detail = JSON.parse(res.body);
+                            console.log(detail);
+                        })
+                }
+				else{
+				    this.$Message.error('服务器出错，上传失败')
+                }
+			},
+			/**
+			 * upload fail
+			 *
+			 * [param] status    server api return error status, like 500
+			 * [param] field
+			 */
+			cropUploadFail(status, field){
+				console.log('-------- upload fail --------');
+				console.log(status);
+				console.log('field: ' + field);
+			},
         }
     }
 </script>

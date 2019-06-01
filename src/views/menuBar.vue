@@ -75,15 +75,16 @@
                 }).then(function(res){
                     // console.log(res);
                     var s = JSON.parse(res.body);
+                    console.log("MenuBar");
                     console.log(s);
                     if(s["state"]=="fail"){
                         this.$Message.info(s["reason"]);
                     }
                     else {
                         //this.$Message.info('成功登录');
-                        console.log("qqqq"+this.GLOBAL.userType)
+                        // console.log("qqqq"+this.GLOBAL.userType)
                         this.GLOBAL.setUserType(s["msg"]["user_type"]);
-                        console.log("hhhh"+this.GLOBAL.userType)
+                        // console.log("hhhh"+this.GLOBAL.userType)
                         this.identity = this.GLOBAL.userType;
                         // console.log(this.identity);
                         this.GLOBAL.setUserName(s["msg"]["username"]);
@@ -93,6 +94,11 @@
                         this.like_sch = this.GLOBAL.followList;
                         this.GLOBAL.setCollectList(s["msg"]["star_list"]);
                         this.star_paper_items = this.GLOBAL.collectList;
+                        if(s["msg"]["avatar"] != ''){
+                            console.log(this.GLOBAL.avatar);
+                            this.GLOBAL.setAvatar(s["msg"]["avatar"]);
+                        }
+                        console.log('avatar' + this.GLOBAL.avatar);
                         //console.log("hhhh"+this.GLOBAL.userName)
                         if(this.GLOBAL.userType == 'EXPERT'){
                             // console.log(s["msg"]["paper_list"]);
@@ -141,8 +147,8 @@
             }
         },
         created() {
-            console.log(this.GLOBAL.userType + 'global meunbar')
-            console.log(this.identity + 'meunbar')
+            // console.log(this.GLOBAL.userType + 'global meunbar')
+            // console.log(this.identity + 'meunbar')
             this.email = CookieUtil.methods.getCookie('email');
             console.log('created menubar' + CookieUtil.methods.getCookie('email'))
             this.password = CookieUtil.methods.getCookie('password');

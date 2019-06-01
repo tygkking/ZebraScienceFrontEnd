@@ -220,6 +220,9 @@
                         this.like_sch = this.GLOBAL.followList;
                         this.GLOBAL.setCollectList(s["msg"]["star_list"]);
                         this.star_paper_items = this.GLOBAL.collectList;
+                        if(s["msg"]["avatar"] != ''){
+                            this.GLOBAL.setAvatar(s["msg"]["avatar"]);
+                        }
                         if(this.GLOBAL.userType == 'EXPERT'){
                             // console.log(s["msg"]["paper_list"]);
                             this.GLOBAL.setMyList(s["msg"]["paper_list"]);

@@ -7,6 +7,8 @@ import App from './app.vue';
 import 'iview/dist/styles/iview.css';
 import Global from './views/global';
 import VueResource from 'vue-resource';
+import myUpload from 'vue-image-crop-upload';
+import 'babel-polyfill';
 
 Vue.use(VueRouter);
 Vue.use(iView);

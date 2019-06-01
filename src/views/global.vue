@@ -13,6 +13,7 @@
         email: '1@1.com',
         password: '123', // Just For Test
         userType: 'VISITOR',
+        avatar: 'http://qsz.lkc1621.xyz/static/photo/1559356265_img.png',
         collectList: [
             {
                 name: 'This is Paper Title One This is Paper Title One This is Paper Title One This is Paper Title One',
@@ -107,6 +108,9 @@
         },
         setMyList(plist) {
             this.paperList = plist;
+        },
+        setAvatar(a_url) {
+            this.avatar = a_url;
         }
     }
 </script>
