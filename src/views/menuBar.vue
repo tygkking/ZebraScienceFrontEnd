@@ -94,11 +94,12 @@
                         this.like_sch = this.GLOBAL.followList;
                         this.GLOBAL.setCollectList(s["msg"]["star_list"]);
                         this.star_paper_items = this.GLOBAL.collectList;
-                        if(s["msg"]["avatar"] != ''){
-                            console.log(this.GLOBAL.avatar);
+                        console.log('Test --------------------'+s.msg.avatar);
+                        console.log(this.GLOBAL.avatar);
+                        if(s["msg"]["avatar"] != '' && s["msg"]["avatar"]!=null){
+                            console.log('avatarYes ' + this.GLOBAL.avatar);
                             this.GLOBAL.setAvatar(s["msg"]["avatar"]);
                         }
-                        console.log('avatar' + this.GLOBAL.avatar);
                         //console.log("hhhh"+this.GLOBAL.userName)
                         if(this.GLOBAL.userType == 'EXPERT'){
                             // console.log(s["msg"]["paper_list"]);

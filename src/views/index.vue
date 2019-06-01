@@ -220,7 +220,7 @@
                         this.like_sch = this.GLOBAL.followList;
                         this.GLOBAL.setCollectList(s["msg"]["star_list"]);
                         this.star_paper_items = this.GLOBAL.collectList;
-                        if(s["msg"]["avatar"] != ''){
+                        if(s["msg"]["avatar"] != '' && s["msg"]["avatar"]!=null){
                             this.GLOBAL.setAvatar(s["msg"]["avatar"]);
                         }
                         if(this.GLOBAL.userType == 'EXPERT'){
