@@ -63,7 +63,7 @@
                     <div  v-for="item in this.comment.slice((pageNum-1)*pageSize, pageNum*pageSize)" >
                         <b style="color: #52c41a;font-size: 17px ">{{item.from.username}}
                             <span style="color: #999999;font-size: 12px">{{item.date}}</span>&nbsp&nbsp&nbsp
-                            <Button type="text" shape="circle" icon="md-chatboxes" style="color: #999999" @click="add_reply"></Button>
+                            <Button type="text" shape="circle" icon="md-chatboxes" style="color: #999999" @click="add_reply(item)"></Button>
                             <Modal v-model="modal3" title="添加评论" ok-text="确定" cancel-text="取消" @on-ok="reply_comment"
                                    @on-cancel="cancel" >
                                 <textarea v-model="content" placeholder="写下你的想法" style="margin-left: 4%;width:90%;height: 200px"/>
@@ -72,13 +72,13 @@
                         <p class="commentColor">{{item.content}}</p>
                         <div v-if="item.replies.length>0">
                             <div style="margin-left: 20px" v-for="reply in item.replies">
-                                <b style="color: #52c41a;font-size: 14px">{{reply.responder}}&nbsp;&nbsp;回复&nbsp;&nbsp;{{reply.reviewers}}
+                                <b style="color: #52c41a;font-size: 14px">{{reply.from_name}}&nbsp;&nbsp;回复&nbsp;&nbsp;{{item.from.username}}
                                     <span style="color: #999999">{{reply.time}}</span>&nbsp&nbsp
-                                    <Button type="text" shape="circle" icon="md-chatboxes" style="color: #999999" @click="add_reply"></Button>
-                                    <Modal v-model="modal3" title="添加评论" ok-text="确定" cancel-text="取消" @on-ok="reply_comment"
-                                           @on-cancel="cancel" >
-                                        <textarea v-model="content" placeholder="写下你的想法" style="margin-left: 4%;width:90%;height: 200px"/>
-                                    </Modal>
+                                    <!--<Button type="text" shape="circle" icon="md-chatboxes" style="color: #999999" @click="add_reply"></Button>-->
+                                    <!--<Modal v-model="modal3" title="添加评论" ok-text="确定" cancel-text="取消" @on-ok="reply_comment"-->
+                                           <!--@on-cancel="cancel" >-->
+                                        <!--<textarea v-model="content" placeholder="写下你的想法" style="margin-left: 4%;width:90%;height: 200px"/>-->
+                                    <!--</Modal>-->
                                 </b>
                                 <p class="commentColor">{{reply.content}}</p>
                             </div>
@@ -120,7 +120,7 @@
                 content:'',
                 pageNum:1,
                 pageSize:5,
-                other_cmt:[],
+                cur_cmt:[],
                 paper:{
                     // paper_id:'', //'13e8bab7244258710c462441e19afbad',
                     // name:'',
@@ -234,13 +234,12 @@
                 document.documentElement.scrollTop = 0;
             },
             add_comment(){
-                console.log(this.identity);
                 if(this.judge_login()==false)return;
                 this.modal2 = true;
             },
-            add_reply(){
-                console.log(this.identity);
+            add_reply(item){
                 if(this.judge_login()==false)return;
+                this.cur_cmt = item;
                 this.modal3 = true;
             },
             sub_comment(){
@@ -261,6 +260,7 @@
                             }
                             else{
                                 this.get_comment()
+                                this.content="";
                             }
                         }, function (res) {
                             alert(res);
@@ -268,7 +268,29 @@
                 }
             },
             reply_comment(){
-
+                if(this.content=='')
+                    return
+                else {
+                    let params = {'from_email':this.GLOBAL.email,'comment_id':this.cur_cmt.comment_id,'to_email':this.cur_cmt.from.userid,
+                        'to_name':this.cur_cmt.from.username,'content':this.content,'comment':this.cur_cmt.content,
+                        'from_name':this.GLOBAL.userName};
+                    this.$http.post(this.GLOBAL.domain + "/api/v1/reply_comment",params,{
+                        headers:{
+                            'Content-Type':"application/json",
+                        }
+                    }).then(function (res) {
+                        var detail = JSON.parse(res.body);
+                        if(detail.state=="fail"){
+                            this.$Message.info("评论失败")
+                        }
+                        else{
+                            this.get_comment();
+                            this.content="";
+                        }
+                    }, function (res) {
+                        alert(res);
+                    });
+                }
 
             },
             jump_man(man){
