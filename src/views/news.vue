@@ -36,10 +36,10 @@
                         </div>
                     </div>
                     <Menu :theme="theme3" active-name="1" style="padding-top: 20px; max-width: 80%; z-index: 0">
-<!--                        <MenuItem name="1" @click.native="news_type = 'comments'">-->
-<!--                            <Icon type="md-chatbubbles" />-->
-<!--                            评论-->
-<!--                        </MenuItem>-->
+                        <MenuItem name="1" @click.native="news_type = 'comments'">
+                            <Icon type="md-chatbubbles" />
+                            评论
+                        </MenuItem>
 <!--                        <MenuItem name="2" @click.native="news_type = 'like'">-->
 <!--                            <Icon type="md-heart" />-->
 <!--                            关注-->
@@ -110,8 +110,8 @@
                         </Row>
                     </div>
                     <div slot="footer">
-                        <Button type="success" size="large"  @click="check_verify('Yes')">同意</Button>
-                        <Button type="error" size="large"  @click="check_verify('No')">拒绝</Button>
+                        <Button type="success" size="large" :disabled="apply_msg.state!=='waiting'" @click="check_verify('Yes')">同意</Button>
+                        <Button type="error" size="large" :disabled="apply_msg.state!=='waiting'" @click="check_verify('No')">拒绝</Button>
                     </div>
                 </Modal>
                 <Col span="16" style="padding-top: 30px; margin: 0px">
@@ -132,8 +132,8 @@
                                             </Col>
                                             <Col span="5">
                                                 <Button type="error" size="small" style="float: right; margin-left: 5px" @click="show_del_modal(item.msg_id)">删除</Button>
-                                                <Button v-show="item.status == '已查看'" type="success" size="small" style="float:right;">已查看</Button>
-                                                <Button v-show="item.status == '未查看'" type="info" size="small" style="float:right;" @click="modal_msg=true">未查看</Button>
+                                                <Button v-show="item.status == 'Yes'" type="success" size="small" style="float:right;">已查看</Button>
+                                                <Button v-show="item.status == 'No'" type="info" size="small" style="float:right;" @click="modal_msg=true">未查看</Button>
                                             </Col>
                                         </Row>
                                     </div>
@@ -159,8 +159,8 @@
                                             </Col>
                                             <Col span="5">
                                                 <Button type="error" size="small" style="float: right; margin-left: 5px" @click="show_del_modal(item.msg_id)">删除</Button>
-                                                <Button v-show="item.status == '已查看'" type="success" size="small" style="float:right;">已查看</Button>
-                                                <Button v-show="item.status == '未查看'" type="info" size="small" style="float:right;" @click="modal_msg=true">未查看</Button>
+                                                <Button v-show="item.status == 'Yes'" type="success" size="small" style="float:right;">已查看</Button>
+                                                <Button v-show="item.status == 'No'" type="info" size="small" style="float:right;" @click="modal_msg=true">未查看</Button>
                                             </Col>
                                         </Row>
                                     </div>
@@ -186,8 +186,8 @@
                                             </Col>
                                             <Col span="5">
                                                 <Button type="error" size="small" style="float: right; margin-left: 5px" @click="show_del_modal(item.msg_id)">删除</Button>
-                                                <Button v-show="item.status == '已查看'" type="success" size="small" style="float:right;">已查看</Button>
-                                                <Button v-show="item.status == '未查看'" type="info" size="small" style="float:right;" @click="modal_msg=true">未查看</Button>
+                                                <Button v-show="item.status == 'Yes'" type="success" size="small" style="float:right;">已查看</Button>
+                                                <Button v-show="item.status == 'No'" type="info" size="small" style="float:right;" @click="modal_msg=true">未查看</Button>
                                             </Col>
                                         </Row>
                                     </div>
@@ -204,7 +204,7 @@
                         <h3>认证消息页</h3>
                         <div class="message-list">
                             <ul style="list-style-type:none; margin-left: 5px; margin-top: 5px">
-                                <li v-for="item in verify_news" @click="show_verify_modal(item.apply_id)">
+                                <li v-for="item in verify_news">
                                     <div class="relevant-detail">
                                         <Row>
                                             <Col span="19">
@@ -213,8 +213,8 @@
                                             </Col>
                                             <Col span="5">
                                                 <Button type="error" size="small" style="float: right; margin-left: 5px" @click="show_del_modal(item.msg_id)">删除</Button>
-                                                <Button v-show="item.status == '已查看'" type="success" size="small" style="float:right;">已查看</Button>
-                                                <Button v-show="item.status == '未查看'" type="info" size="small" style="float:right;" @click="show_verify_modal(item.apply_id)">未查看</Button>
+                                                <Button v-show="item.status == 'Yes'" type="success" size="small" style="float:right;" @click="show_verify_modal(item.apply_id, item.msg_id)">已查看</Button>
+                                                <Button v-show="item.status == 'No'" type="info" size="small" style="float:right;" @click="show_verify_modal(item.apply_id, item.msg_id)">未查看</Button>
                                             </Col>
                                         </Row>
                                     </div>
@@ -256,152 +256,153 @@
                 //identity:'ADMIN', //EXPERT USER visitor ADMIN
                 news_type:'comments', //comments like system verify
                 comments_news: [
-                    {
-                        msg_id: 'c1',
-                        content: 'message1',
-                        status: '未查看',
-                        date: '2019-6-2 15:31:28',
-                    },
-                    {
-                        msg_id: 'c2',
-                        content: 'message2',
-                        status: '已查看',
-                        date: '2019-6-2 15:31:28',
-                    },
-                    {
-                        msg_id: 'c3',
-                        content: 'message3',
-                        status: '未查看',
-                        date: '2019-6-2 15:31:28',
-                    },
-                    {
-                        msg_id: 'c4',
-                        content: 'message4',
-                        status: '已查看',
-                        date: '2019-6-2 15:31:28',
-                    },
-                    {
-                        msg_id: 'c5',
-                        content: 'message5',
-                        status: '未查看',
-                        date: '2019-6-2 15:31:28',
-                    },
+                    // {
+                    //     msg_id: 'c1',
+                    //     content: 'message1',
+                    //     status: 'No',
+                    //     date: '2019-6-2 15:31:28',
+                    // },
+                    // {
+                    //     msg_id: 'c2',
+                    //     content: 'message2',
+                    //     status: 'Yes',
+                    //     date: '2019-6-2 15:31:28',
+                    // },
+                    // {
+                    //     msg_id: 'c3',
+                    //     content: 'message3',
+                    //     status: 'No',
+                    //     date: '2019-6-2 15:31:28',
+                    // },
+                    // {
+                    //     msg_id: 'c4',
+                    //     content: 'message4',
+                    //     status: 'Yes',
+                    //     date: '2019-6-2 15:31:28',
+                    // },
+                    // {
+                    //     msg_id: 'c5',
+                    //     content: 'message5',
+                    //     status: 'No',
+                    //     date: '2019-6-2 15:31:28',
+                    // },
                 ],
                 like_news: [
-                    {
-                        msg_id: 'l1',
-                        content: 'message1',
-                        status: '已查看',
-                        date: '2019-6-2 15:31:28',
-                    },
-                    {
-                        msg_id: 'l2',
-                        content: 'message2',
-                        status: '未查看',
-                        date: '2019-6-2 15:31:28',
-                    },
-                    {
-                        msg_id: 'l3',
-                        content: 'message3',
-                        status: '已查看',
-                        date: '2019-6-2 15:31:28',
-                    },
-                    {
-                        msg_id: 'l4',
-                        content: 'message4',
-                        status: '未查看',
-                        date: '2019-6-2 15:31:28',
-                    },
-                    {
-                        msg_id: 'l5',
-                        content: 'message5',
-                        status: '已查看',
-                        date: '2019-6-2 15:31:28',
-                    },
+                    // {
+                    //     msg_id: 'l1',
+                    //     content: 'message1',
+                    //     status: 'Yes',
+                    //     date: '2019-6-2 15:31:28',
+                    // },
+                    // {
+                    //     msg_id: 'l2',
+                    //     content: 'message2',
+                    //     status: 'No',
+                    //     date: '2019-6-2 15:31:28',
+                    // },
+                    // {
+                    //     msg_id: 'l3',
+                    //     content: 'message3',
+                    //     status: 'Yes',
+                    //     date: '2019-6-2 15:31:28',
+                    // },
+                    // {
+                    //     msg_id: 'l4',
+                    //     content: 'message4',
+                    //     status: 'No',
+                    //     date: '2019-6-2 15:31:28',
+                    // },
+                    // {
+                    //     msg_id: 'l5',
+                    //     content: 'message5',
+                    //     status: 'Yes',
+                    //     date: '2019-6-2 15:31:28',
+                    // },
                 ],
                 system_news: [
-                    {
-                        msg_id: 's1',
-                        content: 'message1',
-                        status: '未查看',
-                        date: '2019-6-2 15:31:28',
-                    },
-                    {
-                        msg_id: 's2',
-                        content: 'message2',
-                        status: '已查看',
-                        date: '2019-6-2 15:31:28',
-                    },
-                    {
-                        msg_id: 's3',
-                        content: 'message3',
-                        status: '未查看',
-                        date: '2019-6-2 15:31:28',
-                    },
-                    {
-                        msg_id: 's4',
-                        content: 'message4',
-                        status: '已查看',
-                        date: '2019-6-2 15:31:28',
-                    },
-                    {
-                        msg_id: 's5',
-                        content: 'message5',
-                        status: '已查看',
-                        date: '2019-6-2 15:31:28',
-                    },
+                    // {
+                    //     msg_id: 's1',
+                    //     content: 'message1',
+                    //     status: 'No',
+                    //     date: '2019-6-2 15:31:28',
+                    // },
+                    // {
+                    //     msg_id: 's2',
+                    //     content: 'message2',
+                    //     status: 'Yes',
+                    //     date: '2019-6-2 15:31:28',
+                    // },
+                    // {
+                    //     msg_id: 's3',
+                    //     content: 'message3',
+                    //     status: 'No',
+                    //     date: '2019-6-2 15:31:28',
+                    // },
+                    // {
+                    //     msg_id: 's4',
+                    //     content: 'message4',
+                    //     status: 'Yes',
+                    //     date: '2019-6-2 15:31:28',
+                    // },
+                    // {
+                    //     msg_id: 's5',
+                    //     content: 'message5',
+                    //     status: 'Yes',
+                    //     date: '2019-6-2 15:31:28',
+                    // },
                 ],
                 verify_news: [
-                    {
-                        msg_id: 'v1',
-                        content: 'message1',
-                        status: '未查看',
-                        date: '2019-6-2 15:31:28',
-                        apply_id: '5cf37fdc9c89e67433cbbea4',
-                    },
-                    {
-                        msg_id: 'v2',
-                        content: 'message2',
-                        status: '未查看',
-                        date: '2019-6-2 15:31:28',
-                        apply_id: '',
-                    },
-                    {
-                        msg_id: 'v3',
-                        content: 'message3',
-                        status: '已查看',
-                        date: '2019-6-2 15:31:28',
-                        apply_id: '',
-                    },
-                    {
-                        msg_id: 'v4',
-                        content: 'message4',
-                        status: '已查看',
-                        date: '2019-6-2 15:31:28',
-                        apply_id: '',
-                    },
-                    {
-                        msg_id: 'v5',
-                        content: 'message5',
-                        status: '已查看',
-                        date: '2019-6-2 15:31:28',
-                        apply_id: '',
-                    },
+                    // {
+                    //     msg_id: 'v1',
+                    //     content: 'message1',
+                    //     status: 'No',
+                    //     date: '2019-6-2 15:31:28',
+                    //     apply_id: '5cf37fdc9c89e67433cbbea4',
+                    // },
+                    // {
+                    //     msg_id: 'v2',
+                    //     content: 'message2',
+                    //     status: 'No',
+                    //     date: '2019-6-2 15:31:28',
+                    //     apply_id: '',
+                    // },
+                    // {
+                    //     msg_id: 'v3',
+                    //     content: 'message3',
+                    //     status: 'Yes',
+                    //     date: '2019-6-2 15:31:28',
+                    //     apply_id: '',
+                    // },
+                    // {
+                    //     msg_id: 'v4',
+                    //     content: 'message4',
+                    //     status: 'Yes',
+                    //     date: '2019-6-2 15:31:28',
+                    //     apply_id: '',
+                    // },
+                    // {
+                    //     msg_id: 'v5',
+                    //     content: 'message5',
+                    //     status: 'Yes',
+                    //     date: '2019-6-2 15:31:28',
+                    //     apply_id: '',
+                    // },
                 ],
                 apply_msg:[],
             }
         },
         methods:{
-            check_news () {
+            check_news (id) {
+                this.change_news_status (id);
                 setTimeout(() => {
                     this.modal_msg = false;
                     this.$Message.success('已读该信息');
                 }, 300);
             },
-            show_verify_modal (apply_id){
+            show_verify_modal (apply_id, msg_id){
                 this.modal_verify = true;
                 this.apply_id = apply_id;
-                console.log(apply_id);
+                console.log('apply_id '+apply_id);
                 this.$http.get(this.GLOBAL.domain + '/api/v1/get_apply',{params: {'apply_id': this.apply_id}})
                     .then(function (res) {
                         var detail = JSON.parse(res.body);
@@ -411,11 +412,14 @@
                         }
                         else{
                             this.apply_msg = detail.msg;
+                            console.log('msg_id '+msg_id);
+                            this.change_news_status(msg_id);
                         }
                     })
             },
             check_verify (type) {
                 if (type === 'Yes') {
+                    console.log("YES");
                     let params = {'apply_id':this.apply_id,'deal':true};
                     console.log(params);
                     this.$http.get(this.GLOBAL.domain + '/api/v1/deal_certification',{params: params})
@@ -439,7 +443,9 @@
                         })
                 }
                 else {
+                    console.log("NO");
                     let params = {'apply_id':this.apply_id,'deal':false};
+                    console.log(params);
                     this.$http.get(this.GLOBAL.domain + '/api/v1/deal_certification',{params: params})
                         .then(function (res) {
                             var detail = JSON.parse(res.body);
@@ -465,7 +471,7 @@
                 var type;
                 switch (this.news_type){
                     case 'comments':
-                        type = 'COMMENT';
+                        type = 'REPLY';
                         break;
                     case 'like':
                         type = 'LIKE';
@@ -527,11 +533,37 @@
                         console.log(detail);
                     })
             },
+            change_news_status (id) {
+                console.log(id);
+                let params = {'msg_id':id};
+                this.$http.get(this.GLOBAL.domain + '/api/v1/change_message_status',{params:params})
+                    .then(function (res) {
+                        var detail = JSON.parse(res.body);
+                        console.log(detail);
+                        if(detail.state == 'success'){
+                            console.log('success');
+                            this.refresh_news();
+                        }
+                        else{
+                            this.$Message.error(detail.reason);
+                        }
+
+                    },function (res) {
+                        var detail = JSON.parse(res.body);
+                        console.log("Failed");
+                        console.log(detail);
+                    })
+            },
             refresh_news () {
                 var all_news = [];
+                this.verify_news = [];
+                this.system_news = [];
+                this.comments_news = [];
+                this.like_news = [];
                 this.$http.get(this.GLOBAL.domain + '/api/v1/get_sys_message',{params: {'email':this.GLOBAL.email}})
                     .then(function (res) {
                         var detail = JSON.parse(res.body);
+                        console.log(detail);
                         console.log(detail.messages);
                         // console.log(this.verify_news);
                         // console.log(this.system_news);
@@ -549,6 +581,9 @@
                                         break;
                                     case 'SYSTEM':
                                         this.system_news.unshift(news);
+                                        break;
+                                    case 'REPLY':
+                                        this.comments_news.unshift(news);
                                         break;
                                     default:
                                         break;
