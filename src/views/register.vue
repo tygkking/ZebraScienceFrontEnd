@@ -79,7 +79,7 @@
                     if (valid) {
                         this.$Message.success('提交成功!')
                         let params = {'username':f.name,'email':f.mail,'password':f.password,'email_code':f.code}
-                        this.$http.post("http://127.0.0.1:5000/api/v1/register",params,{
+                        this.$http.post(this.GLOBAL.domain + "/api/v1/register",params,{
                             headers:{
                                 'Content-Type':"application/json",
                             }
@@ -109,7 +109,7 @@
                 if(re.test(mail)) {
                     let params = {"email": mail};
                     //let params = {"email":this.formValidate.mail};
-                    this.$http.post("http://127.0.0.1:5000/api/v1/email_code", params, {
+                    this.$http.post(this.GLOBAL.domain + "/api/v1/email_code", params, {
                         headers: {
                             'Content-Type': "application/json",
                         }
