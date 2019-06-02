@@ -35,15 +35,15 @@
                             邮箱：{{this.GLOBAL.email}}
                         </div>
                     </div>
-                    <Menu :theme="theme3" active-name="1" style="padding-top: 20px; max-width: 80%">
-                        <MenuItem name="1" @click.native="news_type = 'comments'">
-                            <Icon type="md-chatbubbles" />
-                            评论
-                        </MenuItem>
-                        <MenuItem name="2" @click.native="news_type = 'like'">
-                            <Icon type="md-heart" />
-                            关注
-                        </MenuItem>
+                    <Menu :theme="theme3" active-name="1" style="padding-top: 20px; max-width: 80%; z-index: 0">
+<!--                        <MenuItem name="1" @click.native="news_type = 'comments'">-->
+<!--                            <Icon type="md-chatbubbles" />-->
+<!--                            评论-->
+<!--                        </MenuItem>-->
+<!--                        <MenuItem name="2" @click.native="news_type = 'like'">-->
+<!--                            <Icon type="md-heart" />-->
+<!--                            关注-->
+<!--                        </MenuItem>-->
                         <MenuItem name="3" @click.native="news_type = 'system'">
                             <Icon type="md-alert" />
                             系统通知
@@ -98,15 +98,22 @@
                             清空
                         </Button>
                         <br>
-                        <h3>This is comments news page</h3>
+                        <h3>评论消息页</h3>
                         <div class="message-list">
                             <ul style="list-style-type:none; margin-left: 5px; margin-top: 5px">
                                 <li v-for="item in comments_news">
                                     <div class="relevant-detail">
-                                        {{ item.message.text }}
-                                        <Button type="error" size="small" style="float: right; margin-left: 5px" @click="modal_delete=true">删除</Button>
-                                        <Button v-show="item.message.status == '已查看'" type="success" size="small" style="float:right;">已查看</Button>
-                                        <Button v-show="item.message.status == '未查看'" type="info" size="small" style="float:right;" @click="modal_msg=true">未查看</Button>
+                                        <Row>
+                                            <Col span="19">
+                                                {{ item.content }}
+                                                <div style="display: inline; color: #8391a5; font-size: 12px; margin-left: 10px; float: right">{{ item.date }}</div>
+                                            </Col>
+                                            <Col span="5">
+                                                <Button type="error" size="small" style="float: right; margin-left: 5px" @click="show_del_modal(item.msg_id)">删除</Button>
+                                                <Button v-show="item.status == '已查看'" type="success" size="small" style="float:right;">已查看</Button>
+                                                <Button v-show="item.status == '未查看'" type="info" size="small" style="float:right;" @click="modal_msg=true">未查看</Button>
+                                            </Col>
+                                        </Row>
                                     </div>
                                     <Divider dashed />
                                 </li>
@@ -118,15 +125,22 @@
                             清空
                         </Button>
                         <br>
-                        <h3>This is like news page</h3>
+                        <h3>关注消息页</h3>
                         <div class="message-list">
                             <ul style="list-style-type:none; margin-left: 5px; margin-top: 5px">
                                 <li v-for="item in like_news">
                                     <div class="relevant-detail">
-                                        {{ item.message.text }}
-                                        <Button type="error" size="small" style="float: right; margin-left: 5px" @click="modal_delete=true">删除</Button>
-                                        <Button v-show="item.message.status == '已查看'" type="success" size="small" style="float:right;">已查看</Button>
-                                        <Button v-show="item.message.status == '未查看'" type="info" size="small" style="float:right;" @click="modal_msg=true">未查看</Button>
+                                        <Row>
+                                            <Col span="19">
+                                                {{ item.content }}
+                                                <div style="display: inline; color: #8391a5; font-size: 12px; margin-left: 10px; float: right">{{ item.date }}</div>
+                                            </Col>
+                                            <Col span="5">
+                                                <Button type="error" size="small" style="float: right; margin-left: 5px" @click="show_del_modal(item.msg_id)">删除</Button>
+                                                <Button v-show="item.status == '已查看'" type="success" size="small" style="float:right;">已查看</Button>
+                                                <Button v-show="item.status == '未查看'" type="info" size="small" style="float:right;" @click="modal_msg=true">未查看</Button>
+                                            </Col>
+                                        </Row>
                                     </div>
                                     <Divider dashed />
                                 </li>
@@ -138,15 +152,22 @@
                             清空
                         </Button>
                         <br>
-                        <h3>This is system news page</h3>
+                        <h3>系统消息页</h3>
                         <div class="message-list">
                             <ul style="list-style-type:none; margin-left: 5px; margin-top: 5px">
                                 <li v-for="item in system_news">
                                     <div class="relevant-detail">
-                                        {{ item.message.text }}
-                                        <Button type="error" size="small" style="float: right; margin-left: 5px" @click="modal_delete=true">删除</Button>
-                                        <Button v-show="item.message.status == '已查看'" type="success" size="small" style="float:right;">已查看</Button>
-                                        <Button v-show="item.message.status == '未查看'" type="info" size="small" style="float:right;" @click="modal_msg=true">未查看</Button>
+                                        <Row>
+                                            <Col span="19">
+                                                {{ item.content }}
+                                                <div style="display: inline; color: #8391a5; font-size: 12px; margin-left: 10px; float: right">{{ item.date }}</div>
+                                            </Col>
+                                            <Col span="5">
+                                                <Button type="error" size="small" style="float: right; margin-left: 5px" @click="show_del_modal(item.msg_id)">删除</Button>
+                                                <Button v-show="item.status == '已查看'" type="success" size="small" style="float:right;">已查看</Button>
+                                                <Button v-show="item.status == '未查看'" type="info" size="small" style="float:right;" @click="modal_msg=true">未查看</Button>
+                                            </Col>
+                                        </Row>
                                     </div>
                                     <Divider dashed />
                                 </li>
@@ -158,15 +179,22 @@
                             清空
                         </Button>
                         <br>
-                        <h3>This is verify news page</h3>
+                        <h3>认证消息页</h3>
                         <div class="message-list">
                             <ul style="list-style-type:none; margin-left: 5px; margin-top: 5px">
                                 <li v-for="item in verify_news">
                                     <div class="relevant-detail">
-                                        {{ item.message.text }}
-                                        <Button type="error" size="small" style="float: right; margin-left: 5px" @click="modal_delete=true">删除</Button>
-                                        <Button v-show="item.message.status == '已查看'" type="success" size="small" style="float:right;">已查看</Button>
-                                        <Button v-show="item.message.status == '未查看'" type="info" size="small" style="float:right;" @click="modal_verify=true">未查看</Button>
+                                        <Row>
+                                            <Col span="19">
+                                                {{ item.content }}
+                                                <div style="display: inline; color: #8391a5; font-size: 12px; margin-left: 10px; float: right">{{ item.date }}</div>
+                                            </Col>
+                                            <Col span="5">
+                                                <Button type="error" size="small" style="float: right; margin-left: 5px" @click="show_del_modal(item.msg_id)">删除</Button>
+                                                <Button v-show="item.status == '已查看'" type="success" size="small" style="float:right;">已查看</Button>
+                                                <Button v-show="item.status == '未查看'" type="info" size="small" style="float:right;" @click="show_verify_modal(item.msg_id)">未查看</Button>
+                                            </Col>
+                                        </Row>
                                     </div>
                                     <Divider dashed />
                                 </li>
@@ -198,158 +226,142 @@
                 modal_clean: false,
                 modal_msg: false,
                 modal_verify: false,
+                del_msg_id: '',
+                del_msg_type: '',
+                apply_id: '',
                 theme3: 'light',
                 identity: this.GLOBAL.userType,
                 //identity:'ADMIN', //EXPERT USER visitor ADMIN
                 news_type:'comments', //comments like system verify
                 comments_news: [
                     {
-                        message: {
-                            id: 'c1',
-                            text: 'message1',
-                            status: '未查看',
-                        }
+                        msg_id: 'c1',
+                        content: 'message1',
+                        status: '未查看',
+                        date: '2019-6-2 15:31:28',
                     },
                     {
-                        message: {
-                            id: 'c2',
-                            text: 'message2',
-                            status: '已查看',
-                        }
+                        msg_id: 'c2',
+                        content: 'message2',
+                        status: '已查看',
+                        date: '2019-6-2 15:31:28',
                     },
                     {
-                        message: {
-                            id: 'c3',
-                            text: 'message3',
-                            status: '未查看',
-                        }
+                        msg_id: 'c3',
+                        content: 'message3',
+                        status: '未查看',
+                        date: '2019-6-2 15:31:28',
                     },
                     {
-                        message: {
-                            id: 'c4',
-                            text: 'message4',
-                            status: '已查看',
-                        }
+                        msg_id: 'c4',
+                        content: 'message4',
+                        status: '已查看',
+                        date: '2019-6-2 15:31:28',
                     },
                     {
-                        message: {
-                            id: 'c5',
-                            text: 'message5',
-                            status: '未查看',
-                        }
+                        msg_id: 'c5',
+                        content: 'message5',
+                        status: '未查看',
+                        date: '2019-6-2 15:31:28',
                     },
                 ],
                 like_news: [
                     {
-                        message: {
-                            id: 'l1',
-                            text: 'message1',
-                            status: '已查看',
-                        }
+                        msg_id: 'l1',
+                        content: 'message1',
+                        status: '已查看',
+                        date: '2019-6-2 15:31:28',
                     },
                     {
-                        message: {
-                            id: 'l2',
-                            text: 'message2',
-                            status: '未查看',
-                        }
+                        msg_id: 'l2',
+                        content: 'message2',
+                        status: '未查看',
+                        date: '2019-6-2 15:31:28',
                     },
                     {
-                        message: {
-                            id: 'l3',
-                            text: 'message3',
-                            status: '已查看',
-                        }
+                        msg_id: 'l3',
+                        content: 'message3',
+                        status: '已查看',
+                        date: '2019-6-2 15:31:28',
                     },
                     {
-                        message: {
-                            id: 'l4',
-                            text: 'message4',
-                            status: '未查看',
-                        }
+                        msg_id: 'l4',
+                        content: 'message4',
+                        status: '未查看',
+                        date: '2019-6-2 15:31:28',
                     },
                     {
-                        message: {
-                            id: 'l5',
-                            text: 'message5',
-                            status: '已查看',
-                        }
+                        msg_id: 'l5',
+                        content: 'message5',
+                        status: '已查看',
+                        date: '2019-6-2 15:31:28',
                     },
                 ],
                 system_news: [
                     {
-                        message: {
-                            id: 's1',
-                            text: 'message1',
-                            status: '未查看',
-                        }
+                        msg_id: 's1',
+                        content: 'message1',
+                        status: '未查看',
+                        date: '2019-6-2 15:31:28',
                     },
                     {
-                        message: {
-                            id: 's2',
-                            text: 'message2',
-                            status: '已查看',
-                        }
+                        msg_id: 's2',
+                        content: 'message2',
+                        status: '已查看',
+                        date: '2019-6-2 15:31:28',
                     },
                     {
-                        message: {
-                            id: 's3',
-                            text: 'message3',
-                            status: '未查看',
-                        }
+                        msg_id: 's3',
+                        content: 'message3',
+                        status: '未查看',
+                        date: '2019-6-2 15:31:28',
                     },
                     {
-                        message: {
-                            id: 's4',
-                            text: 'message4',
-                            status: '已查看',
-                        }
+                        msg_id: 's4',
+                        content: 'message4',
+                        status: '已查看',
+                        date: '2019-6-2 15:31:28',
                     },
                     {
-                        message: {
-                            id: 's5',
-                            text: 'message5',
-                            status: '已查看',
-                        }
+                        msg_id: 's5',
+                        content: 'message5',
+                        status: '已查看',
+                        date: '2019-6-2 15:31:28',
                     },
                 ],
                 verify_news: [
                     {
-                        message: {
-                            id: 'v1',
-                            text: 'message1',
-                            status: '未查看',
-                        }
+                        msg_id: 'v1',
+                        content: 'message1',
+                        status: '未查看',
+                        date: '2019-6-2 15:31:28',
                     },
                     {
-                        message: {
-                            id: 'v2',
-                            text: 'message2',
-                            status: '未查看',
-                        }
+                        msg_id: 'v2',
+                        content: 'message2',
+                        status: '未查看',
+                        date: '2019-6-2 15:31:28',
                     },
                     {
-                        message: {
-                            id: 'v3',
-                            text: 'message3',
-                            status: '已查看',
-                        }
+                        msg_id: 'v3',
+                        content: 'message3',
+                        status: '已查看',
+                        date: '2019-6-2 15:31:28',
                     },
                     {
-                        message: {
-                            id: 'v4',
-                            text: 'message4',
-                            status: '已查看',
-                        }
+                        msg_id: 'v4',
+                        content: 'message4',
+                        status: '已查看',
+                        date: '2019-6-2 15:31:28',
                     },
                     {
-                        message: {
-                            id: 'v5',
-                            text: 'message5',
-                            status: '已查看',
-                        }
+                        msg_id: 'v5',
+                        content: 'message5',
+                        status: '已查看',
+                        date: '2019-6-2 15:31:28',
                     },
                 ],
+                apply_msg:[],
             }
         },
         methods:{
@@ -359,47 +371,171 @@
                     this.$Message.success('已读该信息');
                 }, 300);
             },
+            show_verify_modal (msg_id){
+                this.modal_verify = true;
+                this.apply_id = msg_id;
+                console.log(msg_id);
+                this.$http.get(this.GLOBAL.domain + '/api/v1/get_apply',{params: {'apply_id': this.apply_id}})
+                    .then(function (res) {
+                        var detail = JSON.parse(res.body);
+                        console.log(detail);
+                        if(detail.state == 'fail'){
+                            this.$Message.info('Fail，未查找到信息');
+                        }
+                        else{
+                            this.apply_msg = detail;
+                        }
+                    })
+            },
             check_verify (type) {
                 if (type === 'Yes') {
-                    setTimeout(() => {
-                    this.modal_verify = false;
-                    this.$Message.success('已同意该认证');
-                }, 300);
+                    let params = {'apply_id':this.apply_id,'deal':true};
+                    this.$http.get(this.GLOBAL.domain + '/api/v1/deal_certification',{params: params})
+                        .then(function (res) {
+                            var detail = JSON.parse(res.body);
+                            console.log(detail);
+                            if(detail.state == 'success'){
+                                setTimeout(() => {
+                                    this.modal_verify = false;
+                                    this.$Message.success('已同意该认证');
+                                }, 300);
+                            }
+                            else{
+                                this.modal_verify = false;
+                                this.$Message.error('网络出错，请稍后再试');
+                            }
+                        },function (res) {
+                            var detail = JSON.parse(res.body);
+                            console.log('Failed');
+                            console.log(detail);
+                        })
                 }
                 else {
-                    setTimeout(() => {
-                    this.modal_verify = false;
-                    this.$Message.error('已拒绝该认证');
-                }, 300);
+                    let params = {'apply_id':this.apply_id,'deal':false};
+                    this.$http.get(this.GLOBAL.domain + '/api/v1/deal_certification',{params: params})
+                        .then(function (res) {
+                            var detail = JSON.parse(res.body);
+                            console.log(detail);
+                            if(detail.state == 'success'){
+                                setTimeout(() => {
+                                    this.modal_verify = false;
+                                    this.$Message.success('已拒绝该认证');
+                                }, 300);
+                            }
+                            else{
+                                this.modal_verify = false;
+                                this.$Message.error('网络出错，请稍后再试');
+                            }
+                        },function (res) {
+                            var detail = JSON.parse(res.body);
+                            console.log('Failed');
+                            console.log(detail);
+                        })
                 }
             },
             delete_news () {
-                setTimeout(() => {
-                    this.modal_clean = false;
-                    this.$Message.success('成功清空 '+ this.news_type + ' 信息');
-                }, 300);
+                var type;
+                switch (this.news_type){
+                    case 'comments':
+                        type = 'COMMENT';
+                        break;
+                    case 'like':
+                        type = 'LIKE';
+                        break;
+                    case 'system':
+                        type = 'SYSTEM';
+                        break;
+                    case 'verify':
+                        type = 'APPLY';
+                        break;
+                }
+                let params = {'user_id':this.GLOBAL.email, 'message_type': type};
+                this.$http.post(this.GLOBAL.domain + '/api/v1/delete_message', params)
+                    .then(function (res) {
+                        var detail = JSON.parse(res.body);
+                        console.log(detail);
+                        if(detail.state == 'success'){
+                            this.refresh_news();
+                            setTimeout(() => {
+                                this.modal_clean = false;
+                                this.$Message.success('成功清空 '+ this.news_type + ' 信息');
+                            }, 300);
+                        }
+                        else{
+                            this.modal_clean = false;
+                            this.$Message.error('出现错误，清空失败');
+                        }
+                    },function (res) {
+                        var detail = JSON.parse(res.body);
+                        console.log("Failed");
+                        console.log(detail);
+                    })
+            },
+            show_del_modal (msg_id) {
+                this.modal_delete = true;
+                this.del_msg_id = msg_id;
+                console.log(this.del_msg_id);
             },
             del () {
-                setTimeout(() => {
-                    this.modal_delete = false;
-                    this.$Message.success('成功删除');
-                }, 300);
+                let params = {'user_id':this.GLOBAL.email, 'message_id': this.del_msg_id};
+                this.$http.post(this.GLOBAL.domain + '/api/v1/delete_message', params)
+                    .then(function (res) {
+                        var detail = JSON.parse(res.body);
+                        console.log(detail);
+                        if(detail.state == 'success'){
+                            this.refresh_news();
+                            setTimeout(() => {
+                                this.modal_delete = false;
+                                this.$Message.success('成功删除');
+                            }, 300);
+                        }
+                        else{
+                            this.modal_delete = false;
+                            this.$Message.error('出现错误，删除失败');
+                        }
+                    },function (res) {
+                        console.log("Failed");
+                        var detail = JSON.parse(res.body);
+                        console.log(detail);
+                    })
+            },
+            refresh_news () {
+                var all_news = [];
+                this.$http.get(this.GLOBAL.domain + '/api/v1/get_sys_message',{params: {'email':this.GLOBAL.email}})
+                    .then(function (res) {
+                        var detail = JSON.parse(res.body);
+                        console.log(detail.messages);
+                        // console.log(this.verify_news);
+                        // console.log(this.system_news);
+                        if(detail.state == 'fail'){
+                            this.$Message.info('Fail，未查找到信息');
+                        }
+                        else{
+                            // console.log('Test' + detail);
+                            all_news = detail.messages;
+                            for (let news of all_news){
+                                // console.log(news);
+                                switch (news.type){
+                                    case 'APPLY':
+                                        this.verify_news.unshift(news);
+                                        break;
+                                    case 'SYSTEM':
+                                        this.system_news.unshift(news);
+                                        break;
+                                    default:
+                                        break;
+                                }
+                            }
+                            console.log(this.verify_news);
+                            console.log(this.system_news);
+                        }
+                    },function (res) {
+                        console.log(res);
+                })
             },
         },
         created() {
-            this.$http.get(this.GLOBAL.domain + '/api/v1/get_sys_message',{params: {'email':this.GLOBAL.email}})
-                .then(function (res) {
-                    var detail = JSON.parse(res.body);
-                    console.log(detail);
-                    if(detail.state == 'fail'){
-                        this.$Message.info('Fail，未查找到信息');
-                    }
-                    else{
-                        console.log('Test' + detail);
-                    }
-                },function (res) {
-                    console.log(res);
-            })
+            this.refresh_news();
         }
     }
 </script>
