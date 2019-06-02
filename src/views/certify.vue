@@ -161,7 +161,12 @@
                         console.log('SuccessFFF');
                         var detail = JSON.parse(res.body);
                         console.log(detail);
-                        this.modal1 = true;
+                        if(detail.state == 'fail'){
+                            this.$Message.error(detail.reason);
+                        }
+                        else{
+                            this.modal1 = true;
+                        }
                     },function (res) {
                         console.log("Failed");
                         var detail = JSON.parse(res.body);

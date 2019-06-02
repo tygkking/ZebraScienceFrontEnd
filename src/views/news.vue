@@ -84,9 +84,31 @@
                         <Button type="primary" size="large"  @click="check_news">确定</Button>
                     </div>
                 </Modal>
-                <Modal v-model="modal_verify" draggable scrollable title="认证详情">
-                    <div style="margin: 0 0 10px 0">这是认证详情信息</div>
-                    <Input type="textarea" placeholder="备注理由" class="input-select-class" :maxlength="140" :rows="4"/>
+                <Modal v-model="modal_verify" draggable scrollable title="申请人详细信息">
+                    <div v-model="apply_msg" style="font-size: 14px">
+                        <Row>
+                            <Col span="8" style="text-align: right">
+                                姓名：<br>
+                                Email：<br>
+                                绑定ScholarID：<br>
+                                身份证号：<br>
+                                专家领域：<br>
+                                备注：<br>
+                                申请日期：<br>
+                                申请状态：<br>
+                            </Col>
+                            <Col span="16">
+                                {{ apply_msg.name }} <br>
+                                {{ apply_msg.email }} <br>
+                                {{ apply_msg.scid }} <br>
+                                {{ apply_msg.ID }} <br>
+                                {{ apply_msg.field }} <br>
+                                {{ apply_msg.text }} <br>
+                                {{ apply_msg.date }} <br>
+                                {{ apply_msg.state }}<br>
+                            </Col>
+                        </Row>
+                    </div>
                     <div slot="footer">
                         <Button type="success" size="large"  @click="check_verify('Yes')">同意</Button>
                         <Button type="error" size="large"  @click="check_verify('No')">拒绝</Button>
@@ -182,7 +204,7 @@
                         <h3>认证消息页</h3>
                         <div class="message-list">
                             <ul style="list-style-type:none; margin-left: 5px; margin-top: 5px">
-                                <li v-for="item in verify_news">
+                                <li v-for="item in verify_news" @click="show_verify_modal(item.apply_id)">
                                     <div class="relevant-detail">
                                         <Row>
                                             <Col span="19">
@@ -192,7 +214,7 @@
                                             <Col span="5">
                                                 <Button type="error" size="small" style="float: right; margin-left: 5px" @click="show_del_modal(item.msg_id)">删除</Button>
                                                 <Button v-show="item.status == '已查看'" type="success" size="small" style="float:right;">已查看</Button>
-                                                <Button v-show="item.status == '未查看'" type="info" size="small" style="float:right;" @click="show_verify_modal(item.msg_id)">未查看</Button>
+                                                <Button v-show="item.status == '未查看'" type="info" size="small" style="float:right;" @click="show_verify_modal(item.apply_id)">未查看</Button>
                                             </Col>
                                         </Row>
                                     </div>
@@ -335,30 +357,35 @@
                         content: 'message1',
                         status: '未查看',
                         date: '2019-6-2 15:31:28',
+                        apply_id: '5cf37fdc9c89e67433cbbea4',
                     },
                     {
                         msg_id: 'v2',
                         content: 'message2',
                         status: '未查看',
                         date: '2019-6-2 15:31:28',
+                        apply_id: '',
                     },
                     {
                         msg_id: 'v3',
                         content: 'message3',
                         status: '已查看',
                         date: '2019-6-2 15:31:28',
+                        apply_id: '',
                     },
                     {
                         msg_id: 'v4',
                         content: 'message4',
                         status: '已查看',
                         date: '2019-6-2 15:31:28',
+                        apply_id: '',
                     },
                     {
                         msg_id: 'v5',
                         content: 'message5',
                         status: '已查看',
                         date: '2019-6-2 15:31:28',
+                        apply_id: '',
                     },
                 ],
                 apply_msg:[],
@@ -371,10 +398,10 @@
                     this.$Message.success('已读该信息');
                 }, 300);
             },
-            show_verify_modal (msg_id){
+            show_verify_modal (apply_id){
                 this.modal_verify = true;
-                this.apply_id = msg_id;
-                console.log(msg_id);
+                this.apply_id = apply_id;
+                console.log(apply_id);
                 this.$http.get(this.GLOBAL.domain + '/api/v1/get_apply',{params: {'apply_id': this.apply_id}})
                     .then(function (res) {
                         var detail = JSON.parse(res.body);
@@ -383,13 +410,14 @@
                             this.$Message.info('Fail，未查找到信息');
                         }
                         else{
-                            this.apply_msg = detail;
+                            this.apply_msg = detail.msg;
                         }
                     })
             },
             check_verify (type) {
                 if (type === 'Yes') {
                     let params = {'apply_id':this.apply_id,'deal':true};
+                    console.log(params);
                     this.$http.get(this.GLOBAL.domain + '/api/v1/deal_certification',{params: params})
                         .then(function (res) {
                             var detail = JSON.parse(res.body);
@@ -402,7 +430,7 @@
                             }
                             else{
                                 this.modal_verify = false;
-                                this.$Message.error('网络出错，请稍后再试');
+                                this.$Message.error(detail.reasons);
                             }
                         },function (res) {
                             var detail = JSON.parse(res.body);
@@ -424,7 +452,7 @@
                             }
                             else{
                                 this.modal_verify = false;
-                                this.$Message.error('网络出错，请稍后再试');
+                                this.$Message.error(detail.reasons);
                             }
                         },function (res) {
                             var detail = JSON.parse(res.body);
