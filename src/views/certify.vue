@@ -115,29 +115,10 @@
                         this.$Message.success('提交成功!');
                         console.log(this.formValidate.name);
                         //获取同名专家列表
-                        // this.same_name = true;
-                        // this.$http.get(this.GLOBAL.domain + '/api/v1/common_name', {params:{'professor_name':this.formValidate.name}})
-                        //     .then(function (res) {
-                        //         this.same_name = true;
-                        //         var detail = JSON.parse(res.body);
-                        //         if(detail.state === 'fail'){
-                        //             this.showedMessage = detail.reason;
-                        //         }
-                        //         else{
-                        //             this.same_name_sch = detail.msg;
-                        //             this.showedMessage = '检测到同名专家，请选择您是哪一位';
-                        //         }
-                        //         console.log(detail);
-                        //     },function (res) {
-                        //         console.log('Failed');
-                        //         var detail = JSON.parse(res.body);
-                        //         console.log(detail);
-                        //         this.$Message.info(detail);
-                        //     });
                         this.same_name = true;
-                        this.$http.get(this.GLOBAL.domain + '/api/v1/search_professor/' + this.formValidate.name)
+                        this.$http.get(this.GLOBAL.domain + '/api/v1/common_name', {params:{'professor_name':this.formValidate.name}})
                             .then(function (res) {
-                                //this.same_name = true;
+                                this.same_name = true;
                                 var detail = JSON.parse(res.body);
                                 if(detail.state === 'fail'){
                                     this.showedMessage = detail.reason;
@@ -152,7 +133,26 @@
                                 var detail = JSON.parse(res.body);
                                 console.log(detail);
                                 this.$Message.info(detail);
-                            })
+                            });
+                        // this.same_name = true;
+                        // this.$http.get(this.GLOBAL.domain + '/api/v1/search_professor/' + this.formValidate.name)
+                        //     .then(function (res) {
+                        //         //this.same_name = true;
+                        //         var detail = JSON.parse(res.body);
+                        //         if(detail.state === 'fail'){
+                        //             this.showedMessage = detail.reason;
+                        //         }
+                        //         else{
+                        //             this.same_name_sch = detail.msg;
+                        //             this.showedMessage = '检测到同名专家，请选择您是哪一位';
+                        //         }
+                        //         console.log(detail);
+                        //     },function (res) {
+                        //         console.log('Failed');
+                        //         var detail = JSON.parse(res.body);
+                        //         console.log(detail);
+                        //         this.$Message.info(detail);
+                        //     })
                     } else {
                         this.$Message.error('表单验证失败!')
                     }
