@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div style="min-width: 900px;">
         <div class="top_xf">
             <MenuBar :input=true :search_content='this.$route.query.search_content' :search_item="this.$route.query.search_type" @search="search"></MenuBar>
         </div>

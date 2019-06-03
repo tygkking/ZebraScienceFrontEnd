@@ -1,6 +1,7 @@
 <style scoped>
 .userpage{
     /*border: 1px solid #d7dde4;*/
+    min-width: 700px;
     background-color: white;
     position: relative;
     border-radius: 4px;
