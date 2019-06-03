@@ -22,7 +22,10 @@
 <template>
     <div class="news_page">
         <MenuBar  v-on:user="identity = 'USER'" v-on:visitor="identity = 'VISITOR'" v-on:expert="identity = 'EXPERT'" v-on:admin="identity = 'ADMIN'"></MenuBar>
-        <div style="margin-top: 60px">
+        <div v-if="identity == 'VISITOR'" style="width: 100%; text-align: center; height: 200px;">
+            <h2 style="margin-top: 100px">您还未登录！<br> 无法查看消息页面</h2>
+        </div>
+        <div v-else style="margin-top: 60px">
             <Row>
                 <Col span="7">
                     <div v-show="false" class="user-intro" style="text-align: center; width: 100%; margin-top: 20px; margin-bottom: 20px;">
@@ -79,7 +82,9 @@
                     </div>
                 </Modal>
                 <Modal v-model="modal_msg" draggable scrollable title="消息详情">
-                    <div>这是消息详情</div>
+                    <div style="font-size: 13px; margin: 10px;">
+                        {{news_detail}}
+                    </div>
                     <div slot="footer">
                         <Button type="primary" size="large"  @click="check_news">确定</Button>
                     </div>
@@ -114,7 +119,7 @@
                         <Button type="error" size="large" :disabled="apply_msg.state!=='waiting'" @click="check_verify('No')">拒绝</Button>
                     </div>
                 </Modal>
-                <Col span="16" style="padding-top: 30px; margin: 0px">
+                <Col span="16" style="padding-top: 30px; margin: 0px; min-height: 470px">
                     <div class="comments_news" v-if="news_type=='comments'">
                         <Button @click="modal_clean=true" style="float: right;">
                             清空
@@ -133,7 +138,7 @@
                                             <Col span="5">
                                                 <Button type="error" size="small" style="float: right; margin-left: 5px" @click="show_del_modal(item.msg_id)">删除</Button>
                                                 <Button v-show="item.status == 'Yes'" type="success" size="small" style="float:right;">已查看</Button>
-                                                <Button v-show="item.status == 'No'" type="info" size="small" style="float:right;" @click="modal_msg=true">未查看</Button>
+                                                <Button v-show="item.status == 'No'" type="info" size="small" style="float:right;" @click="show_msg_modal(item.content, item.msg_id)">未查看</Button>
                                             </Col>
                                         </Row>
                                     </div>
@@ -160,7 +165,7 @@
                                             <Col span="5">
                                                 <Button type="error" size="small" style="float: right; margin-left: 5px" @click="show_del_modal(item.msg_id)">删除</Button>
                                                 <Button v-show="item.status == 'Yes'" type="success" size="small" style="float:right;">已查看</Button>
-                                                <Button v-show="item.status == 'No'" type="info" size="small" style="float:right;" @click="modal_msg=true">未查看</Button>
+                                                <Button v-show="item.status == 'No'" type="info" size="small" style="float:right;" @click="show_msg_modal(item.content, item.msg_id)">未查看</Button>
                                             </Col>
                                         </Row>
                                     </div>
@@ -187,7 +192,7 @@
                                             <Col span="5">
                                                 <Button type="error" size="small" style="float: right; margin-left: 5px" @click="show_del_modal(item.msg_id)">删除</Button>
                                                 <Button v-show="item.status == 'Yes'" type="success" size="small" style="float:right;">已查看</Button>
-                                                <Button v-show="item.status == 'No'" type="info" size="small" style="float:right;" @click="modal_msg=true">未查看</Button>
+                                                <Button v-show="item.status == 'No'" type="info" size="small" style="float:right;" @click="show_msg_modal(item.content, item.msg_id)">未查看</Button>
                                             </Col>
                                         </Row>
                                     </div>
@@ -213,8 +218,8 @@
                                             </Col>
                                             <Col span="5">
                                                 <Button type="error" size="small" style="float: right; margin-left: 5px" @click="show_del_modal(item.msg_id)">删除</Button>
-                                                <Button v-show="item.status == 'Yes'" type="success" size="small" style="float:right;" @click="show_verify_modal(item.apply_id, item.msg_id)">已查看</Button>
-                                                <Button v-show="item.status == 'No'" type="info" size="small" style="float:right;" @click="show_verify_modal(item.apply_id, item.msg_id)">未查看</Button>
+                                                <Button v-show="item.status == 'Yes'" type="success" size="small" style="float:right;" @click="show_verify_modal(item.apply_id, item.msg_id, item.status)">已查看</Button>
+                                                <Button v-show="item.status == 'No'" type="info" size="small" style="float:right;" @click="show_verify_modal(item.apply_id, item.msg_id, item.status)">未查看</Button>
                                             </Col>
                                         </Row>
                                     </div>
@@ -248,9 +253,14 @@
                 modal_clean: false,
                 modal_msg: false,
                 modal_verify: false,
+
                 del_msg_id: '',
                 del_msg_type: '',
                 apply_id: '',
+
+                news_detail: '',
+                news_id: '',
+
                 theme3: 'light',
                 identity: this.GLOBAL.userType,
                 //identity:'ADMIN', //EXPERT USER visitor ADMIN
@@ -392,14 +402,19 @@
             }
         },
         methods:{
-            check_news (id) {
-                this.change_news_status (id);
+            check_news () {
+                this.change_news_status (this.news_id);
                 setTimeout(() => {
                     this.modal_msg = false;
                     this.$Message.success('已读该信息');
                 }, 300);
             },
-            show_verify_modal (apply_id, msg_id){
+            show_msg_modal (content, id) {
+                this.modal_msg = true;
+                this.news_detail = content;
+                this.news_id = id;
+            },
+            show_verify_modal (apply_id, msg_id, status){
                 this.modal_verify = true;
                 this.apply_id = apply_id;
                 console.log('apply_id '+apply_id);
@@ -413,7 +428,8 @@
                         else{
                             this.apply_msg = detail.msg;
                             console.log('msg_id '+msg_id);
-                            this.change_news_status(msg_id);
+                            if(status == 'No')
+                                this.change_news_status(msg_id);
                         }
                     })
             },
@@ -568,7 +584,7 @@
                         // console.log(this.verify_news);
                         // console.log(this.system_news);
                         if(detail.state == 'fail'){
-                            this.$Message.info('Fail，未查找到信息');
+                            this.$Message.info('未查找到信息');
                         }
                         else{
                             // console.log('Test' + detail);
@@ -585,6 +601,8 @@
                                     case 'REPLY':
                                         this.comments_news.unshift(news);
                                         break;
+                                    case 'APPLYRESULT':
+                                        this.system_news.unshift(news);
                                     default:
                                         break;
                                 }

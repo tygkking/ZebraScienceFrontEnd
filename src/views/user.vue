@@ -75,10 +75,10 @@
                             </div>
                         </Col>
                         <Col span="19">
-                            <div class="person-detail" style="margin-left: 30px; margin-top: 20px">
-                                <h2>{{this.GLOBAL.userName}}</h2>
+                            <div class="person-detail" style="margin-left: 30px; padding: 30px; border-left: 1px dashed #8391a5">
+                                <h2 style="font-family: 华文中宋; padding-left: 10px">{{this.GLOBAL.userName}}</h2>
                                 <br>
-                                <h3>邮箱：{{this.GLOBAL.email}}</h3>
+                                <h3 style="font-family: 微软雅黑">邮箱：{{this.GLOBAL.email}}</h3>
                                 <br>
 <!--                                <h3>个人简介：{{introduction}}</h3>-->
                             </div>
