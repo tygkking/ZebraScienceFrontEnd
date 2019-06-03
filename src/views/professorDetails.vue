@@ -32,7 +32,7 @@
 }
 
 .paper-detail{
-    margin-top: 10px;
+    margin-top: 3px;
     margin-bottom: 10px;
     /*font-family: 华文中宋;*/
     font-size: 18px;
@@ -67,7 +67,7 @@
                                 </Button>
                             </div>
                         </Col>
-                        <Col span="19">
+                        <Col span="9">
                             <div class="person-detail" style="margin-left: 30px; margin-top: 20px">
                                 <h2>{{userName}}<Tag color="orange" style="margin-left:20px">Scholar ID: {{profID}}</Tag></h2>
                                 <br>
@@ -79,9 +79,12 @@
                                 <h4>发表论文数：{{paper_num}}&nbsp&nbsp被引次数：{{ref_num}}</h4>
                             </div>
                         </Col>
+                        <Col span="10">
+                            <Netgraph :cop="coop_sch" :man="userName"></Netgraph>
+                        </Col>
                     </Row>
                 </div>
-                <Divider />
+                <!--<Divider />-->
                 <div class="professor-detail">
                     <Row>
                         <Col span="14">
@@ -147,9 +150,11 @@
 
 <script>
     import MenuBar from './menuBar.vue'
+    import Netgraph from './netgraph'
     export default {
         components:{
-            MenuBar
+            MenuBar,
+            Netgraph
         },
         name: 'professorDetails',
         data () {
@@ -313,8 +318,9 @@
                             var detail = JSON.parse(res.body);
                             console.log(detail);
                             if(detail.state == 'fail'){
-                                alert(detail.reason)
+                                this.$Message.error(detail.reason);
                                 that.to_scholar(that.profID);
+                                window.location.href='http://xueshu.baidu.com/scholarID/' + profID;
                             }
                             else{
                                 that.userName = detail.msg.name;
