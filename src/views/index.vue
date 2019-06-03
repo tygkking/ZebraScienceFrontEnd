@@ -56,7 +56,7 @@
 </style>
 <template>
     <div class="index">
-        <Dropdown v-if="identity != 'VISITOR'" placement="bottom-start" style="margin-left: 90%; margin-top: 1%; font-size: 14px">
+        <Dropdown v-if="identity != 'VISITOR'" placement="bottom-start" style="margin-left: 88%; margin-top: 1%; font-size: 14px">
             <a style="color: black">
                 <Icon type="ios-contact"></Icon>
                 {{this.GLOBAL.userName}}
@@ -80,9 +80,9 @@
         <Row type="flex" justify="center" align="middle" style="height: 70%">
             <Col span="24" offset="">
                 <h1>
-                    <img src="../images/zebra.png">
+                    <img src="../images/zebra.png" style="height: 180px">
                 </h1>
-
+                <br><br>
                 <h2>
                     <p>Welcome to Zebra Science!</p>
                 </h2>
