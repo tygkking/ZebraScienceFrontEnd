@@ -7,9 +7,9 @@
             <div v-for="item in search_results" class="sc_content">
                 <div v-if="type=='paper'">
                     <div class="c_font">
-                        <router-link tag="a" :to="{path:'/paperDetails',query:{paperID: item.paperid}}" target="_blank">{{item.name}}</router-link>
+                        <router-link tag="a" :to="{path:'/paperDetails',query:{paperID: item.paperid}}" target="_blank" v-html="item.name">{{item.name}}</router-link>
                     </div>
-                    <div class="c_abstract">{{item.abstract}}</div>
+                    <div class="c_abstract" v-html="item.abstract">{{item.abstract}}</div>
                     <div class="paper-author">
                         <div v-for="(value, key) in item.author" style="display: inline">{{ key }}&nbsp&nbsp</div>
                         <div style="display: inline">-&nbsp&nbsp{{item.source_journal.name}}&nbsp&nbsp-&nbsp&nbsp{{item.source_journal.date}}&nbsp&nbsp-&nbsp&nbsp{{item.year}}</div>
@@ -26,9 +26,9 @@
                         </router-link>
                         <div class="searchResult_text">
                             <router-link class="personName" :to="{path: '/professorDetails',query:{profID: item.scid}}" target="_blank">
-                                {{item.name}}
+                                <div v-html="item.name" id="professorName">{{item.name}}</div>
                             </router-link>
-                            <p class="personInstitution">{{item.mechanism}}</p>
+                            <p class="personInstitution" v-html="item.mechanism">{{item.mechanism}}</p>
                             <div class="personNum">
                                 <p class="personNumItem">
                                     <span>发表文章：</span>
@@ -52,7 +52,7 @@
 
                 <div v-else-if="type=='organization'">
                     <div class="c_font">
-                        <a href="https://www.baidu.com" target="_blank">{{item.mechanism}}</a>
+                        <a :href="item.url" target="_blank">{{item.mechanism}}</a>
                     </div>
                     <div class="c_abstract" v-for="intro in item.introduction">{{intro}}</div>
                     <hr style="width: 80%">
@@ -94,17 +94,22 @@
         },
         methods: {
             getSearchDetails(item, content) {
+
                 var that = this;
                 console.log("get: item + " + item + "; content + " + content + "; pageNum + " + this.pageNum);
                 if(this.$route.query.advance_data)
                 {
-                    this.$http.post("http://qsz.lkc1621.xyz/api/v1/search_paper_nb/", {
-                        advance_data: this.$route.query.advance_data,
-                        title: content,
-                        writer: this.$route.query.advance_writer,
-                        book: this.$route.query.advance_book,
-                        time: this.$route.query.advance_time
-                    }, {emulateJSON:true}).then(function (res) {
+                    let params = {'keyw_and': this.$route.query.advance_data.and,
+                        'keyw_or': this.$route.query.advance_data.or,
+                        'keyw_not': this.$route.query.advance_data.none,
+                        'title': content,
+                        'author': this.$route.query.advance_writer,
+                        'journal': this.$route.query.advance_book,
+                        'start_time': this.$route.query.advance_time[0],
+                        'end_time': this.$route.query.advance_time[1],
+                    }
+                    this.$http.post("http://qsz.lkc1621.xyz/api/v1/search_paper_nb", params).then(function (res) {
+                        console.log(res)
                         var detail = JSON.parse(res.body);
                         console.log(detail);
                         that.search_results = detail.msg;
@@ -121,10 +126,9 @@
                 }
                 else if(this.$route.query.extra_org_name)
                 {
-                    this.$http.post("http://qsz.lkc1621.xyz/api/v1/search_professer_nb/", {
-                        extra_org_name: this.$route.query.extra_org_name,
-                        title: content,
-                    }, {emulateJSON:true}).then(function (res) {
+                    let params = {'organization_name': this.$route.query.extra_org_name, 'professor_name': content}
+                    this.$http.post("http://qsz.lkc1621.xyz/api/v1/search_professor_nb",params).then(function (res) {
+                        console.log(res)
                         var detail = JSON.parse(res.body);
                         console.log(detail);
                         that.search_results = detail.msg;
@@ -135,7 +139,7 @@
                             that.totalNum = detail.count;
 
                         window.scrollTo(0, 0);
-                    },function (res) {
+                      },function (res) {
                         console.log(res)
                     })
                 }
@@ -184,15 +188,6 @@
                 this.pageNum = value;
                 this.getSearchDetails(this.$route.query.search_type, this.$route.query.search_content);
             },
-            // highlight() {
-            //     var key = this.$route.query.search_content;
-            //     var txt = document.getElementById("showArea").innerHTML;
-            //     var temp = txt.split(key);
-            //     txt = temp.join('<span style="color:red;">' + key + '</span>');
-            //     console.log('mount')
-            //     console.log(txt);
-            // },
-
         },
         computed: {
 
@@ -293,7 +288,6 @@
     .searchResultItem .searchResult_text .personName {
         display: block;
         text-decoration: none;
-        color: #212121;
         font-size: 18px;
         cursor: pointer
     }
