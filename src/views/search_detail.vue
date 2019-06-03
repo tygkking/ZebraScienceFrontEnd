@@ -12,7 +12,7 @@
                     <div class="c_abstract" v-html="item.abstract">{{item.abstract}}</div>
                     <div class="paper-author">
                         <div v-for="(value, key) in item.author" style="display: inline">{{ key }}&nbsp&nbsp</div>
-                        <div style="display: inline">-&nbsp&nbsp{{item.source_journal.name}}&nbsp&nbsp-&nbsp&nbsp{{item.source_journal.date}}&nbsp&nbsp-&nbsp&nbsp{{item.year}}</div>
+                        <div style="display: inline">-&nbsp&nbsp{{item.source_journal.name}}&nbsp&nbsp-&nbsp&nbsp{{item.source_journal.date}}&nbsp&nbsp-&nbsp&nbsp<div style="display: inline" v-html="item.year">{{item.year}}</div></div>
                     </div>
                     <div class="paper-key">
                         关键词：<div v-for="keyword in item.keyword" style="display: inline">{{keyword}}&nbsp</div>
@@ -107,6 +107,7 @@
                         'journal': this.$route.query.advance_book,
                         'start_time': this.$route.query.advance_time[0],
                         'end_time': this.$route.query.advance_time[1],
+                        'page_num': this.pageNum
                     }
                     this.$http.post("http://qsz.lkc1621.xyz/api/v1/search_paper_nb", params).then(function (res) {
                         console.log(res)
@@ -233,7 +234,7 @@
     }
     .sc_detail{
         margin-left: 10%;
-        margin-top: 6%;
+        margin-top: 5%;
     }
     .sc_content{
         margin-top: 15px;
