@@ -5,6 +5,7 @@
     position: relative;
     border-radius: 4px;
     overflow: hidden;
+    min-width: 700px;
 }
 
 #layout{
@@ -54,7 +55,7 @@
 <template>
     <div class="userpage">
         <MenuBar  v-on:user="identity = 'USER'" v-on:visitor="identity = 'VISITOR'" v-on:expert="identity = 'EXPERT'" v-on:admin="identity = 'ADMIN'"></MenuBar>
-        <Layout id="layout">
+        <Layout id="layout" v-if="isRouterAlive">
             <Content :style="{padding: '0 50px'}">
                 <div class="user-intro">
                     <Row>
@@ -171,6 +172,7 @@
                 pageNum: 1,
                 pageSize: 10,
                 got_paper_num: 1,
+                isRouterAlive: true,
                 paper_items: [
                     {
                         paper_detail: {
@@ -252,6 +254,12 @@
             }
         },
         methods:{
+            reload(){
+                this.isRouterAlive = false;
+                this.$nextTick(function () {
+                    this.isRouterAlive = true;
+                })
+            },
             toggle_like (){
                 let params = {'user_id':this.GLOBAL.email,'professor_id':this.profID}
                 console.log(params)
@@ -332,6 +340,8 @@
                                 that.coop_sch = detail.msg.copinfo;
                                 that.paper_items = detail.msg.paper;
                                 that.got_paper_num = detail.msg.paper.length;
+
+                                this.reload();
                             }
                     },function (res) {
                         console.log(res)
