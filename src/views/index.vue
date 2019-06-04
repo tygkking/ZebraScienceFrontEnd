@@ -156,7 +156,7 @@
         <!--<router-link :to="setting_url">信息设置</router-link>-->
         <div id="ftCon">
             2019-2019 &copy; ZebraScience
-            <a href="http://www.baidu.com">联系我们</a>
+            <router-link :to="{path: '/aboutUs'}">联系我们</router-link>
         </div>
     </div>
 </template>
