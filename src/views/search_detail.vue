@@ -85,7 +85,7 @@
                 theme1: 'primary',
                 search_results: [],
                 type: '',
-                pageNum: 1,
+                pageNum: 0,
                 totalNum: 0,
             }
         },
@@ -117,8 +117,10 @@
                         that.type = item;
                         if (detail.reason == "未搜索到该专家" || detail.reason == "未查找到相关论文" || detail.reason == "未查找到相关机构")
                             alert(detail.reason);
-                        if (item == 'paper' || item == 'organization')
-                            that.totalNum = detail.count;
+                        if (detail.total_count != 0)
+                            that.totalNum = detail.total_count;
+                        if (that.pageNum == 0)
+                            that.pageNum++;
 
                         window.scrollTo(0, 0);
                     },function (res) {
@@ -136,8 +138,10 @@
                         that.type = item;
                         if (detail.reason == "未搜索到该专家" || detail.reason == "未查找到相关论文" || detail.reason == "未查找到相关机构")
                             alert(detail.reason);
-                        if (item == 'paper' || item == 'organization')
-                            that.totalNum = detail.count;
+                        if (detail.total_count != 0)
+                            that.totalNum = detail.total_count;
+                        if (that.pageNum == 0)
+                            that.pageNum++;
 
                         window.scrollTo(0, 0);
                       },function (res) {
