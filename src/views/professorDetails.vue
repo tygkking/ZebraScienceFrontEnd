@@ -24,7 +24,7 @@
 .user-intro{
     margin-left: 20px;
     margin-right: 20px;
-    margin-bottom: 60px;
+    margin-bottom: 10px;
 }
 
 .professor-detail{
@@ -84,7 +84,7 @@
                         </Col>
                     </Row>
                 </div>
-                <!--<Divider />-->
+                <Divider />
                 <div class="professor-detail">
                     <Row>
                         <Col span="14">
