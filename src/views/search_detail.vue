@@ -173,6 +173,8 @@
                                 alert(detail.reason);
                             if(item == 'paper' || item == 'organization')
                                 that.totalNum = detail.count
+                            if (that.pageNum == 0)
+                            that.pageNum++;
                             window.scrollTo(0,0);
                         },function (res) {
                             console.log(res);
