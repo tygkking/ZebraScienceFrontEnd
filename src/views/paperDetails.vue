@@ -270,6 +270,7 @@
                 this.modal3 = true;
             },
             sub_comment(){
+                if(this.judge_login()==false)return;
                 if(this.content.trim()==''){
                     this.$Message.error('内容不能为空');
                     this.content = '';

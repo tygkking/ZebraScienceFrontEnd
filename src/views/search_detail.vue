@@ -12,7 +12,7 @@
                     <div class="c_abstract" v-html="item.abstract">{{item.abstract}}</div>
                     <div class="paper-author">
                         <b>作者：</b>
-                        <span v-for="(value, key) in item.author" style="display: inline">{{ key }}&nbsp&nbsp</span>
+                        <span v-for="(value, key) in item.author" style="display: inline">{{ value }}&nbsp&nbsp</span>
                         <b>年份：</b>
                         <span style="display: inline" v-html="item.year">{{item.year}}</span><br>
                         <b>来源：</b>
@@ -69,6 +69,10 @@
             <div v-if="this.$route.query.search_type == 'paper' || this.$route.query.search_type == 'organization'" style="margin: 3% 20% 10% 0">
                 <Page :current="pageNum" :total="totalNum" :page-size=10 @on-change="change_page" simple style="text-align: center;"/>
             </div>
+            <BackTop :height="100" :bottom="200">
+                <Icon type="md-arrow-up" class="top"/>
+                <br/>返回顶端
+            </BackTop>
 
         </div>
     </div>
@@ -322,5 +326,12 @@
     }
     .color_black{
         color: black;
+    }
+    .top{
+        padding: 10px;
+        background: rgba(0, 140, 229, .7);
+        color: #fff;
+        text-align: center;
+        border-radius: 2px;
     }
 </style>
