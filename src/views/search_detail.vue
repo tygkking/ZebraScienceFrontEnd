@@ -4,6 +4,15 @@
             <MenuBar :input=true :search_content='this.$route.query.search_content' :search_item="this.$route.query.search_type" @search="search"></MenuBar>
         </div>
         <div class="sc_detail" id="showArea">
+            <Button v-if="wordcloud_show" @click="check_word_cloud" style="margin-left: 70%">点击查看词云</Button>
+            <Modal v-model="wordcloud_modal" draggable scrollable title="词云">
+                <div v-if="wordcloud_modal" style="text-align: center">
+                    <img :src=this.wordcloud_path style="display: block; width:100%; height:380px; object-fit: cover">
+                </div>
+                <div slot="footer">
+                    <Button type="primary" size="large"  @click="quit_word_cloud">确定</Button>
+                </div>
+            </Modal>
             <div v-for="item in search_results" class="sc_content">
                 <div v-if="type=='paper'">
                     <div class="c_font">
@@ -80,16 +89,19 @@
 
 <script>
     import MenuBar from './menuBar.vue'
-    import Button from "../../dist/vendors";
+    // import Button from "../../dist/vendors";
     export default {
         components: {
-            Button,
+            // Button,
             MenuBar
         },
         name: "search_paper",
         data() {
             return {
                 modal1: false,
+                wordcloud_modal: false,
+                wordcloud_path: '',
+                wordcloud_show: false,
                 index_url:'/',
                 register_url:'/register',
                 identity: this.GLOBAL.userType,
@@ -104,8 +116,14 @@
             this.getSearchDetails(this.$route.query.search_type, this.$route.query.search_content)
         },
         methods: {
+            check_word_cloud () {
+                this.wordcloud_modal = true;
+            },
+            quit_word_cloud () {
+                this.wordcloud_modal = false;
+            },
             getSearchDetails(item, content) {
-
+                this.wordcloud_show = false;
                 var that = this;
                 console.log("get: item + " + item + "; content + " + content + "; pageNum + " + this.pageNum);
                 if(this.$route.query.advance_data)
@@ -126,6 +144,8 @@
                         console.log(detail);
                         that.search_results = detail.msg;
                         that.type = item;
+                        that.wordcloud_show = true;
+                        that.wordcloud_path = detail.word_cloud_path;
                         if (detail.reason == "未搜索到该专家" || detail.reason == "未查找到相关论文" || detail.reason == "未查找到相关机构")
                             alert(detail.reason);
                         if (detail.total_count != 0)
@@ -147,6 +167,7 @@
                         console.log(detail);
                         that.search_results = detail.msg;
                         that.type = item;
+                        that.wordcloud_show = false;
                         if (detail.reason == "未搜索到该专家" || detail.reason == "未查找到相关论文" || detail.reason == "未查找到相关机构")
                             alert(detail.reason);
                         if (detail.total_count != 0)
@@ -170,10 +191,16 @@
                             console.log(detail);
                             that.search_results=detail.msg;
                             that.type = item;
+                            console.log(that.wordcloud_path);
                             if(detail.reason == "未搜索到该专家" || detail.reason == "未查找到相关论文" || detail.reason == "未查找到相关机构")
                                 alert(detail.reason);
-                            if(item == 'paper' || item == 'organization')
+                            if(item == 'paper' || item == 'organization'){
                                 that.totalNum = detail.count
+                                if(item == 'paper'){
+                                    that.wordcloud_show = true;
+                                    that.wordcloud_path = detail.word_cloud_path;
+                                }
+                            }
                             if (that.pageNum == '')
                             that.pageNum = 1;
                             window.scrollTo(0,0);

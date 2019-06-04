@@ -208,7 +208,7 @@
                         this.$Message.info(s["reason"]);
                     }
                     else {
-                        this.$Message.info('成功登录');
+                        // this.$Message.info('成功登录');
                         console.log("qqqq"+this.GLOBAL.userType)
                         this.GLOBAL.setUserType(s["msg"]["user_type"]);
                         console.log("hhhh"+this.GLOBAL.userType)
