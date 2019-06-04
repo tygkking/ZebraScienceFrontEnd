@@ -33,10 +33,9 @@
 <style scoped>
     .aboutUs{
         font-size: 20px;
-        height: 500px;
         width: 100%;
         text-align: center;
-        /* background-color: #666; */
         padding-top: 8%;
+        margin-bottom: 10%;
     }
 </style>

@@ -65,8 +65,7 @@
         <Layout>
             <Footer class="layout-footer-center" style="background-color: #666666; color: #eeeeee;">
                 2019-2019 &copy; ZebraScience
-                <a href="http://www.baidu.com" style="margin-left: 20px; color: #eeeeee">联系我们</a>
-            </Footer>
+                <router-link :to="{path:'/aboutUs'}" style="margin-left: 20px; color: #eeeeee">联系我们</router-link>            </Footer>
         </Layout>
     </div>
 </template>
