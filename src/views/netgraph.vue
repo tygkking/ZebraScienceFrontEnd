@@ -85,6 +85,10 @@
                             name: 'Les Miserables',
                             type: 'graph',
                             layout: 'force',
+                            force:{
+                                repulsion:200,
+                                edgeLength:50
+                            },
                             data: this.webkitDep.nodes.map(function (node, idx) {
                                 node.id = idx;
                                 return node;
