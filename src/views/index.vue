@@ -125,7 +125,7 @@
                             <img v-if="none_times<4" src="../images/add.png" @click="none_times++" height="20" width="20" style="vertical-align:middle">
                         </div>
                     </div>
-                    <div class="extra-item">s
+                    <div class="extra-item">
                         作者：
                         <Input class="extra-input" v-model="advance_writer"></Input>
                     </div>
