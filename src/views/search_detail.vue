@@ -96,7 +96,7 @@
                 theme1: 'primary',
                 search_results: [],
                 type: '',
-                pageNum: 0,
+                pageNum: '',
                 totalNum: 0,
             }
         },
@@ -130,8 +130,8 @@
                             alert(detail.reason);
                         if (detail.total_count != 0)
                             that.totalNum = detail.total_count;
-                        if (that.pageNum == 0)
-                            that.pageNum++;
+                        if (that.pageNum == '')
+                            that.pageNum = 1;
 
                         window.scrollTo(0, 0);
                     },function (res) {
@@ -151,8 +151,8 @@
                             alert(detail.reason);
                         if (detail.total_count != 0)
                             that.totalNum = detail.total_count;
-                        if (that.pageNum == 0)
-                            that.pageNum++;
+                        if (that.pageNum == '')
+                            that.pageNum = 1;
 
                         window.scrollTo(0, 0);
                       },function (res) {
@@ -166,6 +166,7 @@
                     this.$http.get(this.GLOBAL.domain + "/api/v1/search_" + item + "/" + content, {params:param})
                         .then(function (res) {
                             var detail = JSON.parse(res.body);
+                            console.log("search success")
                             console.log(detail);
                             that.search_results=detail.msg;
                             that.type = item;
@@ -173,8 +174,8 @@
                                 alert(detail.reason);
                             if(item == 'paper' || item == 'organization')
                                 that.totalNum = detail.count
-                            if (that.pageNum == 0)
-                            that.pageNum++;
+                            if (that.pageNum == '')
+                            that.pageNum = 1;
                             window.scrollTo(0,0);
                         },function (res) {
                             console.log(res);
@@ -188,10 +189,11 @@
                     alert("请输入搜索类型");
                     return;
                 }
-                this.pageNum = 1;
-                var that = this;
                 if(content == "")
                     return;
+                this.pageNum = '';
+                var that = this;
+
                 this.$router.push({
                     query:{
                         search_content: content,
