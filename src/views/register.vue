@@ -89,8 +89,12 @@
                             if(s["state"]=="fail"){
                                 alert(s["reason"])
                             }
-                            else
-                                alert("注册成功！")
+                            else {
+                                alert("注册成功！");
+                                this.$router.push({
+                                    path: '/'
+                                })
+                            }
                         },function (res) {
                             console.log(res)
                         });

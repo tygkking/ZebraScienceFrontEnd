@@ -29,7 +29,7 @@
                 <div v-else-if="type=='professor'">
                     <div class="searchResultItem">
                         <router-link tag="a" class="searchResult_pic" :to="{path: '/professorDetails',query:{profID: item.scid}}" target="_blank">
-                            <img src="/src/images/zebra.png" alt="图片" width="64" height="64">
+                            <img src="../images/zebra.png" alt="图片" width="64" height="64">
                         </router-link>
                         <div class="searchResult_text">
                             <router-link class="personName" :to="{path: '/professorDetails',query:{profID: item.scid}}" target="_blank">

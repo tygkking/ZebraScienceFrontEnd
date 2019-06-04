@@ -104,7 +104,7 @@
                             <Input class="extra-input" v-model="advance_data.and[item - 1]"></Input>
                         </div>
                         <div style="display: inline">
-                            <img v-if="and_times<4" src="/src/images/add.png" @click="and_times++" height="20" width="20" style="vertical-align:middle">
+                            <img v-if="and_times<4" src="../images/add.png" @click="and_times++" height="20" width="20" style="vertical-align:middle">
                         </div>
                     </div>
                     <div class="extra-item">
@@ -113,7 +113,7 @@
                             <Input class="extra-input" v-model="advance_data.or[item - 1]"></Input>
                         </div>
                         <div style="display: inline">
-                            <img v-if="or_times<4" src="/src/images/add.png" @click="or_times++" height="20" width="20" style="vertical-align:middle">
+                            <img v-if="or_times<4" src="../images/add.png" @click="or_times++" height="20" width="20" style="vertical-align:middle">
                         </div>
                     </div>
                     <div class="extra-item">
@@ -122,10 +122,10 @@
                             <Input class="extra-input" v-model="advance_data.none[item - 1]"></Input>
                         </div>
                         <div style="display: inline">
-                            <img v-if="none_times<4" src="/src/images/add.png" @click="none_times++" height="20" width="20" style="vertical-align:middle">
+                            <img v-if="none_times<4" src="../images/add.png" @click="none_times++" height="20" width="20" style="vertical-align:middle">
                         </div>
                     </div>
-                    <div class="extra-item">
+                    <div class="extra-item">s
                         作者：
                         <Input class="extra-input" v-model="advance_writer"></Input>
                     </div>
@@ -148,12 +148,12 @@
                 </div>
             </Col>
         </Row>
-        <router-link :to="{path: '/professorDetails',query:{profID: 'CN-BQ73PUWJ'}}">专家详情</router-link>
-        <router-link :to="user_url">个人主页</router-link>
-        <router-link :to="paperDetails_url">论文详情</router-link>
-        <router-link :to="news_url">消息界面</router-link>
-        <router-link :to="certify_url">申请认证</router-link>
-        <router-link :to="setting_url">信息设置</router-link>
+        <!--<router-link :to="{path: '/professorDetails',query:{profID: 'CN-BQ73PUWJ'}}">专家详情</router-link>-->
+        <!--<router-link :to="user_url">个人主页</router-link>-->
+        <!--<router-link :to="paperDetails_url">论文详情</router-link>-->
+        <!--<router-link :to="news_url">消息界面</router-link>-->
+        <!--<router-link :to="certify_url">申请认证</router-link>-->
+        <!--<router-link :to="setting_url">信息设置</router-link>-->
         <div id="ftCon">
             2019-2019 &copy; ZebraScience
             <a href="http://www.baidu.com">联系我们</a>
