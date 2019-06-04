@@ -5,6 +5,7 @@
     position: relative;
     border-radius: 4px;
     overflow: hidden;
+    min-width: 700px;
 }
 
 #layout{
@@ -24,7 +25,7 @@
 .user-intro{
     margin-left: 20px;
     margin-right: 20px;
-    margin-bottom: 60px;
+    margin-bottom: 10px;
 }
 
 .professor-detail{
@@ -32,7 +33,7 @@
 }
 
 .paper-detail{
-    margin-top: 10px;
+    margin-top: 3px;
     margin-bottom: 10px;
     /*font-family: 华文中宋;*/
     font-size: 18px;
@@ -54,7 +55,7 @@
 <template>
     <div class="userpage">
         <MenuBar  v-on:user="identity = 'USER'" v-on:visitor="identity = 'VISITOR'" v-on:expert="identity = 'EXPERT'" v-on:admin="identity = 'ADMIN'"></MenuBar>
-        <Layout id="layout">
+        <Layout id="layout" v-if="isRouterAlive">
             <Content :style="{padding: '0 50px'}">
                 <div class="user-intro">
                     <Row>
@@ -67,7 +68,7 @@
                                 </Button>
                             </div>
                         </Col>
-                        <Col span="19">
+                        <Col span="9">
                             <div class="person-detail" style="margin-left: 30px; margin-top: 20px">
                                 <h2>{{userName}}<Tag color="orange" style="margin-left:20px">Scholar ID: {{profID}}</Tag></h2>
                                 <br>
@@ -78,6 +79,9 @@
                                 <br>
                                 <h4>发表论文数：{{paper_num}}&nbsp&nbsp被引次数：{{ref_num}}</h4>
                             </div>
+                        </Col>
+                        <Col span="10">
+                            <Netgraph :cop="coop_sch" :man="userName"></Netgraph>
                         </Col>
                     </Row>
                 </div>
@@ -147,9 +151,11 @@
 
 <script>
     import MenuBar from './menuBar.vue'
+    import Netgraph from './netgraph'
     export default {
         components:{
-            MenuBar
+            MenuBar,
+            Netgraph
         },
         name: 'professorDetails',
         data () {
@@ -166,6 +172,7 @@
                 pageNum: 1,
                 pageSize: 10,
                 got_paper_num: 1,
+                isRouterAlive: true,
                 paper_items: [
                     {
                         paper_detail: {
@@ -247,6 +254,12 @@
             }
         },
         methods:{
+            reload(){
+                this.isRouterAlive = false;
+                this.$nextTick(function () {
+                    this.isRouterAlive = true;
+                })
+            },
             toggle_like (){
                 let params = {'user_id':this.GLOBAL.email,'professor_id':this.profID}
                 console.log(params)
@@ -313,8 +326,9 @@
                             var detail = JSON.parse(res.body);
                             console.log(detail);
                             if(detail.state == 'fail'){
-                                alert(detail.reason)
+                                this.$Message.error(detail.reason);
                                 that.to_scholar(that.profID);
+                                window.location.href='http://xueshu.baidu.com/scholarID/' + profID;
                             }
                             else{
                                 that.userName = detail.msg.name;
@@ -326,6 +340,8 @@
                                 that.coop_sch = detail.msg.copinfo;
                                 that.paper_items = detail.msg.paper;
                                 that.got_paper_num = detail.msg.paper.length;
+
+                                this.reload();
                             }
                     },function (res) {
                         console.log(res)

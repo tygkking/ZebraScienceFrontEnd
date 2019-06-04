@@ -2,13 +2,19 @@
     <div v-if="flag" class="page">
         <MenuBar  v-on:user="identity = 'USER'" v-on:visitor="identity = 'VISITOR'" v-on:expert="identity = 'EXPERT'" v-on:admin="identity = 'ADMIN'"></MenuBar>
         <Layout id="layout">
-                <div style="margin-left: 26%;width: 50%">
+                <div style="margin-left: 15%; width: 68%; min-width: 500px">
                     <h3 style="color: #06c;font-size: 26px;font-weight: bold;word-break: break-all">{{paper.name}}</h3>
                     <div class="dtl_l_content">
+                        <Divider dashed/>
                         <div class="dtl_l_love_wr ">
-                            <span>来自</span>
+                            <span>来自&nbsp</span>
                             <a :href=paper.source_url[0]>{{paper.source_url[0]}}</a>
-                            <p style="margin-top: 2%;color: #363e4f"> {{this.paper.source_journal.name}}&nbsp-&nbsp{{this.paper.source_journal.date}}</p>
+                            <br><br>
+                            <span>期刊来源&nbsp</span>
+                            <span style="margin-top: 2%;color: #363e4f; font-family: 微软雅黑;"> {{this.paper.source_journal.name}}&nbsp-&nbsp{{this.paper.source_journal.date}}</span>
+                            <br><br>
+                            <span>年份&nbsp</span>
+                            <span style="margin-top: 2%;color: #363e4f; font-family: 微软雅黑;">{{this.paper.year}}</span>
                         </div>
                         <div class="dtl_l_love_auth_wr" >
                             <Row>
@@ -16,7 +22,9 @@
                                     <label style="width: 90px;color: #999999" >作者：</label>
                                 </Col>
                                 <Col span="22">
-                                    <label @click="jump_man(key)" v-for="(value, key) in paper.author" style="color: #2b85e4;font-size: 15px">{{key}}&nbsp;&nbsp;&nbsp;</label>
+                                    <label @click="jump_man(key)" v-for="(value, key) in paper.author" style="color: #2b85e4;font-size: 15px; cursor:pointer; width: fit-content; font-size: 13px; font-family: 微软雅黑">
+                                        {{key}}<Divider type="vertical" />
+                                    </label>
                                 </Col>
                             </Row>
                             <!--<label style="width: 60px;color: #999999" >作者：</label>-->
@@ -28,51 +36,69 @@
                                     <label style="width: 52px;color: #999999" >摘要：</label>
                                 </Col>
                                 <Col span="22">
-                                    <label class="multiLineText" style="width: 100%">{{paper.abstract}}</label>
+                                    <label class="multiLineText" style="width: 100%; color: #3f3f3f">
+                                        {{paper.abstract}}
+                                    </label>
                                 </Col>
                             </Row>
                         </div>
                         <div class="dtl_l_love_auth_wr"  style="margin-top: 7px">
                             <Row>
                                 <Col span="2">
-                                    <label style="width: 90px;color: #999999" >关键字：</label>
+                                    <label style="width: 90px;color: #999999" >关键词：</label>
                                 </Col>
                                 <Col span="22">
-                                    <label v-for="word in paper.keyword" style="color: #2b85e4;font-size: 15px;word-break: break-all">{{word}}&nbsp;&nbsp;&nbsp;</label>
+                                    <label v-for="word in paper.keyword" style="color: #3f3f3f;font-size: 15px;word-break: break-all; font-size: 13px; font-family: 微软雅黑">
+                                        {{word}}<Divider type="vertical" />
+                                    </label>
                                 </Col>
                             </Row>
                             <!--<label style="width: 60px;color: #999999" >作者：</label>-->
                             <!--<label v-for="auth in paper.author" style="color: #2b85e4;font-size: 14px">{{auth}}&nbsp;&nbsp;&nbsp;</label>-->
                         </div>
-                        <Button icon="ios-star" style="width: 20%; font-size: 14px;margin-left: 20%;margin-top: 7px" v-model="showlike" :class="{liked: isliked}" @click.native="toggle_like">
+<!--                        <Divider />-->
+                        <Button icon="ios-star" style="width: 30%; min-width: 200px; font-size: 14px;margin-left: 35%;margin-top: 20px" v-model="showlike" :class="{liked: isliked}" @click.native="toggle_like">
                             {{showlike}}</Button>
-                        <Button icon="ios-text" style="width: 20%; font-size: 14px;margin-left: 10%;margin-top: 7px"
-                                @click="add_comment"> 添加评论</Button>
-                        <Modal v-model="modal2" title="添加评论" ok-text="确定" cancel-text="取消" @on-ok="sub_comment"
+<!--                        <Button icon="ios-text" style="width: 20%; font-size: 14px;margin-left: 10%;margin-top: 7px"-->
+<!--                                @click="add_comment"> 添加评论</Button>-->
+                        <Modal v-model="modal2" title="回复评论" ok-text="确定" cancel-text="取消" @on-ok="sub_comment"
                                @on-cancel="cancel" >
                             <textarea v-model="content" placeholder="写下你的想法" style="margin-left: 4%;width:90%;height: 200px"/>
                         </Modal>
                     </div>
                 </div>
-
-            <div style="margin-left: 26%;margin-top: 25px; width: 55%">
-                <h2 style="">评论</h2>
-                <Divider style="height: 85%" />
+            <Divider />
+            <div style="margin-left: 20%; width: 60%; min-width: 500px">
+                <h2 style="margin-bottom: 10px">评论区</h2>
+                <div style="min-width: 500px;">
+                    <Row type="flex" justify="center" align="middle" style="min-width: 450px">
+                        <Col span="3" style="min-width: 110px">
+                            <img :src=this.GLOBAL.avatar height="90px" style="margin: 5px; border-radius: 50%; padding: 3px; background-color: #fff; border: 1px solid rgba(0, 0, 0, 0.15);">
+                        </Col>
+                        <Col span="18">
+                            <Input v-model="content" type="textarea" :autosize="{minRows: 4,maxRows: 4}" :maxlength=140 placeholder="写下你的想法" style="margin-left: 4%;width:90%;"/>
+                        </Col>
+                    </Row>
+                </div>
+                <Button icon="ios-text" style="width: 20%; min-width: 100px; font-size: 14px; float: right; margin-right: 10%; margin-top:10px; margin-bottom:10px; padding: 5px"
+                                @click="sub_comment">发表评论</Button>
+                <Divider />
                 <p v-if="comment.length==0">暂无评论，我来发表第一篇评论！</p>
                 <div v-else >
                     <div  v-for="item in this.comment.slice((pageNum-1)*pageSize, pageNum*pageSize)" >
-                        <b style="color: #52c41a;font-size: 17px ">{{item.from.username}}
-                            <span style="color: #999999;font-size: 12px">{{item.date}}</span>&nbsp&nbsp&nbsp
-                            <Button type="text" shape="circle" icon="md-chatboxes" style="color: #999999" @click="add_reply(item)"></Button>
-                            <Modal v-model="modal3" title="添加评论" ok-text="确定" cancel-text="取消" @on-ok="reply_comment"
+                        <b style="color: #2B86E4;font-size: 14px ">
+                            {{item.from.username}}
+                            <span style="color: #999999;font-size: 12px; margin-left: 10px">{{item.date}}</span>&nbsp&nbsp&nbsp
+                            <Button type="text" shape="circle" icon="md-chatboxes" style="color: #666666" @click="add_reply(item)">回复</Button>
+                            <Modal v-model="modal3" title="回复评论" cancel-text="取消" ok-text="回复" @on-ok="reply_comment"
                                    @on-cancel="cancel" >
-                                <textarea v-model="content" placeholder="写下你的想法" style="margin-left: 4%;width:90%;height: 200px"/>
+                                <Input v-model="content" type="textarea" :autosize="{minRows: 4,maxRows: 4}" :maxlength=140 placeholder="写下你的回复" style="margin-left: 4%;width:90%;"/>
                             </Modal>
                         </b>
                         <p class="commentColor">{{item.content}}</p>
-                        <div v-if="item.replies.length>0">
-                            <div style="margin-left: 20px" v-for="reply in item.replies">
-                                <b style="color: #52c41a;font-size: 14px">{{reply.from_name}}&nbsp;&nbsp;回复&nbsp;&nbsp;{{item.from.username}}
+                        <div v-if="item.replies.length>0" style="width: 70%; margin: 0px 20px 0px 20px; padding: 5px; border-left: 2px solid #8391a5; background-color: #fcfcfc">
+                            <div style="padding:0px 5px 0px 5px;" v-for="reply in item.replies">
+                                <b style="color: #86bbf2;font-size: 14px">{{reply.from_name}}&nbsp;&nbsp;<span style="color: #999999">回复</span>&nbsp;&nbsp;{{item.from.username}}
                                     <span style="color: #999999">{{reply.time}}</span>&nbsp&nbsp
                                     <!--<Button type="text" shape="circle" icon="md-chatboxes" style="color: #999999" @click="add_reply"></Button>-->
                                     <!--<Modal v-model="modal3" title="添加评论" ok-text="确定" cancel-text="取消" @on-ok="reply_comment"-->
@@ -81,9 +107,10 @@
                                     <!--</Modal>-->
                                 </b>
                                 <p class="commentColor">{{reply.content}}</p>
+                                <Divider v-if="item.replies.length>1" dashed style="margin:10px"/>
                             </div>
                         </div>
-                        <Divider style="height: 85%" dash="true"/>
+                        <Divider dashed style="margin:10px"/>
                     </div>
                     <Page :current="pageNum" :total="comment.length" :page-size="pageSize" @on-change="change_page"
                           simple style="margin-left: 32%"/>
@@ -243,8 +270,11 @@
                 this.modal3 = true;
             },
             sub_comment(){
-                if(this.content=='')
+                if(this.content.trim()==''){
+                    this.$Message.error('内容不能为空');
+                    this.content = '';
                     return
+                }
                 else {
                     console.log(this.paper.paper_id)
                     let params = {'from_email':this.GLOBAL.email,'paper_id':this.paper.paper_id,'content':this.content};
@@ -259,6 +289,7 @@
                                 this.$Message.info("评论失败")
                             }
                             else{
+                                this.$Message.success('评论成功');
                                 this.get_comment()
                                 this.content="";
                             }
@@ -268,8 +299,11 @@
                 }
             },
             reply_comment(){
-                if(this.content=='')
+                if(this.content.trim()==''){
+                    this.$Message.error('内容不能为空');
+                    this.content = '';
                     return
+                }
                 else {
                     let params = {'from_email':this.GLOBAL.email,'comment_id':this.cur_cmt.comment_id,'to_email':this.cur_cmt.from.userid,
                         'to_name':this.cur_cmt.from.username,'content':this.content,'comment':this.cur_cmt.content,
@@ -281,7 +315,7 @@
                     }).then(function (res) {
                         var detail = JSON.parse(res.body);
                         if(detail.state=="fail"){
-                            this.$Message.info("评论失败")
+                            this.$Message.info("回复失败")
                         }
                         else{
                             this.get_comment();
@@ -378,17 +412,18 @@
         margin-top: 5px;
     }
     .dtl_l_love_wr {
-         font-size: 15px;
+         font-size: 13px;
          overflow: hidden;
          line-height: 15px;
          margin: 15px 0 12px;
          color: #999999;
      }
     .dtl_l_love_auth_wr{
+        font-size:13px;
         width: 100%;
         overflow: hidden;
         color: #999;
-        margin-top: 2px;
+        margin-top: 10px;
     }
     .multiLineText{
         word-break: break-all;
@@ -402,7 +437,10 @@
         color: white;
     }
     .commentColor{
-        color: #444444;
+        color: #3f3f3f;
+        font-family: 微软雅黑;
+        font-size: 13px;
+        margin: 0px 0px 10px 20px;
     }
     .top{
         padding: 10px;

@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div style="min-width: 900px;">
         <div class="top_xf">
             <MenuBar :input=true :search_content='this.$route.query.search_content' :search_item="this.$route.query.search_type" @search="search"></MenuBar>
         </div>
@@ -11,12 +11,19 @@
                     </div>
                     <div class="c_abstract" v-html="item.abstract">{{item.abstract}}</div>
                     <div class="paper-author">
-                        <div v-for="(value, key) in item.author" style="display: inline">{{ key }}&nbsp&nbsp</div>
-                        <div style="display: inline">-&nbsp&nbsp{{item.source_journal.name}}&nbsp&nbsp-&nbsp&nbsp{{item.source_journal.date}}&nbsp&nbsp-&nbsp&nbsp<div style="display: inline" v-html="item.year">{{item.year}}</div></div>
+                        <b>作者：</b>
+                        <span v-for="(value, key) in item.author" style="display: inline">{{ key }}&nbsp&nbsp</span>
+                        <b>年份：</b>
+                        <span style="display: inline" v-html="item.year">{{item.year}}</span><br>
+                        <b>来源：</b>
+                        <span style="display: inline">&nbsp&nbsp{{item.source_journal.name}}&nbsp&nbsp&nbsp&nbsp{{item.source_journal.date}}&nbsp&nbsp&nbsp&nbsp</span><br>
+
                     </div>
                     <div class="paper-key">
-                        关键词：<div v-for="keyword in item.keyword" style="display: inline">{{keyword}}&nbsp</div>
+                        <b>关键词：</b>
+                        <div v-for="keyword in item.keyword" style="display: inline">{{keyword}}&nbsp</div>
                     </div>
+                    <Divider/>
                 </div>
 
                 <div v-else-if="type=='professor'">
@@ -55,7 +62,7 @@
                         <a :href="item.url" target="_blank">{{item.mechanism}}</a>
                     </div>
                     <div class="c_abstract" v-for="intro in item.introduction">{{intro}}</div>
-                    <hr style="width: 80%">
+                    <Divider/>
                 </div>
 
             </div>
@@ -223,38 +230,44 @@
         overflow:hidden;
         position: fixed;
         top: 0px;
+        z-index: 1;
     }
     .paper-author{
         color: #333333;
-        font-size: 15px;
-        margin: 2px 0 2px 0;
+        font-size: 14px;
+        margin: 10px 0 2px 10px;
         width: 80%;
+        font-family: 微软雅黑;
     }
     .paper-key{
         color: #444444;
-        font-size: 15px;
+        font-size: 14px;
         width: 80%;
-        border-bottom: #9999 1px solid;
+        font-family: 微软雅黑;
+        margin-left: 10px;
+        /*border-bottom: #9999 1px solid;*/
     }
     .sc_detail{
         margin-left: 10%;
-        margin-top: 5%;
+        margin-top: 80px;
+        z-index: 3;
     }
     .sc_content{
         margin-top: 15px;
+        width: 90%;
     }
     .c_font{
         font-family: "Helvetica Neue";
         margin-bottom: 6px;
         font-size: 20px;
         word-wrap:break-word;
-        width: 80%;
+        width: 90%;
     }
     .c_abstract{
-        line-height: 17px;
-        width: 80%;
+        line-height: 20px;
+        width: 90%;
         color: #666;
-        font-size: 13px;
+        font-size: 14px;
         word-break: break-all;
         display: -webkit-box;
         -webkit-line-clamp: 3;  /*限制在一个块元素显示的文本的行数*/
@@ -274,10 +287,10 @@
         float: left;
         width: 78px;
         height: 78px;
-        -webkit-border-radius: 50%;
-        -moz-border-radius: 50%;
-        -ms-border-radius: 50%;
-        border-radius: 50%;
+        -webkit-border-radius: 10%;
+        -moz-border-radius: 10%;
+        -ms-border-radius: 10%;
+        border-radius: 10%;
         cursor: pointer;
         overflow: hidden;
         border: 3px solid #fff;

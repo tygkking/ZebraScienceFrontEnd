@@ -206,6 +206,7 @@
         border-radius: 4px;
         background: #f5f7f9;
         width: 80%;
+        min-width: 700px;
     }
     .input-select-class {
         width: 200px;
