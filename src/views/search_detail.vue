@@ -7,7 +7,7 @@
             <Button v-if="wordcloud_show" @click="check_word_cloud" style="margin-left: 70%">点击查看词云</Button>
             <Modal v-model="wordcloud_modal" draggable scrollable title="词云">
                 <div v-if="wordcloud_modal" style="text-align: center">
-                    <img :src=this.wordcloud_path style="display: block; width:100%; height:380px; object-fit: cover">
+                    <img :src=this.GLOBAL.wordcloud_path style="display: block; width:100%; height:380px; object-fit: cover">
                 </div>
                 <div slot="footer">
                     <Button type="primary" size="large"  @click="quit_word_cloud">确定</Button>
@@ -100,7 +100,7 @@
             return {
                 modal1: false,
                 wordcloud_modal: false,
-                wordcloud_path: '',
+                // wordcloud_path: '',
                 wordcloud_show: false,
                 index_url:'/',
                 register_url:'/register',
@@ -145,7 +145,8 @@
                         that.search_results = detail.msg;
                         that.type = item;
                         that.wordcloud_show = true;
-                        that.wordcloud_path = detail.word_cloud_path;
+                        if(that.pageNum == '')
+                            that.GLOBAL.setWordCloud(detail.word_cloud_path);
                         if (detail.reason == "未搜索到该专家" || detail.reason == "未查找到相关论文" || detail.reason == "未查找到相关机构")
                             alert(detail.reason);
                         if (detail.total_count != 0)
@@ -191,14 +192,15 @@
                             console.log(detail);
                             that.search_results=detail.msg;
                             that.type = item;
-                            console.log(that.wordcloud_path);
+                            console.log(that.GLOBAL.wordcloud_path);
                             if(detail.reason == "未搜索到该专家" || detail.reason == "未查找到相关论文" || detail.reason == "未查找到相关机构")
                                 alert(detail.reason);
                             if(item == 'paper' || item == 'organization'){
                                 that.totalNum = detail.count
                                 if(item == 'paper'){
                                     that.wordcloud_show = true;
-                                    that.wordcloud_path = detail.word_cloud_path;
+                                    if(that.pageNum == '')
+                                        that.GLOBAL.setWordCloud(detail.word_cloud_path);
                                 }
                             }
                             if (that.pageNum == '')

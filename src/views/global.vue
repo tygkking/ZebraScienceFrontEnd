@@ -13,6 +13,7 @@
         email: '',
         password: '', // Just For Test
         userType: 'VISITOR',
+        wordcloud_path: '',
         avatar: 'http://qsz.lkc1621.xyz/static/photo/1559356265_img.png',
         collectList: [
             // {
@@ -111,7 +112,10 @@
         },
         setAvatar(a_url) {
             this.avatar = a_url;
-        }
+        },
+        setWordCloud(url) {
+            this.wordcloud_path = url;
+        },
     }
 </script>
 
