@@ -302,11 +302,11 @@
                 }
                 else if (this.search_item == 'professor' && this.extra_org)
                 {
-                    if(this.extra_org_name == '')
-                    {
-                        alert("请输入所在机构");
-                        return;
-                    }
+                    // if(this.extra_org_name == '')
+                    // {
+                    //     alert("请输入所在机构");
+                    //     return;
+                    // }
                     this.$router.push({
                         name: 'search_detail',
                         query:{
