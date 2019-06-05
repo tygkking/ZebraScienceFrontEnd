@@ -30,7 +30,7 @@
                     </div>
                     <div class="paper-key">
                         <b>关键词：</b>
-                        <div v-for="keyword in item.keyword" style="display: inline">{{keyword}}&nbsp</div>
+                        <div v-for="keyword in item.keyword" style="display: inline" v-html="keyword">{{keyword}}&nbsp</div>
                     </div>
                     <Divider/>
                 </div>
