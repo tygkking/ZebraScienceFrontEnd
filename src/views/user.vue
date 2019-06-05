@@ -119,7 +119,7 @@
                                         <div style="font-size: 14px">
                                             年份：{{ item.year }}
                                             &nbsp
-                                            作者：<div style="display: inline" v-for="(key, value) in item.author">{{ value }}&nbsp&nbsp</div>
+                                            作者：<div style="display: inline" v-for="(key, value) in item.author">{{ key }}&nbsp&nbsp</div>
                                             <br>
                                             出处：{{ item.source_journal.name }}&nbsp&nbsp{{ item.source_journal.date }}
                                         </div>
