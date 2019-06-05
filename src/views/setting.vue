@@ -2,10 +2,10 @@
     <div>
         <MenuBar  v-on:user="identity = 'USER'" v-on:visitor="identity = 'VISITOR'" v-on:expert="identity = 'EXPERT'" v-on:admin="identity = 'ADMIN'"></MenuBar>
         <div class="certify-detail">
-            <div v-if="identity == 'VISITOR'" style="width: 100%; text-align: center; height: 200px;">
+            <div v-if="identity == 'VISITOR'" style="width: 100%; text-align: center; height: 480px;">
                 <h2 style="margin-top: 80px">您还未登录！<br> Zebra 请您登录</h2>
             </div>
-            <Tabs value="name2" :animated="false" style="margin-top: 60px; width: 100%; text-align: center" v-show="identity != 'VISITOR'">
+            <Tabs value="name2" :animated="false" style="min-height:480px; margin-top: 60px; width: 100%; text-align: center" v-show="identity != 'VISITOR'">
                 <TabPane label="修改用户名" name="name1"  @click.native="handleReset ('change_pwd')" v-if="identity != 'EXPERT'">
                     <div class="layout-content-main">
                         <Form ref="change_name" :model="change_name" :rules="change_name_rule" :label-width="100">

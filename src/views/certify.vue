@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div style="background: white">
         <MenuBar  v-on:user="identity = 'USER'" v-on:visitor="identity = 'VISITOR'" v-on:expert="identity = 'EXPERT'" v-on:admin="identity = 'ADMIN'"></MenuBar>
         <Modal v-model="modal1" cancel-text="取消" @on-cancel="check_ok" draggable scrollable title="发送申请成功">
             <h3>您已成功发送申请，请耐心等待管理员审核</h3>
@@ -13,7 +13,7 @@
                     <h2 style="margin-left: 30%">{{showedMessage}}</h2>
                     <ul style="list-style-type:none; margin-left: 5px; margin-top: 5px;">
                         <li v-for="item in same_name_sch" style="width:40%; float:left; margin-left: 20px; min-width: 320px">
-                                <div onmouseover="this.style.background = '#e7e7e7'" onmouseout="this.style.background = '#f5f7f9'" @click="confirm_prof_id(item.scid)" style="cursor:pointer; margin:5px; padding: 5px; border: #2b85e4 solid 1px; border-radius: 5px; overflow: hidden">
+                                <div onmouseover="this.style.background = '#e7e7e7'" onmouseout="this.style.background = '#ffffff'" @click="confirm_prof_id(item.scid)" style="cursor:pointer; margin:5px; padding: 5px; border: #2b85e4 solid 1px; border-radius: 5px; overflow: hidden">
                                     <Row>
                                         <Col span="9" style="text-align: center; overflow: hidden; white-space: nowrap; padding-top: 5px">
                                             <div class="relevant-detail">
@@ -33,8 +33,8 @@
                         </li>
                     </ul>
                 </div>
-                <div class="certify-detail" style="background: #f5f7f9;">
-                    <div v-if="identity == 'VISITOR'" style="width: 100%; text-align: center;">
+                <div class="certify-detail">
+                    <div v-if="identity == 'VISITOR'" style="width: 100%; text-align: center; min-height: 450px">
                         <h2 style="margin-top: 80px">您还未登录！<br> 请登录后再申请认证</h2>
                     </div>
                     <div class="layout-content-main" v-show="(identity == 'USER' || identity == 'ADMIN') && same_name == false">
@@ -200,13 +200,19 @@
 <style>
     .certify-detail{
         padding-top: 60px;
-        min-height: 480px;
+        min-height: 470px;
         padding-left: 25%;
         overflow: hidden;
         border-radius: 4px;
-        background: #f5f7f9;
+        background: white;
         width: 80%;
         min-width: 700px;
+    }
+    .ivu-layout{
+        background-color: white;
+    }
+    .ivu-layout-content{
+        background-color: white;
     }
     .input-select-class {
         width: 200px;
@@ -214,6 +220,8 @@
     }
     .layout-content-main{
         padding: 40px;
+        width: 80%;
+        background-color: white;
     }
     .same-name-expert{
         padding-top: 80px;

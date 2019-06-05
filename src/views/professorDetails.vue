@@ -8,6 +8,10 @@
     min-width: 700px;
 }
 
+.ivu-layout{
+    background-color: white;
+}
+
 #layout{
     margin-top: 60px;
     padding-top: 40px;

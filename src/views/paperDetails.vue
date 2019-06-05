@@ -23,7 +23,7 @@
                                 </Col>
                                 <Col span="22">
                                     <label @click="jump_man(key)" v-for="(value, key) in paper.author" style="color: #2b85e4;font-size: 15px; cursor:pointer; width: fit-content; font-size: 13px; font-family: 微软雅黑">
-                                        {{key}}<Divider type="vertical" />
+                                        {{value}}<Divider type="vertical" />
                                     </label>
                                 </Col>
                             </Row>
@@ -398,6 +398,9 @@
         position: relative;
         border-radius: 4px;
         overflow: hidden;
+    }
+    .ivu-layout{
+        background-color: white;
     }
     #layout{
         margin-top: 55px;
