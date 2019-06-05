@@ -21,16 +21,29 @@
                     <div class="c_abstract" v-html="item.abstract">{{item.abstract}}</div>
                     <div class="paper-author">
                         <b>作者：</b>
-                        <span v-for="(value, key) in item.author" style="display: inline">{{ value }}&nbsp&nbsp</span>
+                        <span v-for="(value, key) in item.author" style="display: inline">
+                            <div v-html="value" style="display: inline">
+                                {{ value }}
+                            </div>&nbsp&nbsp
+                        </span>
                         <b>年份：</b>
                         <span style="display: inline" v-html="item.year">{{item.year}}</span><br>
                         <b>来源：</b>
-                        <span style="display: inline">&nbsp&nbsp{{item.source_journal.name}}&nbsp&nbsp&nbsp&nbsp{{item.source_journal.date}}&nbsp&nbsp&nbsp&nbsp</span><br>
+                        <span style="display: inline">
+                            &nbsp&nbsp
+                            <div v-html="item.source_journal.name" style="display: inline">
+                                {{item.source_journal.name}}
+                            </div>&nbsp&nbsp&nbsp&nbsp
+                            <div v-html="item.source_journal.date" style="display: inline">
+                                {{item.source_journal.date}}
+                            </div>
+                            &nbsp&nbsp&nbsp&nbsp
+                        </span><br>
 
                     </div>
                     <div class="paper-key">
                         <b>关键词：</b>
-                        <div v-for="keyword in item.keyword" style="display: inline" v-html="keyword">{{keyword}}&nbsp</div>
+                        <div v-for="keyword in item.keyword" style="display: inline" ><div v-html="keyword" style="display: inline">{{keyword}}</div>&nbsp;</div>
                     </div>
                     <Divider/>
                 </div>
