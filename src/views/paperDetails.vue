@@ -22,7 +22,7 @@
                                     <label style="width: 90px;color: #999999" >作者：</label>
                                 </Col>
                                 <Col span="22">
-                                    <label @click="jump_man(key)" v-for="(value, key) in paper.author" style="color: #2b85e4;font-size: 15px; cursor:pointer; width: fit-content; font-size: 13px; font-family: 微软雅黑">
+                                    <label @click="jump_man(value)" v-for="(value, key) in paper.author" style="color: #2b85e4;font-size: 15px; cursor:pointer; width: fit-content; font-size: 13px; font-family: 微软雅黑">
                                         {{value}}<Divider type="vertical" />
                                     </label>
                                 </Col>
