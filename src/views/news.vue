@@ -517,13 +517,36 @@
                         }
                         else{
                             this.modal_clean = false;
-                            this.$Message.error('出现错误，清空失败');
+                            // this.$Message.error('出现错误，清空失败');
                         }
                     },function (res) {
                         var detail = JSON.parse(res.body);
                         console.log("Failed");
                         console.log(detail);
                     })
+                if (this.news_type == 'system'){
+                    let params = {'user_id':this.GLOBAL.email, 'message_type': 'APPLYRESULT'};
+                    this.$http.post(this.GLOBAL.domain + '/api/v1/delete_message', params)
+                        .then(function (res) {
+                            var detail = JSON.parse(res.body);
+                            console.log(detail);
+                            if(detail.state == 'success'){
+                                this.refresh_news();
+                                setTimeout(() => {
+                                    this.modal_clean = false;
+                                    // this.$Message.success('成功清空 '+ this.news_type + ' 信息');
+                                }, 300);
+                            }
+                            else{
+                                this.modal_clean = false;
+                                // this.$Message.error('出现错误，清空失败');
+                            }
+                        },function (res) {
+                            var detail = JSON.parse(res.body);
+                            console.log("Failed");
+                            console.log(detail);
+                        })
+                }
             },
             show_del_modal (msg_id) {
                 this.modal_delete = true;
