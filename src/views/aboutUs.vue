@@ -3,7 +3,7 @@
         <MenuBar></MenuBar>
         <div class="aboutUs" >
             <img src="../images/zebra.png" style="height: 220px"><br>
-            <span style="font-size: 35px">ZebraScience</span><br>
+            <span style="font-size: 35px">Zebra&nbsp&nbspScience</span><br>
             <span style="color: #2db7f5">v1.0</span>
             <br><br>
             <span style="font-size: 30px">团队介绍：</span><br>

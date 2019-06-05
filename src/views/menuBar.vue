@@ -1,5 +1,5 @@
 <template>
-    <Menu mode="horizontal" :theme="theme1" active-name="1" style="min-width: 600px;width:100%; position: fixed">
+    <Menu mode="horizontal" :theme="theme1" active-name="1" style="width:100%; position: fixed">
         <router-link :to="index_url" style="float:left">
             <MenuItem name="1">
                 <Icon type="ios-home" size="20"/>
