@@ -26,21 +26,21 @@ const routers = [
     {
         path: '/professorDetails',
         meta: {
-            title: 'professorDetails'
+            title: '专家详情'
         },
         component: (resolve) => require(['./views/ProfessorDetails.vue'], resolve)
     },
     {
         path: '/user',
         meta: {
-            title: 'user'
+            title: '个人主页'
         },
         component: (resolve) => require(['./views/user.vue'], resolve)
     },
     {
         path: '/paperDetails',
         meta: {
-            title: 'paperDetails'
+            title: '论文详情'
         },
         component: (resolve) => require(['./views/paperDetails.vue'], resolve)
     },
@@ -48,7 +48,7 @@ const routers = [
         path: '/news',
         name: 'news',
         meta: {
-            title: 'news'
+            title: '消息页面'
         },
         component: (resolve) => require(['./views/news.vue'], resolve)
     },
@@ -56,7 +56,7 @@ const routers = [
         path: '/certify',
         name: 'certify',
         meta: {
-            title: 'certify'
+            title: '申请认证'
         },
         component: (resolve) => require(['./views/certify.vue'], resolve)
     },
@@ -64,7 +64,7 @@ const routers = [
         path: '/setting',
         name: 'setting',
         meta: {
-            title: 'setting'
+            title: '设置'
         },
         component: (resolve) => require(['./views/setting.vue'], resolve)
     },
@@ -72,7 +72,7 @@ const routers = [
         path: '/aboutUs',
         name: 'aboutUs',
         meta: {
-            title: 'aboutUs'
+            title: '关于我们'
         },
         component: (resolve) => require(['./views/aboutUs.vue'], resolve)
     },
